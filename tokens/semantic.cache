@@ -1,0 +1,28 @@
+;; Object tokens/
+;; SEMANTICDB Tags save file
+(semanticdb-project-database-file "tokens/"
+  :tables (list 
+   (semanticdb-table "AdvCondition.java"
+    :major-mode 'jde-mode
+    :tags '(("tokens" package nil nil [1 16]) ("java.lang.*" include nil (dependency-file none) [18 37]) ("java.util.*" include nil (dependency-file none) [38 57]) ("AdvCondition" type (:typemodifiers ("public") :members (("c1" variable (:typemodifiers ("public") :type "AdvCondition") (reparse-symbol class_member_declaration) [140 163]) ("c2" variable (:typemodifiers ("public") :type "AdvCondition") (reparse-symbol class_member_declaration) [168 191]) ("Type_AND" variable (:typemodifiers ("public" "static") :type "int") (reparse-symbol class_member_declaration) [201 230]) ("Type_OR" variable (:typemodifiers ("public" "static") :type "int") (reparse-symbol class_member_declaration) [235 263]) ("Type_ATOM" variable (:typemodifiers ("public" "static") :type "int") (reparse-symbol class_member_declaration) [268 298]) ("atom" variable (:typemodifiers ("public") :type "Condition") (reparse-symbol class_member_declaration) [304 326]) ("jointType" variable (:typemodifiers ("public") :type "int") (reparse-symbol class_member_declaration) [332 353]) ("AdvCondition" function (:constructor-flag t :typemodifiers ("public") :arguments (("c1" variable (:type "AdvCondition") (reparse-symbol formal_parameters) [379 394]) ("c2" variable (:type "AdvCondition") (reparse-symbol formal_parameters) [396 411]) ("type" variable (:type "int") (reparse-symbol formal_parameters) [413 421]))) (reparse-symbol class_member_declaration) [359 494]) ("AdvCondition" function (:constructor-flag t :typemodifiers ("public") :arguments (("c" variable (:type "Condition") (reparse-symbol formal_parameters) [519 530]))) (reparse-symbol class_member_declaration) [499 623]) ("toString" function (:constructor-flag t :typemodifiers ("public")) (reparse-symbol class_member_declaration) [633 910]) ("toLFString" function (:constructor-flag t :typemodifiers ("public")) (reparse-symbol class_member_declaration) [920 1213]) ("negateSelf" function (:typemodifiers ("public") :type "void") (reparse-symbol class_member_declaration) [1219 1553])) :type "class") nil [109 1555]))
+    :file "AdvCondition.java"
+    :pointmax 1556
+    :unmatched-syntax 'nil
+    )
+   (semanticdb-table "ConType.java"
+    :major-mode 'jde-mode
+    :tags '(("tokens" package nil nil [1 16]) ("java.lang.*" include nil nil [17 36]) ("java.util.*" include nil nil [37 56]))
+    :file "ConType.java"
+    :pointmax 137
+    )
+   (semanticdb-table "Condition.java"
+    :major-mode 'jde-mode
+    :tags '(("tokens" package nil nil [1 16]) ("java.lang.*" include nil nil [18 37]) ("java.util.*" include nil nil [38 57]) ("Condition" type (:typemodifiers ("public") :members (("l" variable (:typemodifiers ("public") :type "Expression") (reparse-symbol class_member_declaration) [86 106]) ("r" variable (:typemodifiers ("public") :type "Expression") (reparse-symbol class_member_declaration) [109 129]) ("type" variable (:typemodifiers ("public") :type "ConType") (reparse-symbol class_member_declaration) [132 152]) ("Condition" function (:constructor-flag t :typemodifiers ("public") :arguments (("c" variable (:type "boolean") (reparse-symbol formal_parameters) [172 181]))) (reparse-symbol class_member_declaration) [155 242]) ("Condition" function (:constructor-flag t :typemodifiers ("public") :arguments (("l" variable (:type "Expression") (reparse-symbol formal_parameters) [263 275]) ("r" variable (:type "Expression") (reparse-symbol formal_parameters) [277 289]) ("type" variable (:type "ConType") (reparse-symbol formal_parameters) [291 303]))) (reparse-symbol class_member_declaration) [246 357]) ("toString" function (:typemodifiers ("public") :type "String") (reparse-symbol class_member_declaration) [360 1042]) ("toLFString" function (:typemodifiers ("public") :type "String") (reparse-symbol class_member_declaration) [1045 1774]) ("negateSelf" function (:typemodifiers ("public") :type "void") (reparse-symbol class_member_declaration) [1777 2315])) :type "class") nil [60 2317]))
+    :file "Condition.java"
+    :pointmax 2317
+    )
+   )
+  :file "semantic.cache"
+  :semantic-tag-version "2.0pre4"
+  :semanticdb-version "2.0pre4"
+  )

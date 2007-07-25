@@ -30,9 +30,9 @@ public class ProverImplFociVampyre extends Prover{
 	}
 
 	//to tell if c1 implies c2
-	boolean imply(AdvCondition c1, AdvCondition c2);
-
-
+	boolean imply(AdvCondition c1, AdvCondition c2){
+		return implyByVamPyre(c1.toLFString(),c2.toLFString());
+	}
 
 	//to tell if the condition is satisfiable
 	boolean isSatisfiable(AdvCondition c);
@@ -53,10 +53,11 @@ public class ProverImplFociVampyre extends Prover{
 		//InputStream[] inStreams = new InputStream[] {process.getInputStream(),process.getErrorStream()};
 		BufferedReader br  = new BufferedReader(new InputStreamReader(vampyreProcess.getInputStream()));
 		StreamTokenizer st=new StreamTokenizer(br);
-
 		st.commentChar("%");
 		st.eolIsSignificant(false);
-		
+
+		vampyreProcess.waitFor();
+				
 	}
 
 	private File writeStringToTempFile(String s){

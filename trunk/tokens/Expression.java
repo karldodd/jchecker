@@ -41,6 +41,18 @@ public class Expression{
 			default: return "Expression";
 		}
 	}
+	
+	public String toLFString(){
+		switch(type){
+			case num:return num+"";
+			case var:return v.getName();
+			case plus:return "(+ "+l.toLFString()+" "+r.toLFString()+")";
+			case minus:return "(- "+l.toLFString()+" "+r.toLFString()+")";
+			case multiply:return "(* "+l.toLFString()+" "+r.toLFString()+")";
+			case negative:return "(- "+l.toLFString()+")";
+			default: return "Expression";
+		}
+	}
 	/*case var:return v.getName();break;
 			case plus:return "("+l.toString()+"+"+r.toString()+")";break;
 			case minus:return "("+l.toString()+"-"+r.toString()+")";break;

@@ -57,6 +57,15 @@ public class ProverImplFociVampyre extends Prover{
 		st.eolIsSignificant(false);
 
 		vampyreProcess.waitFor();
+		
+		boolean streamEnd=false;
+		while(!streamEnd){
+			int tok=st.nextToken();
+			if(tok==st.TT_EOF)streamEnd=true;
+			else{
+				
+			}
+		}
 				
 	}
 

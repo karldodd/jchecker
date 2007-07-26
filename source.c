@@ -1,6 +1,6 @@
 a=-(a-b)-c-d*e+7-10;
+b=c;
 /*int c,b,a,d,e;
-
 while(c<1){b=c+1-5*6+7;c=c+1;}
 
 if (c<d&&c>d-5||(a>=0)){ERROR;} else {a=b;c=d;e=e+1;}

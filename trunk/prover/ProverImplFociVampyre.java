@@ -74,7 +74,9 @@ public class ProverImplFociVampyre implements Prover{
 				int tok=st.nextToken();
 				if(tok==st.TT_EOF)streamEnd=true;
 				else{
-					if(tok==st.TT_WORD){
+					if(tok==st.TT_WORD)
+					{
+						System.out.println(st.sval);
 						if(st.sval.equals("successfully")){
 							result=true;
 							streamEnd=true;
@@ -89,7 +91,33 @@ public class ProverImplFociVampyre implements Prover{
 				}
 			}
 			br.close();
-			
+
+			br= new BufferedReader(new InputStreamReader(vampyreProcess.getErrorStream()));
+			st=new StreamTokenizer(br);
+			st.commentChar('%');
+			st.eolIsSignificant(false);
+			streamEnd=false;
+			while(!streamEnd){
+				int tok=st.nextToken();
+				if(tok==st.TT_EOF)streamEnd=true;
+				else{
+					if(tok==st.TT_WORD)
+					{
+						System.out.println(st.sval);
+						if(st.sval.equals("successfully")){
+							result=true;
+							streamEnd=true;
+							gotresult=true;
+						}
+						else if (st.sval.equals("Error")){
+							result=false;
+							streamEnd=true;
+							gotresult=true;
+						}
+					}
+				}
+			}
+			br.close();
 		}
 		catch(Exception e)
 		{
@@ -104,8 +132,10 @@ public class ProverImplFociVampyre implements Prover{
 		Calendar rightNow = Calendar.getInstance(); 
 		String fileName=Long.toString(rightNow.getTimeInMillis());
 
-
-		File tempFile=File.createTempFile("f","v");
+                File f=new File(".");
+		File tempFile=new File(f.getCanonicalPath()+fileName);
+		System.out.println(tempFile.getAbsolutePath());
+		//File tempFile=File.createTempFile("for","vam");
 		//tempFile.deleteOnExit();
 		FileWriter fw=new FileWriter(tempFile);
 		fw.write(s);

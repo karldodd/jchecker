@@ -33,7 +33,7 @@ public class ProverImplFociVampyre implements Prover{
 	}
 
 	//to tell if c1 implies c2
-	public boolean imply(AdvCondition c1, AdvCondition c2) throws Exception{
+	public boolean imply(AdvCondition c1, AdvCondition c2){
 		return implyByVampyre(c1.toLFString(),c2.toLFString());
 	}
 
@@ -44,12 +44,21 @@ public class ProverImplFociVampyre implements Prover{
 		//throw new Exception("to be implemented...");
 	}
 
-	private	boolean implyByVampyre(String c1lf,String c2lf) throws Exception{
+	private	boolean implyByVampyre(String c1lf,String c2lf){
 		boolean result=false;
 		boolean gotresult=false;
-		String source="V1:\n pf: (=> "+c1lf+" "+c2lf+" )";
+		String source="V1:\n pf (=> "+c1lf+" "+c2lf+" ).";
 		//then write the string to a temp file
-		File f=writeStringToTempFile(source);
+		File f=null;
+		try{
+			f=writeStringToTempFile(source);
+		}
+		catch(Exception e)
+		{
+			System.err.println("Error occurred when writing temp file. The answer is regarded as false.");
+			return false;
+		}
+		
 		
 		Process vampyreProcess=null;
 		try {               
@@ -76,17 +85,17 @@ public class ProverImplFociVampyre implements Prover{
 				else{
 					if(tok==st.TT_WORD)
 					{
-						System.out.println(st.sval);
-						if(st.sval.equals("successfully")){
+						//System.out.println(st.sval);
+						if(st.sval.equals("successfully.")){
 							result=true;
 							streamEnd=true;
 							gotresult=true;
 						}
-						else if (st.sval.equals("Error")){
+						/*else if (st.sval.equals("Error")){
 							result=false;
 							streamEnd=true;
 							gotresult=true;
-						}
+						}*/
 					}
 				}
 			}
@@ -103,13 +112,13 @@ public class ProverImplFociVampyre implements Prover{
 				else{
 					if(tok==st.TT_WORD)
 					{
-						System.out.println(st.sval);
-						if(st.sval.equals("successfully")){
+						//System.out.println(st.sval);
+						/*if(st.sval.equals("successfully")){
 							result=true;
 							streamEnd=true;
 							gotresult=true;
-						}
-						else if (st.sval.equals("Error")){
+						}*/
+						if (st.sval.equals("Error")){
 							result=false;
 							streamEnd=true;
 							gotresult=true;
@@ -121,10 +130,15 @@ public class ProverImplFociVampyre implements Prover{
 		}
 		catch(Exception e)
 		{
-			throw e;
+			System.err.println("Error occurred when excuting vampyre. The answer is regarded as false.");
+			return false;
 		}
 		if(!gotresult)
-			throw new Exception("result is null when invoking implyByVampyre");
+		{
+			//throw new Exception("result is null when invoking implyByVampyre");
+			System.err.println("Warning: vampyre engine failed. The answer is regarded as false.");
+			return false;
+		}
 		return result;
 	}
 
@@ -132,11 +146,13 @@ public class ProverImplFociVampyre implements Prover{
 		Calendar rightNow = Calendar.getInstance(); 
 		String fileName=Long.toString(rightNow.getTimeInMillis());
 
-                File f=new File(".");
-		File tempFile=new File(f.getCanonicalPath()+fileName);
-		System.out.println(tempFile.getAbsolutePath());
-		//File tempFile=File.createTempFile("for","vam");
-		//tempFile.deleteOnExit();
+      		//File f=new File(".");
+		//File tempFile=new File(f.getCanonicalPath()+"/"+fileName);
+		//System.out.println(tempFile.getAbsolutePath());
+		System.out.println("Writing:\n"+s);
+		File tempFile=File.createTempFile("for","vam");
+		tempFile.deleteOnExit();
+
 		FileWriter fw=new FileWriter(tempFile);
 		fw.write(s);
 		fw.close();

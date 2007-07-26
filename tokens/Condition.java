@@ -56,17 +56,17 @@ public class Condition extends Sentence{
 		case F:
 			return "(false)";
 		case equal:
-			return "(" + "= " + l.toString() + " " + r.toString() + ")";
+			return "(" + "= " + l.toLFString() + " " + r.toLFString() + ")";
 		case notequal:
-			return "(" + "<> " + l.toString() + " " + r.toString() + ")";
+			return "(" + "<> " + l.toLFString() + " " + r.toLFString() + ")";
 		case larger:
-			return "(" + "> " + l.toString() + " " + r.toString() + ")";
+			return "(" + "> " + l.toLFString() + " " + r.toLFString() + ")";
 		case smaller:
-			return "(" + "< " + l.toString() + " " + r.toString() + ")";
+			return "(" + "< " + l.toLFString() + " " + r.toLFString() + ")";
 		case equallarger:
-			return "(" + ">= " + l.toString() + " " + r.toString() + ")";
+			return "(" + ">= " + l.toLFString() + " " + r.toLFString() + ")";
 		case equalsmaller:
-			return "(" + "<= " + l.toString() + " " + r.toString() + ")";
+			return "(" + "<= " + l.toLFString() + " " + r.toLFString() + ")";
 		default:
 			return "condition";
 		}

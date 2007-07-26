@@ -55,7 +55,7 @@ public class ProverImplFociVampyre implements Prover{
 		}
 		catch(Exception e)
 		{
-			System.err.println("Error occurred when writing temp file. The answer is regarded as false.");
+			System.err.println("Warning: Error occurred when writing temp file. The answer is regarded as false.");
 			return false;
 		}
 		
@@ -64,7 +64,7 @@ public class ProverImplFociVampyre implements Prover{
 		try {               
 	       		vampyreProcess = Runtime.getRuntime().exec(new String[]{"./prover.byte",f.getAbsolutePath()});
 		}     
-     		catch(IOException e) {
+     	catch(Exception e) {
 			System.err.println("Error when invoking vampyre:\n" + e); 
  			System.exit(1);
 		}
@@ -120,6 +120,7 @@ public class ProverImplFociVampyre implements Prover{
 						}*/
 						if (st.sval.equals("Error")){
 							result=false;
+							System.err.println("Vampyre reported error: there might be syntax error(s). The answer is regarded as false.");
 							streamEnd=true;
 							gotresult=true;
 						}
@@ -136,7 +137,7 @@ public class ProverImplFociVampyre implements Prover{
 		if(!gotresult)
 		{
 			//throw new Exception("result is null when invoking implyByVampyre");
-			System.err.println("Warning: vampyre engine failed. The answer is regarded as false.");
+			//System.err.println("Warning: vampyre engine failed. The answer is regarded as false.");
 			return false;
 		}
 		return result;

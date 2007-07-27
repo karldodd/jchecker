@@ -2,7 +2,7 @@ package tokens;
 import java.lang.*;
 import java.util.*;
 
-public abstract class Sentence implements EdgeLabel{
+public abstract class Sentence {
 
 public abstract String toString();
 //public abstract String toLFString();

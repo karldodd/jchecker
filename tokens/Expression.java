@@ -38,7 +38,9 @@ public class Expression{
 			case minus:return "("+l.toString()+"-"+r.toString()+")";
 			case multiply:return "("+l.toString()+"*"+r.toString()+")";
 			case negative:return "(-"+l.toString()+")";
-			default: return "Expression";
+			default:
+				System.err.println("Warning: unexpected ExpType"); 
+				return "Expression";
 		}
 	}
 	
@@ -50,6 +52,32 @@ public class Expression{
 			case minus:return "(- "+l.toLFString()+" "+r.toLFString()+")";
 			case multiply:return "(* "+l.toLFString()+" "+r.toLFString()+")";
 			case negative:return "(- "+l.toLFString()+")";
+			default:
+				System.err.println("Warning: unexpected ExpType"); 
+				return "Expression";
+		}
+	}
+
+	public String toFociString(){
+		switch(type){
+			case num:return num+"";
+			case var:return v.getName();
+			case plus:return "+ ["+l.toFociString()+" "+r.toFociString()+"]";
+			case minus:
+				//System.err.println("Warning: foci might not support minus expression.");
+				return "+ ["+l.toFociString()+" * -1 "+r.toFociString()+"]";
+			case multiply:
+				if(l.type==ExpType.num)
+					return "* "+l.toFociString()+" "+r.toFociString();
+				else if(r.type==ExpType.num)
+					return "* "+r.toFociString()+" "+l.toFociString();
+				else{
+					System.err.println("Warning: foci might not support complex multiply expression.");
+					return "* "+l.toFociString()+" "+r.toFociString();
+				}
+			case negative:
+				//System.err.println("Warning: foci might not support negative expression.");
+				return "* -1 "+l.toFociString()+" ";
 			default: return "Expression";
 		}
 	}

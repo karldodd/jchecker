@@ -25,10 +25,27 @@ public class ProverImplFociVampyre implements Prover{
 				firstElement=false;
 			else
 				sb.append(" ; ");
-			sb.append(e.toLFString());			
+			sb.append(e.toFociString());			
 		}
 		//then write the string to a temp file
-		File f=writeStringToTempFile(sb.toString());
+		System.out.println("String sent to foci:\n"+sb.toString());
+		File fin=writeStringToTempFile(sb.toString());
+		File fout=File.createTempFile("for","foci");
+		fout.deleteOnExit();
+
+		Process fociProcess = Runtime.getRuntime().exec(new String[]{"./foci.byte",fin.getAbsolutePath(),fout.getAbsolutePath()});
+		
+		BufferedReader inputReader  = new BufferedReader(new InputStreamReader(fociProcess.getInputStream()));
+		BufferedReader errorReader  = new BufferedReader(new InputStreamReader(fociProcess.getErrorStream()));
+		
+		StreamTokenizer inputST=new StreamTokenizer(inputReader);
+		StreamTokenizer errorST=new StreamTokenizer(errorReader);
+
+		inputST.eolIsSignificant(false);
+		errorST.eolIsSignificant(false);
+
+		
+		
 		return null;
 	}
 
@@ -40,8 +57,86 @@ public class ProverImplFociVampyre implements Prover{
 	//to tell if the condition is satisfiable
 	public boolean isSatisfiable(AdvCondition c)
 	{
-		return false;
-		//throw new Exception("to be implemented...");
+		
+		boolean result=false;
+		boolean gotresult=false;
+		try{
+		System.out.println("Formula sent to foci:\n"+c.toString());
+		File fin=writeStringToTempFile(c.toFociString());
+		File fout=File.createTempFile("for","foci");
+		fout.deleteOnExit();
+
+		Process fociProcess = Runtime.getRuntime().exec(new String[]{"./foci.byte",fin.getAbsolutePath(),fout.getAbsolutePath()});
+		
+		BufferedReader inputReader  = new BufferedReader(new InputStreamReader(fociProcess.getInputStream()));
+		BufferedReader errorReader  = new BufferedReader(new InputStreamReader(fociProcess.getErrorStream()));
+		
+		StreamTokenizer inputST=new StreamTokenizer(inputReader);
+		StreamTokenizer errorST=new StreamTokenizer(errorReader);
+
+		inputST.eolIsSignificant(false);
+		errorST.eolIsSignificant(false);
+
+		boolean streamEnd=false;
+		StreamTokenizer st=inputST;
+		while(!streamEnd){
+			int tok=st.nextToken();
+			if(tok==st.TT_EOF)streamEnd=true;
+			else{
+				if(tok==st.TT_WORD)
+				{
+					//System.out.println(st.sval);
+					if(st.sval.equals("SAT")){
+						result=true;
+						streamEnd=true;
+						gotresult=true;
+					}
+					else if (st.sval.equals("UNSAT")){
+						result=false;
+						streamEnd=true;
+						gotresult=true;
+					}
+				}
+			}
+		}
+		if(!gotresult){
+			streamEnd=false;
+			st=errorST;
+			while(!streamEnd){
+				int tok=st.nextToken();
+				if(tok==st.TT_EOF)streamEnd=true;
+				else{
+					if(tok==st.TT_WORD)
+					{
+						//System.out.println(st.sval);
+						if(st.sval.equals("Fatal")){
+							System.out.println("Warning: error occurred. There might be syntax error! The answer is regarded as false.");
+							result=false;
+							streamEnd=true;
+							gotresult=true;
+						}
+						else if (st.sval.equals("error")){
+							System.out.println("Warning: error occurred. There might be syntax error! The answer is regarded as false.");
+							result=false;
+							streamEnd=true;
+							gotresult=true;
+						}
+					}
+				}
+			}
+		}
+		if(!gotresult){
+			System.out.println("Warning: No useful signals received. The answer is regarded as false.");
+			return false;
+		}
+		}
+		catch(Exception e)
+		{
+			System.err.println(e);
+			System.out.println("Warning: Exception caught. The answer is regarded as false.");
+			return false;
+		}
+		return result;
 	}
 
 	private	boolean implyByVampyre(String c1lf,String c2lf){
@@ -144,14 +239,14 @@ public class ProverImplFociVampyre implements Prover{
 	}
 
 	private File writeStringToTempFile(String s) throws Exception{
-		Calendar rightNow = Calendar.getInstance(); 
-		String fileName=Long.toString(rightNow.getTimeInMillis());
+		//Calendar rightNow = Calendar.getInstance(); 
+		//String fileName=Long.toString(rightNow.getTimeInMillis());
 
       		//File f=new File(".");
 		//File tempFile=new File(f.getCanonicalPath()+"/"+fileName);
 		//System.out.println(tempFile.getAbsolutePath());
 		System.out.println("Writing:\n"+s);
-		File tempFile=File.createTempFile("for","vam");
+		File tempFile=File.createTempFile("for","vamfoci");
 		tempFile.deleteOnExit();
 
 		FileWriter fw=new FileWriter(tempFile);

@@ -13,11 +13,12 @@
 
 
 
+package prover;
 
 
 
 //#line 2 "FociParser.y"
-package prover;
+/*package prover;*/
 
 import java.lang.*;
 /*import java.lang.Math;*/
@@ -301,8 +302,8 @@ final static String yyrule[] = {
 };
 
 //#line 167 "FociParser.y"
-
-ArrayList<AdvCondition> predicatePool;
+boolean loaded=false;
+ArrayList<AdvCondition> conditionPool;
 
 StreamTokenizer st;
 
@@ -350,27 +351,11 @@ int yylex()
   }
   else if(tok==st.TT_WORD)
   {
-    if (yytext.equals("if"))
-      return IF;
-    else if (yytext.equals("else"))
-      return ELSE;
-    else if (yytext.equals("while"))
-      return WHILE;
-    else if (yytext.equals("int"))
-      return DCL_INT;
-    else if (yytext.equals("bool"))
-      return DCL_BOOL;
-    else if (yytext.equals("return"))
-      return RETURN;
-    else if (yytext.equals("ERROR"))
-      return ERROR;
-    else
-    {
-	yylval= new FociParserVal((Object)yytext);
+	yylval= new FociParserVal(yytext);
 	//pout("WORD from yylex: yytext:"+yytext);
 	return WORD;
         //System.out.println("unknown word: "+yytext+" ,return first char.");
-    }
+    
     //else return yytext.charAt(0);
   }
   //else{pout("Special char returned.")}
@@ -383,33 +368,33 @@ String getStringValue(FociParserVal pv)
 }
 
 void initialize(){
-	sentencePool=new ArrayList<AdvCondition>();
+	loaded=false;
+	conditionPool=new ArrayList<AdvCondition>();
 }
 
-int doTest(File file)
+int parseFile(File file)
 {
+  initialize();
   FileReader fr;
   Reader r;
   FileInputStream fileIn;
-  //从字节流创建字符流
   InputStreamReader inReader;
   int ret;
   dflag=true;
   try
   {
-	fileIn = new FileInputStream("source.c");
+	fileIn = new FileInputStream(file);
 	inReader = new InputStreamReader(fileIn);
-    	st = new StreamTokenizer(inReader); 
+    st = new StreamTokenizer(inReader); 
 
-    	st.slashStarComments(true);
+    st.slashStarComments(true);
 	st.slashSlashComments(true);
-	//识别行结束符;参数为假，将行结束符视作空白符
+
 	st.eolIsSignificant(false);
-	//设置引号的符号表示
+
 	st.quoteChar('"');
-	st.ordinaryChar('-');
+	//st.ordinaryChar('-');
 	//st.quoteChar('-');
-	//将ASCII码为0-32的字符设为空白符
 	st.whitespaceChars(0, 32);
         //st.whitespaceChars(st.TT_EOL,st.TT_EOL);
   }
@@ -429,14 +414,24 @@ int doTest(File file)
     yyerror("could not open source data");
     return 0;
   }
+  loaded=true;
   return ret;
+}
+
+public ArrayList<AdvCondition> getConditionPool()
+{
+	if(loaded)return conditionPool;
+	else
+	{
+		System.err.println("The parser has not parsed any file yet.");
+		return new ArrayList<AdvCondition>();
+	}
 }
 
 public static void main(String args[])
 {
-  Parser par = new Parser(false);
-  par.initialize();
-  int a=par.doTest(new File("source.c"));
+  FociParser par = new FociParser(false);
+  par.parseFile(new File(args[0]));
 }
 
 //this program do not want to be a grammar checker although it does some check on the source.
@@ -445,7 +440,23 @@ public static void main(String args[])
 //if(a==b&&c==d) ->condition tree
 // a+b-4*5 operator priority
 //if else support 
-//#line 386 "FociParser.java"
+
+/*
+	 AdvCondition latestCon;
+	 for (AdvCondition c: al )
+	 {
+		 if(firstEle)
+		 {
+			 latestCon=c;
+			 firstEle=false;
+		 }
+		 else
+			 latestCon=new AdvCondition(latestCon,c,AdvCondition.Type_AND);
+	 }
+	 
+	 The above can be determined by model checker to help compiler learn the reachability.
+*/
+//#line 396 "FociParser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -603,7 +614,7 @@ case 1:
 {
 	ArrayList<AdvCondition> al=(ArrayList<AdvCondition>)val_peek(0).obj;
 	System.out.println("Work completed.\nThe grammar of the foci output file is correct.\n In all, "+formulaNo+" predicates found.");
-	for (Predicate s: al)
+	for (AdvCondition s: al)
 	{
 		System.out.println(s.toString());
 	}
@@ -619,7 +630,7 @@ case 3:
 {
  	ArrayList<AdvCondition> al=(ArrayList<AdvCondition>)val_peek(1).obj;
  	if(val_peek(0)!=null)
- 		al.add((Sentence)val_peek(0).obj);
+ 		al.add((AdvCondition)val_peek(0).obj);
  	yyval=new FociParserVal(al);
 	formulaNo++;
  	/*warning $1 might have changed!*/
@@ -648,7 +659,7 @@ case 7:
 {
 	 ArrayList<AdvCondition> al=(ArrayList<AdvCondition>)val_peek(1).obj;
 	 boolean firstEle=true;
-	 AdvCondtion latestCon;
+	 AdvCondition latestCon=null;
 	 for (AdvCondition c: al )
 	 {
 		 if(firstEle)
@@ -667,7 +678,7 @@ case 8:
 {
 	 ArrayList<AdvCondition> al=(ArrayList<AdvCondition>)val_peek(1).obj;
 	 boolean firstEle=true;
-	 AdvCondtion latestCon;
+	 AdvCondition latestCon=null;
 	 for (AdvCondition c: al )
 	 {
 		 if(firstEle)
@@ -719,7 +730,7 @@ case 15:
 {
 	 ArrayList<Expression> al=(ArrayList<Expression>)val_peek(1).obj;
 	 boolean firstEle=true;
-	 Expression latestExp;
+	 Expression latestExp=null;
 	 for (Expression e: al )
 	 {
 		 if(firstEle)
@@ -761,7 +772,7 @@ case 19:
 	 yyval=new FociParserVal(al);
  }
 break;
-//#line 697 "FociParser.java"
+//#line 707 "FociParser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

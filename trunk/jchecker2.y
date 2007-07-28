@@ -427,7 +427,6 @@ public static void main(String args[])
 }
 
 
-
 //this program do not want to be a grammar checker although it does some check on the source.
 
 //some problematic things:

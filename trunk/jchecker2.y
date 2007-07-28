@@ -39,6 +39,8 @@ System.out.println("Work completed.\nThe grammar of the file is correct.\n   "+s
 	{
 		System.out.println(s.toString());
 	}
+	sentencePool=al;
+	System.out.println("Sentence pool is ready.");
 }
  ;
 
@@ -273,6 +275,7 @@ condition: expression '=' '=' expression
  }*/
  ;
 %%
+boolean sentenceLoaded=false;
 ArrayList<Sentence> sentencePool;
 
 StreamTokenizer st;
@@ -353,12 +356,15 @@ String getStringValue(ParserVal pv)
 	return (String)pv.obj;
 }
 
-void initialize(){
+private void initialize(){
+	sentenceLoaded=false;
 	sentencePool=new ArrayList<Sentence>();
 }
 
-int doTest(File file)
+int parseFile(File file)
 {
+  initialize();
+
   FileReader fr;
   Reader r;
   FileInputStream fileIn;
@@ -368,11 +374,11 @@ int doTest(File file)
   dflag=true;
   try
   {
-	fileIn = new FileInputStream("source.c");
+	fileIn = new FileInputStream(file);
 	inReader = new InputStreamReader(fileIn);
-    	st = new StreamTokenizer(inReader); 
+    st = new StreamTokenizer(inReader); 
 
-    	st.slashStarComments(true);
+    st.slashStarComments(true);
 	st.slashSlashComments(true);
 	//识别行结束符;参数为假，将行结束符视作空白符
 	st.eolIsSignificant(false);
@@ -400,15 +406,27 @@ int doTest(File file)
     yyerror("could not open source data");
     return 0;
   }
+  sentenceLoaded=true;
   return ret;
+}
+
+public ArrayList<Sentence> getSentencePool(){
+	if(sentenceLoaded)
+		return sentencePool;
+	else{
+		System.err.println("The parser has not parsed any file yet.");
+		return new ArrayList<Sentence>();
+	}
 }
 
 public static void main(String args[])
 {
   Parser par = new Parser(false);
-  par.initialize();
-  int a=par.doTest(new File("source.c"));
+  int a=par.parseFile(new File("source.c"));
+
 }
+
+
 
 //this program do not want to be a grammar checker although it does some check on the source.
 

@@ -15,6 +15,7 @@ import abstraction.*;
 
 /* YACC Declarations */
 %token NUM WORD
+//%token TRUE FALSE
 //%nonassoc UMINUS
 //%nonassoc MINUS
 %left '+'
@@ -54,6 +55,7 @@ formulas:{ArrayList<AdvCondition> al=new ArrayList<AdvCondition>();$$=new FociPa
  	if($2!=null)
  		al.add((AdvCondition)$2.obj);
  	$$=new FociParserVal(al);
+	//if(debugging)System.out.println("formula inserted: "+((AdvCondition)$2.obj).toString());
 	formulaNo++;
  	//warning $1 might have changed!
  }
@@ -63,11 +65,13 @@ formula: '=' term term
  {
 	 Condition c=new Condition((Expression)$2.obj,(Expression)$3.obj,ConType.equal);
 	 $$=new FociParserVal(new AdvCondition(c));
+	 //if(debugging)System.out.println("formula got: "+c.toString());
  }
- | '<' '=' term term {}
+ | '<' '=' term term
  {
-	 Condition c=new Condition((Expression)$2.obj,(Expression)$3.obj,ConType.equalsmaller);
+	 Condition c=new Condition((Expression)$3.obj,(Expression)$4.obj,ConType.equalsmaller);
 	 $$=new FociParserVal(new AdvCondition(c));
+	 
  }
  | '&' '[' formulaarray ']'
  {
@@ -123,7 +127,11 @@ formulaarray: formula formula
  ;
 
 term: NUM {Expression e=new Expression($1.ival);$$=new FociParserVal(e);}
- | WORD {Expression e=new Expression(new Variable(getStringValue($1)));$$=new FociParserVal(e);}
+ | WORD
+ {
+	Expression e=new Expression(new Variable(getStringValue($1)));$$=new FociParserVal(e);
+	if(debugging)System.out.println("term is word: "+e.toString());
+ }
  | '+' '[' termarray ']'
  {
 	 ArrayList<Expression> al=(ArrayList<Expression>)$3.obj;
@@ -141,9 +149,9 @@ term: NUM {Expression e=new Expression($1.ival);$$=new FociParserVal(e);}
 	 }
 	 $$=new FociParserVal(latestExp);
  }
- | '*' NUM term 
+ | NUM '*' term 
  {
-	 Expression e=new Expression(new Expression($2.ival),(Expression)$3.obj,ExpType.multiply);
+	 Expression e=new Expression(new Expression($1.ival),(Expression)$3.obj,ExpType.multiply);
 	 $$=new FociParserVal(e);
  }
  | '(' term ')' {$$=$2;}
@@ -170,6 +178,7 @@ ArrayList<AdvCondition> conditionPool;
 StreamTokenizer st;
 
 boolean dflag;
+boolean debugging=true;
 int formulaNo=0;
 
 void pout(String s)
@@ -213,7 +222,10 @@ int yylex()
   }
   else if(tok==st.TT_WORD)
   {
-	yylval= new FociParserVal(yytext);
+	//yylval=new FociParserVal(yytext);
+	yylval=new FociParserVal((Object)yytext);
+	//pout("yytext: "+yytext);
+	if(debugging)pout("TT_WORD recognized: "+(String)yylval.obj);
 	//pout("WORD from yylex: yytext:"+yytext);
 	return WORD;
         //System.out.println("unknown word: "+yytext+" ,return first char.");
@@ -231,6 +243,7 @@ String getStringValue(FociParserVal pv)
 
 void initialize(){
 	loaded=false;
+	formulaNo=0;
 	conditionPool=new ArrayList<AdvCondition>();
 }
 
@@ -251,9 +264,7 @@ int parseFile(File file)
 
     st.slashStarComments(true);
 	st.slashSlashComments(true);
-
 	st.eolIsSignificant(false);
-
 	st.quoteChar('"');
 	//st.ordinaryChar('-');
 	//st.quoteChar('-');

@@ -17,20 +17,21 @@ package prover;
 
 
 
-//#line 2 "FociParser.y"
-/*package prover;*/
+//#line 1 "FociParser.y"
+
+/*package prover;*/
 
 import java.lang.*;
-/*import java.lang.Math;*/
+/*import java.lang.Math;*/
 import java.io.*;
 import java.util.*;
 
-/*load self-defined token-library*/
-/*import tokens.Sentence;*/
+/*load self-defined token-library*/
+/*import tokens.Sentence;*/
 import tokens.*;
 import abstraction.*;
 
-//#line 30 "FociParser.java"
+//#line 31 "FociParser.java"
 
 
 
@@ -164,97 +165,100 @@ public final static short WORD=258;
 public final static short NEG=259;
 public final static short YYERRCODE=256;
 final static short yylhs[] = {                           -1,
-    0,    1,    1,    2,    4,    2,    2,    2,    2,    2,
-    5,    5,    3,    3,    3,    3,    3,    6,    6,
+    0,    1,    1,    2,    2,    2,    2,    2,    2,    4,
+    4,    3,    3,    3,    3,    3,    5,    5,
 };
 final static short yylen[] = {                            2,
-    1,    0,    2,    3,    0,    5,    4,    4,    2,    3,
-    2,    2,    1,    1,    4,    3,    3,    2,    2,
+    1,    0,    2,    3,    4,    4,    4,    2,    3,    2,
+    2,    1,    1,    4,    3,    3,    2,    2,
 };
 final static short yydefred[] = {                         2,
     0,    0,    0,    0,    0,    0,    0,    0,    3,    0,
-    0,    9,   13,   14,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    4,    0,   10,   11,
-    8,   12,    7,    0,    0,   16,   17,    5,   18,   15,
-   19,    6,
+    0,    8,    0,   13,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    4,    0,    9,   10,    7,
+   11,    6,   15,    0,    0,   16,    5,   17,   14,   18,
 };
 final static short yydgoto[] = {                          1,
-    2,   21,   18,   42,   22,   35,
+    2,   20,   17,   21,   35,
 };
 final static short yysindex[] = {                         0,
-    0,  -24,  -90,  -86,  -24,  -36,  -52,  -24,    0,  -24,
-  -24,    0,    0,    0,  -79, -242,  -36,  -36,  -36,  -23,
-  -24,  -30,  -27,  -36,  -36,  -21,    0,  -36,    0,    0,
-    0,    0,    0,  -36,  -40,    0,    0,    0,    0,    0,
-    0,    0,
+    0,  -26,  -84,  -83,  -26,  -38,  -46,  -26,    0,  -26,
+  -26,    0,  -25,    0,  -73,  -38,  -38,  -38,  -22,  -26,
+  -34,  -29,  -38,  -38,  -21,    0,  -38,    0,    0,    0,
+    0,    0,    0,  -38,  -40,    0,    0,    0,    0,    0,
 };
 final static short yyrindex[] = {                         0,
     0,   21,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    1,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,
 };
 final static short yygindex[] = {                         0,
-    0,   17,   24,    0,    6,    0,
+    0,    8,   31,   11,    0,
 };
-final static int YYTABLESIZE=222;
+final static int YYTABLESIZE=259;
 static short yytable[];
 static { yytable();}
 static void yytable(){
-yytable = new short[]{                         17,
-   10,   16,   15,   17,   11,   16,   15,    4,   19,    8,
-    4,   24,    8,    4,   25,    8,   23,   29,    9,   37,
-    1,   12,    0,    0,   20,    0,    0,    0,    0,    7,
-    6,    0,    7,    6,    0,    7,    6,   30,   32,   32,
-   26,   27,   28,    0,    0,    0,    0,   34,   36,    0,
-    0,   38,   40,    0,    0,    0,    0,   39,   41,    0,
-    0,    0,   31,    0,    0,   33,    0,    0,    0,    0,
+yytable = new short[]{                         16,
+   12,   16,   15,    4,   15,    8,   10,   11,    4,    9,
+    8,    4,   12,    8,   18,   19,   23,   24,   28,   36,
+    1,   22,    0,    0,    0,    7,    6,   29,   31,   31,
+    7,    6,    0,    7,    6,    0,    0,    0,   12,    0,
+   12,   12,    0,   12,    0,    0,   25,   26,   27,    0,
+    0,    0,   39,   33,   34,    0,    0,   37,   30,    0,
+   12,   12,    0,   32,   38,   40,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    3,
+    0,    5,    0,   12,    3,    0,    5,    3,    0,    5,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    3,    0,    5,    3,    0,    5,    3,
-    0,    5,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,   12,    0,   12,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,   13,   14,    0,    0,
-   13,   14,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,   13,   14,   13,   14,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,   12,   12,
 };
 }
 static short yycheck[];
 static { yycheck(); }
 static void yycheck() {
 yycheck = new short[] {                         40,
-   91,   42,   43,   40,   91,   42,   43,   38,   61,   40,
-   38,   91,   40,   38,  257,   40,   11,   41,    2,   41,
-    0,    5,   -1,   -1,    8,   -1,   -1,   -1,   -1,   60,
-   61,   -1,   60,   61,   -1,   60,   61,   21,   22,   23,
-   17,   18,   19,   -1,   -1,   -1,   -1,   24,   25,   -1,
-   -1,   28,   93,   -1,   -1,   -1,   -1,   34,   35,   -1,
-   -1,   -1,   93,   -1,   -1,   93,   -1,   -1,   -1,   -1,
+    0,   40,   43,   38,   43,   40,   91,   91,   38,    2,
+   40,   38,    5,   40,   61,    8,   42,   91,   41,   41,
+    0,   11,   -1,   -1,   -1,   60,   61,   20,   21,   22,
+   60,   61,   -1,   60,   61,   -1,   -1,   -1,   38,   -1,
+   40,   41,   -1,   43,   -1,   -1,   16,   17,   18,   -1,
+   -1,   -1,   93,   23,   24,   -1,   -1,   27,   93,   -1,
+   60,   61,   -1,   93,   34,   35,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  124,
+   -1,  126,   -1,   93,  124,   -1,  126,  124,   -1,  126,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,  124,   -1,  126,  124,   -1,  126,  124,
-   -1,  126,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,  124,   -1,  126,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,  257,  258,   -1,   -1,
-  257,  258,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,  257,  258,  257,  258,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,  257,  258,
 };
 }
 final static short YYFINAL=1;
@@ -284,8 +288,7 @@ final static String yyrule[] = {
 "formulas :",
 "formulas : formulas formula",
 "formula : '=' term term",
-"$$1 :",
-"formula : '<' '=' term term $$1",
+"formula : '<' '=' term term",
 "formula : '&' '[' formulaarray ']'",
 "formula : '|' '[' formulaarray ']'",
 "formula : '~' formula",
@@ -295,19 +298,21 @@ final static String yyrule[] = {
 "term : NUM",
 "term : WORD",
 "term : '+' '[' termarray ']'",
-"term : '*' NUM term",
+"term : NUM '*' term",
 "term : '(' term ')'",
 "termarray : term term",
 "termarray : termarray term",
 };
 
-//#line 167 "FociParser.y"
+//#line 174 "FociParser.y"
+
 boolean loaded=false;
 ArrayList<AdvCondition> conditionPool;
 
 StreamTokenizer st;
 
 boolean dflag;
+boolean debugging=true;
 int formulaNo=0;
 
 void pout(String s)
@@ -351,7 +356,10 @@ int yylex()
   }
   else if(tok==st.TT_WORD)
   {
-	yylval= new FociParserVal(yytext);
+	//yylval=new FociParserVal(yytext);
+	yylval=new FociParserVal((Object)yytext);
+	//pout("yytext: "+yytext);
+	if(debugging)pout("TT_WORD recognized: "+(String)yylval.obj);
 	//pout("WORD from yylex: yytext:"+yytext);
 	return WORD;
         //System.out.println("unknown word: "+yytext+" ,return first char.");
@@ -369,6 +377,7 @@ String getStringValue(FociParserVal pv)
 
 void initialize(){
 	loaded=false;
+	formulaNo=0;
 	conditionPool=new ArrayList<AdvCondition>();
 }
 
@@ -389,9 +398,7 @@ int parseFile(File file)
 
     st.slashStarComments(true);
 	st.slashSlashComments(true);
-
 	st.eolIsSignificant(false);
-
 	st.quoteChar('"');
 	//st.ordinaryChar('-');
 	//st.quoteChar('-');
@@ -456,7 +463,7 @@ public static void main(String args[])
 	 
 	 The above can be determined by model checker to help compiler learn the reachability.
 */
-//#line 396 "FociParser.java"
+//#line 403 "FociParser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -610,7 +617,7 @@ boolean doaction;
       {
 //########## USER-SUPPLIED ACTIONS ##########
 case 1:
-//#line 39 "FociParser.y"
+//#line 40 "FociParser.y"
 {
 	ArrayList<AdvCondition> al=(ArrayList<AdvCondition>)val_peek(0).obj;
 	System.out.println("Work completed.\nThe grammar of the foci output file is correct.\n In all, "+formulaNo+" predicates found.");
@@ -618,44 +625,43 @@ case 1:
 	{
 		System.out.println(s.toString());
 	}
-	/*predicatePool=al;*/
+	/*predicatePool=al;*/
 }
 break;
 case 2:
-//#line 50 "FociParser.y"
+//#line 51 "FociParser.y"
 {ArrayList<AdvCondition> al=new ArrayList<AdvCondition>();yyval=new FociParserVal(al);}
 break;
 case 3:
-//#line 52 "FociParser.y"
+//#line 53 "FociParser.y"
 {
  	ArrayList<AdvCondition> al=(ArrayList<AdvCondition>)val_peek(1).obj;
  	if(val_peek(0)!=null)
  		al.add((AdvCondition)val_peek(0).obj);
  	yyval=new FociParserVal(al);
+	/*if(debugging)System.out.println("formula inserted: "+((AdvCondition)$2.obj).toString());*/
 	formulaNo++;
- 	/*warning $1 might have changed!*/
+ 	/*warning $1 might have changed!*/
  }
 break;
 case 4:
-//#line 63 "FociParser.y"
+//#line 65 "FociParser.y"
 {
 	 Condition c=new Condition((Expression)val_peek(1).obj,(Expression)val_peek(0).obj,ConType.equal);
 	 yyval=new FociParserVal(new AdvCondition(c));
+	 /*if(debugging)System.out.println("formula got: "+c.toString());*/
  }
 break;
 case 5:
-//#line 67 "FociParser.y"
-{}
-break;
-case 6:
-//#line 68 "FociParser.y"
+//#line 71 "FociParser.y"
 {
-	 Condition c=new Condition((Expression)val_peek(3).obj,(Expression)val_peek(2).obj,ConType.equalsmaller);
+	 Condition c=new Condition((Expression)val_peek(1).obj,(Expression)val_peek(0).obj,ConType.equalsmaller);
 	 yyval=new FociParserVal(new AdvCondition(c));
+	 
  }
 break;
-case 7:
-//#line 73 "FociParser.y"
+case 6:
+//#line 77 "FociParser.y"
 {
 	 ArrayList<AdvCondition> al=(ArrayList<AdvCondition>)val_peek(1).obj;
 	 boolean firstEle=true;
@@ -673,8 +679,8 @@ case 7:
 	 yyval=new FociParserVal(latestCon);
  }
 break;
-case 8:
-//#line 90 "FociParser.y"
+case 7:
+//#line 94 "FociParser.y"
 {
 	 ArrayList<AdvCondition> al=(ArrayList<AdvCondition>)val_peek(1).obj;
 	 boolean firstEle=true;
@@ -692,16 +698,16 @@ case 8:
 	 yyval=new FociParserVal(latestCon);
  }
 break;
-case 9:
-//#line 106 "FociParser.y"
+case 8:
+//#line 110 "FociParser.y"
 {AdvCondition c=(AdvCondition)val_peek(0).obj;c.negateSelf();yyval=new FociParserVal(c);}
 break;
-case 10:
-//#line 107 "FociParser.y"
+case 9:
+//#line 111 "FociParser.y"
 {yyval=val_peek(1);}
 break;
-case 11:
-//#line 111 "FociParser.y"
+case 10:
+//#line 115 "FociParser.y"
 {
 	 ArrayList<AdvCondition> al=new ArrayList<AdvCondition>();
 	 al.add((AdvCondition)val_peek(1).obj);
@@ -709,24 +715,27 @@ case 11:
 	 yyval=new FociParserVal(al);
  }
 break;
-case 12:
-//#line 118 "FociParser.y"
+case 11:
+//#line 122 "FociParser.y"
 {
 	 ArrayList<AdvCondition> al=(ArrayList<AdvCondition>)val_peek(1).obj;
 	 al.add((AdvCondition)val_peek(0).obj);	
 	 yyval=new FociParserVal(al);
  }
 break;
-case 13:
-//#line 125 "FociParser.y"
+case 12:
+//#line 129 "FociParser.y"
 {Expression e=new Expression(val_peek(0).ival);yyval=new FociParserVal(e);}
 break;
-case 14:
-//#line 126 "FociParser.y"
-{Expression e=new Expression(new Variable(getStringValue(val_peek(0))));yyval=new FociParserVal(e);}
+case 13:
+//#line 131 "FociParser.y"
+{
+	Expression e=new Expression(new Variable(getStringValue(val_peek(0))));yyval=new FociParserVal(e);
+	if(debugging)System.out.println("term is word: "+e.toString());
+ }
 break;
-case 15:
-//#line 128 "FociParser.y"
+case 14:
+//#line 136 "FociParser.y"
 {
 	 ArrayList<Expression> al=(ArrayList<Expression>)val_peek(1).obj;
 	 boolean firstEle=true;
@@ -744,19 +753,19 @@ case 15:
 	 yyval=new FociParserVal(latestExp);
  }
 break;
-case 16:
-//#line 145 "FociParser.y"
+case 15:
+//#line 153 "FociParser.y"
 {
-	 Expression e=new Expression(new Expression(val_peek(1).ival),(Expression)val_peek(0).obj,ExpType.multiply);
+	 Expression e=new Expression(new Expression(val_peek(2).ival),(Expression)val_peek(0).obj,ExpType.multiply);
 	 yyval=new FociParserVal(e);
  }
 break;
-case 17:
-//#line 149 "FociParser.y"
+case 16:
+//#line 157 "FociParser.y"
 {yyval=val_peek(1);}
 break;
-case 18:
-//#line 153 "FociParser.y"
+case 17:
+//#line 161 "FociParser.y"
 {
 	 ArrayList<Expression> al=new ArrayList<Expression>();
 	 al.add((Expression)val_peek(1).obj);
@@ -764,15 +773,15 @@ case 18:
 	 yyval=new FociParserVal(al);
  }
 break;
-case 19:
-//#line 160 "FociParser.y"
+case 18:
+//#line 168 "FociParser.y"
 {
 	 ArrayList<Expression> al=(ArrayList<Expression>)val_peek(1).obj;
 	 al.add((Expression)val_peek(0).obj);	
 	 yyval=new FociParserVal(al);
  }
 break;
-//#line 707 "FociParser.java"
+//#line 716 "FociParser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

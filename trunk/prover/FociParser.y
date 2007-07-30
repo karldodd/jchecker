@@ -129,7 +129,13 @@ formulaarray: formula formula
 term: NUM {Expression e=new Expression($1.ival);$$=new FociParserVal(e);}
  | WORD
  {
-	Expression e=new Expression(new Variable(getStringValue($1)));$$=new FociParserVal(e);
+	 String withSuffix=getStringValue($1);
+	 String withoutSuffix;
+	 if(revertMap.containsKey(withSuffix))
+		 withoutSuffix=revertMap.get(withSuffix);
+	 else
+		 withoutSuffix=withSuffix;
+	Expression e=new Expression(new Variable(withoutSuffix));$$=new FociParserVal(e);
 	if(debugging)System.out.println("term is word: "+e.toString());
  }
  | '+' '[' termarray ']'
@@ -174,6 +180,7 @@ termarray: term term
 %%
 boolean loaded=false;
 ArrayList<AdvCondition> conditionPool;
+Map<String,String> revertMap;
 
 StreamTokenizer st;
 
@@ -247,9 +254,11 @@ void initialize(){
 	conditionPool=new ArrayList<AdvCondition>();
 }
 
-int parseFile(File file)
+int parseFile(File file, Map<String,String> revertMap)
 {
   initialize();
+  this.revertMap=revertMap;
+
   FileReader fr;
   Reader r;
   FileInputStream fileIn;
@@ -303,8 +312,8 @@ public ArrayList<AdvCondition> getConditionPool()
 
 public static void main(String args[])
 {
-  FociParser par = new FociParser(false);
-  par.parseFile(new File(args[0]));
+  //FociParser par = new FociParser(false,map);
+  //par.parseFile(new File(args[0]));
 }
 
 //this program do not want to be a grammar checker although it does some check on the source.

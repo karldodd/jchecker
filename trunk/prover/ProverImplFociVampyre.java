@@ -19,10 +19,7 @@ public class ProverImplFociVampyre implements Prover{
 	public Set<String> doSubstitution(Set<EdgeLabel> edges){
 		//for evaluation sentence v=e;
 		//e is substituted by former regulation;
-		//and generate new rule for v;
-		TreeMap<String,String> map=new TreeMap<String,String>();
-		TreeMap<String,String> map=new TreeMap<String,String>();
-		
+		//and generate new rule for v;	
 		
 	}
 
@@ -31,23 +28,15 @@ public class ProverImplFociVampyre implements Prover{
 		StringBuilder sb=new StringBuilder("");
 		boolean firstElement=true;
 
-		
 		TreeMap<String,String> map=new TreeMap<String,String>();
-		
+		TreeMap<String,String> revertMap=new TreeMap<String,String>();
 
 		for(EdgeLabel e : edges){
 			if(firstElement)
 				firstElement=false;
 			else
 				sb.append(" ; ");
-			if(e instanceof EvaluationSentence)
-			{
-				EvaluationSentence es=(EvaluationSentence)e;
-			}
-			else if (e instanceof AdvCondition)
-			{
-				sb.append(e.toFociString());	
-			}		
+			sb.append(e.toFociString(map,revertMap));
 		}
 		//then write the string to a temp file
 		System.out.println("String sent to foci:\n"+sb.toString());
@@ -66,9 +55,18 @@ public class ProverImplFociVampyre implements Prover{
 		inputST.eolIsSignificant(false);
 		errorST.eolIsSignificant(false);
 
+		FociParser fp=new FociParser(false);
+		fp.parseFile(fout,revertMap);
+		ArrayList<AdvCondition> interpolations=fp.getConditionPool();
+
+		HashSet<Predicate> predicates=new HashSet<Predicate>();
+		for(AdvCondition ac : interpolations)
+		{
+			Predicate p=new Predicate(ac);
+			predicates.add(p);
+		}
 		
-		
-		return null;
+		return predicates;
 	}
 
 	//to tell if c1 implies c2

@@ -16,16 +16,38 @@ public class ProverImplFociVampyre implements Prover{
 		return (Prover)prover;
 	}
 
+	public Set<String> doSubstitution(Set<EdgeLabel> edges){
+		//for evaluation sentence v=e;
+		//e is substituted by former regulation;
+		//and generate new rule for v;
+		TreeMap<String,String> map=new TreeMap<String,String>();
+		TreeMap<String,String> map=new TreeMap<String,String>();
+		
+		
+	}
+
 	//if the edges are satisfiable, throw Exception
 	public Set<Predicate> getInterpolation(Set<EdgeLabel> edges) throws Exception{
 		StringBuilder sb=new StringBuilder("");
 		boolean firstElement=true;
+
+		
+		TreeMap<String,String> map=new TreeMap<String,String>();
+		
+
 		for(EdgeLabel e : edges){
 			if(firstElement)
 				firstElement=false;
 			else
 				sb.append(" ; ");
-			sb.append(e.toFociString());			
+			if(e instanceof EvaluationSentence)
+			{
+				EvaluationSentence es=(EvaluationSentence)e;
+			}
+			else if (e instanceof AdvCondition)
+			{
+				sb.append(e.toFociString());	
+			}		
 		}
 		//then write the string to a temp file
 		System.out.println("String sent to foci:\n"+sb.toString());

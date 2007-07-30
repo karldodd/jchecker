@@ -18,4 +18,13 @@ public class EvaluationSentence extends Sentence implements EdgeLabel{
 	public String toFociString(){
 		return "= "+v.getName()+" "+e.toFociString();
 	}
+
+	public String toFociString(Map<String,String> map){
+		String exp=e.toFociString(map);
+		if(map.containsKey(v.getName()))
+			map.put(v.getName(),map.get(v.getName())+"_suf");
+		else
+			map.put(v.getName(),v.getName()+"_suf");
+		return "= "+map.get(v.getName())+" "+exp;
+	}
 }

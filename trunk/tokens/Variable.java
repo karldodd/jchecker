@@ -20,4 +20,10 @@ public class Variable{
 	public Object getValue(){
 		return this.value;
 	}
+
+	/*
+	//'a' to 'a_suf'
+	public void addSuffix(String suf){
+		
+	}*/
 }

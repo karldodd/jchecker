@@ -65,7 +65,7 @@ public class AdvCondition implements EdgeLabel{
 	}
     }
 
-    public String toFociString(Map<String,String> map){
+    public String toFociString(Map<String,String> map, Map<String,String> revertMap){
 	if(this.jointType==AdvCondition.Type_ATOM){
 	    return this.atom.toFociString(map);
 	}

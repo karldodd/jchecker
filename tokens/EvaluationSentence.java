@@ -19,12 +19,30 @@ public class EvaluationSentence extends Sentence implements EdgeLabel{
 		return "= "+v.getName()+" "+e.toFociString();
 	}
 
-	public String toFociString(Map<String,String> map){
+	public String toFociString(Map<String,String> map,Map<String,String> revertMap){
+
+		if(map==null)map=new Map<String,String>();
+		if(revertMap==null)map=new Map<String,String>();
+
+		//use the old map to replace the e part
 		String exp=e.toFociString(map);
-		if(map.containsKey(v.getName()))
-			map.put(v.getName(),map.get(v.getName())+"_suf");
-		else
-			map.put(v.getName(),v.getName()+"_suf");
+
+		//generate the new suffix and reflesh the map
+		String withNewSuffix;
+		do{
+			withNewSuffix=v.getName()+"_suf"+Variable.getRandomIntSuffix();
+		}while(map.containsKey(withNewsuffix)||revertMap.containsKey(withNewsuffix));
+
+		map.put(v.getName(),withNewSuffix);
+		revertMap.put(withNewSuffix,v.getName());
+
+		//the weakness of this approach is:
+		//there might be some unforeseen variable whose name is "xxx_sufxxxxxx", just same as what you got.
+		//then in foci result, if there is the "xxx_sufxxxxxx", we cannot tell whether it is real "xxx_sufxxxxxx" or "xxx".
+
+		//In order to check it, when bumping into new variables in Exp of EvaluationSentence or AdvCondition, check if
+		//their name are in revertMap. If so, regenerate the suffix for old items.
+
 		return "= "+map.get(v.getName())+" "+exp;
 	}
 }

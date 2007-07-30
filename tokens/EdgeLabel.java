@@ -6,6 +6,8 @@ public interface EdgeLabel{
 	String toString();
 	String toLFString();
 	String toFociString();
-	String toFociString(Map<String,String> map);
-	Set<String> getPrimitiveVariableNames();
+
+	//map is to save info: primitive var => var with suffix
+	//revertMap is to save info: var with suffix => primitive var
+	String toFociString(Map<String,String> map, Map<String,String> revertMap);
 }

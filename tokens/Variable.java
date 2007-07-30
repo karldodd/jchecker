@@ -20,7 +20,9 @@ public class Variable{
 	public Object getValue(){
 		return this.value;
 	}
-
+	public static int getRandomIntSuffix(){
+		return (int)(100000.00*Math.random());
+	}
 	/*
 	//'a' to 'a_suf'
 	public void addSuffix(String suf){

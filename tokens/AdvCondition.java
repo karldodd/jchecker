@@ -65,6 +65,18 @@ public class AdvCondition implements EdgeLabel{
 	}
     }
 
+    public String toFociString(Map<String,String> map){
+	if(this.jointType==AdvCondition.Type_ATOM){
+	    return this.atom.toFociString(map);
+	}
+	else if (this.jointType==AdvCondition.Type_AND){
+	    return "& ["+c1.toFociString(map)+" "+c2.toFociString(map)+"]";
+	}
+	else{
+	    return "| ["+c1.toFociString(map)+" "+c2.toFociString(map)+"]";
+	}
+    }
+
     public void negateSelf(){
 	if(this.jointType==AdvCondition.Type_ATOM){
 	    this.atom.negateSelf();

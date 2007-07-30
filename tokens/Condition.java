@@ -97,6 +97,31 @@ public class Condition extends Sentence{
 		}
 	}
 
+	public String toFociString(Map<String,String> map) {
+		switch (type) {
+		// public enum ConType
+		// {T,F,equal,notequal,larger,smaller,equallarger,equalsmaller}
+		case T:
+			return "true";
+		case F:
+			return "false";
+		case equal:
+			return "" + "= " + l.toFociString(map) + " " + r.toFociString(map) + " ";
+		case notequal:
+			return "" + "~ =" + l.toFociString(map) + " " + r.toFociString(map) + "";
+		case larger:
+			return "" + "<= " + r.toFociString(map) + " + [" + l.toFociString(map) + " -1 ]";
+		case smaller:
+			return "" + "<= " + l.toFociString(map) + " + [" + r.toFociString(map) + " -1 ]";
+		case equallarger:
+			return "" + "<= " + r.toFociString(map) + " " + l.toFociString(map) + "";
+		case equalsmaller:
+			return "" + "<= " + l.toFociString(map) + " " + r.toFociString(map) + "";
+		default:
+			return "condition";
+		}
+	}
+
 	public void negateSelf() {
 		// public enum ConType
 		// {equal,notequal,larger,smaller,equallarger,equalsmaller}

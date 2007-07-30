@@ -81,6 +81,45 @@ public class Expression{
 			default: return "Expression";
 		}
 	}
+	
+	public String toFociString(Map<String,String> map){
+		switch(type){
+			case num:return num+"";
+			case var:return map.containsKey(v.getName())?map.get(v.getName):v.getName();
+			case plus:return "+ ["+l.toFociString(map)+" "+r.toFociString(map)+"]";
+			case minus:
+				//System.err.println("Warning: foci might not support minus expression.");
+				return "+ ["+l.toFociString(map)+" * -1 "+r.toFociString(map)+"]";
+			case multiply:
+				if(l.type==ExpType.num)
+					return "* "+l.toFociString(map)+" "+r.toFociString(map);
+				else if(r.type==ExpType.num)
+					return "* "+r.toFociString(map)+" "+l.toFociString(map);
+				else{
+					System.err.println("Warning: foci might not support complex multiply expression.");
+					return "* "+l.toFociString(map)+" "+r.toFociString(map);
+				}
+			case negative:
+				//System.err.println("Warning: foci might not support negative expression.");
+				return "* -1 "+l.toFociString(map)+" ";
+			default: return "Expression";
+		}
+	}
+
+
+	//change all variables 'a' to 'a_suf'
+	/*public void addSuffix(String suf)
+	{
+		//num,var,plus,minus,multiply,negative
+		switch(type){
+			case num:break;//do nothing as a number
+			case var:v.addSuffix(suf);break;
+			case negative:l.addSuffix(suf);break;
+			default: //plus,minus,multiply
+				l.addSuffix(suf);
+				r.addSuffix(suf);
+		}
+	}*/
 	/*case var:return v.getName();break;
 			case plus:return "("+l.toString()+"+"+r.toString()+")";break;
 			case minus:return "("+l.toString()+"-"+r.toString()+")";break;

@@ -8,6 +8,8 @@ import java.util.*;
 import java.io.*;
 
 public class ProverImplFociVampyre implements Prover{
+	private static boolean debugging=true;
+
 	private static ProverImplFociVampyre prover=null;
 	private ProverImplFociVampyre(){}
 
@@ -16,15 +18,15 @@ public class ProverImplFociVampyre implements Prover{
 		return (Prover)prover;
 	}
 
-	public Set<String> doSubstitution(Set<EdgeLabel> edges){
+	/*public Set<String> doSubstitution(Set<EdgeLabel> edges){
 		//for evaluation sentence v=e;
 		//e is substituted by former regulation;
 		//and generate new rule for v;	
 		
-	}
+	}*/
 
 	//if the edges are satisfiable, throw Exception
-	public Set<Predicate> getInterpolation(Set<EdgeLabel> edges) throws Exception{
+	public Set<Predicate> getInterpolation(List<EdgeLabel> edges) throws Exception{
 		StringBuilder sb=new StringBuilder("");
 		boolean firstElement=true;
 
@@ -54,14 +56,27 @@ public class ProverImplFociVampyre implements Prover{
 
 		inputST.eolIsSignificant(false);
 		errorST.eolIsSignificant(false);
+		
+		fociProcess.waitFor();
 
 		FociParser fp=new FociParser(false);
+		if(debugging)
+		{
+			System.out.println("=============================");
+			System.out.println("Showing revertMap:");
+			Set<String> s=revertMap.keySet();
+			for(String key : s){
+				System.out.println("Key: "+key+"  value: "+revertMap.get(key));
+			}
+			System.out.println("=============================");
+		}
 		fp.parseFile(fout,revertMap);
 		ArrayList<AdvCondition> interpolations=fp.getConditionPool();
 
 		HashSet<Predicate> predicates=new HashSet<Predicate>();
 		for(AdvCondition ac : interpolations)
 		{
+			if(debugging)System.out.println("Getting predicate: "+ac.toString());
 			Predicate p=new Predicate(ac);
 			predicates.add(p);
 		}

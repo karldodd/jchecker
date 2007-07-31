@@ -21,8 +21,8 @@ public class EvaluationSentence extends Sentence implements EdgeLabel{
 
 	public String toFociString(Map<String,String> map,Map<String,String> revertMap){
 
-		if(map==null)map=new Map<String,String>();
-		if(revertMap==null)map=new Map<String,String>();
+		if(map==null)map=new TreeMap<String,String>();
+		if(revertMap==null)map=new TreeMap<String,String>();
 
 		//use the old map to replace the e part
 		String exp=e.toFociString(map);
@@ -30,8 +30,8 @@ public class EvaluationSentence extends Sentence implements EdgeLabel{
 		//generate the new suffix and reflesh the map
 		String withNewSuffix;
 		do{
-			withNewSuffix=v.getName()+"_suf"+Variable.getRandomIntSuffix();
-		}while(map.containsKey(withNewsuffix)||revertMap.containsKey(withNewsuffix));
+			withNewSuffix=v.getName()+"suf"+Variable.getRandomIntSuffix();
+		}while(map.containsKey(withNewSuffix)||revertMap.containsKey(withNewSuffix));
 
 		map.put(v.getName(),withNewSuffix);
 		revertMap.put(withNewSuffix,v.getName());

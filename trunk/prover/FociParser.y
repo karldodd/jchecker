@@ -15,7 +15,8 @@ import abstraction.*;
 
 /* YACC Declarations */
 %token NUM WORD
-//%token TRUE FALSE
+
+%token TRUESTR FALSESTR
 //%nonassoc UMINUS
 //%nonassoc MINUS
 %left '+'
@@ -61,7 +62,18 @@ formulas:{ArrayList<AdvCondition> al=new ArrayList<AdvCondition>();$$=new FociPa
  }
  ;
 
-formula: '=' term term 
+formula:TRUESTR
+ {
+	 Condition c = new Condition(true);
+	 $$=new FociParserVal(new AdvCondition(c));
+ }
+ | FALSESTR
+ {
+	 Condition c = new Condition(false);
+	 $$=new FociParserVal(new AdvCondition(c));
+ }
+
+ | '=' term term 
  {
 	 Condition c=new Condition((Expression)$2.obj,(Expression)$3.obj,ConType.equal);
 	 $$=new FociParserVal(new AdvCondition(c));
@@ -185,7 +197,7 @@ Map<String,String> revertMap;
 StreamTokenizer st;
 
 boolean dflag;
-boolean debugging=true;
+boolean debugging=false;
 int formulaNo=0;
 
 void pout(String s)
@@ -216,7 +228,7 @@ int yylex()
 
   yytext=st.sval;//string value
   
-  pout("yytext:"+yytext+"  char"+(char)tok+" nval: "+st.nval);
+  if(debugging)pout("yytext:"+yytext+"  char"+(char)tok+" nval: "+st.nval);
   
   if(tok==st.TT_EOL)
   {
@@ -233,6 +245,12 @@ int yylex()
 	yylval=new FociParserVal((Object)yytext);
 	//pout("yytext: "+yytext);
 	if(debugging)pout("TT_WORD recognized: "+(String)yylval.obj);
+	if(yytext.equals("true")){
+		return TRUESTR;
+	}
+	else if(yytext.equals("false")){
+		return FALSESTR;
+	}
 	//pout("WORD from yylex: yytext:"+yytext);
 	return WORD;
         //System.out.println("unknown word: "+yytext+" ,return first char.");

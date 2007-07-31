@@ -85,7 +85,7 @@ public class Expression{
 	public String toFociString(Map<String,String> map){
 		switch(type){
 			case num:return num+"";
-			case var:return map.containsKey(v.getName())?map.get(v.getName):v.getName();
+			case var:return map.containsKey(v.getName())?map.get(v.getName()):v.getName();
 			case plus:return "+ ["+l.toFociString(map)+" "+r.toFociString(map)+"]";
 			case minus:
 				//System.err.println("Warning: foci might not support minus expression.");

@@ -162,87 +162,93 @@ int ptr;
 //#### end semantic value section ####
 public final static short NUM=257;
 public final static short WORD=258;
-public final static short NEG=259;
+public final static short TRUESTR=259;
+public final static short FALSESTR=260;
+public final static short NEG=261;
 public final static short YYERRCODE=256;
 final static short yylhs[] = {                           -1,
-    0,    1,    1,    2,    2,    2,    2,    2,    2,    4,
-    4,    3,    3,    3,    3,    3,    5,    5,
+    0,    1,    1,    2,    2,    2,    2,    2,    2,    2,
+    2,    4,    4,    3,    3,    3,    3,    3,    5,    5,
 };
 final static short yylen[] = {                            2,
-    1,    0,    2,    3,    4,    4,    4,    2,    3,    2,
-    2,    1,    1,    4,    3,    3,    2,    2,
+    1,    0,    2,    1,    1,    3,    4,    4,    4,    2,
+    3,    2,    2,    1,    1,    4,    3,    3,    2,    2,
 };
 final static short yydefred[] = {                         2,
-    0,    0,    0,    0,    0,    0,    0,    0,    3,    0,
-    0,    8,    0,   13,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    4,    0,    9,   10,    7,
-   11,    6,   15,    0,    0,   16,    5,   17,   14,   18,
+    0,    0,    4,    5,    0,    0,    0,    0,    0,    0,
+    3,    0,    0,   10,    0,   15,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    6,    0,   11,
+   12,    9,   13,    8,   17,    0,    0,   18,    7,   19,
+   16,   20,
 };
 final static short yydgoto[] = {                          1,
-    2,   20,   17,   21,   35,
+    2,   22,   19,   23,   37,
 };
 final static short yysindex[] = {                         0,
-    0,  -26,  -84,  -83,  -26,  -38,  -46,  -26,    0,  -26,
-  -26,    0,  -25,    0,  -73,  -38,  -38,  -38,  -22,  -26,
-  -34,  -29,  -38,  -38,  -21,    0,  -38,    0,    0,    0,
-    0,    0,    0,  -38,  -40,    0,    0,    0,    0,    0,
+    0,  -31,    0,    0,  -87,  -85,  -31,  -25,  -53,  -31,
+    0,  -31,  -31,    0,  -32,    0,  -80,  -25,  -25,  -25,
+  -22,  -31,  -38,  -35,  -25,  -25,  -20,    0,  -25,    0,
+    0,    0,    0,    0,    0,  -25,  -27,    0,    0,    0,
+    0,    0,
 };
 final static short yyrindex[] = {                         0,
-    0,   21,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    1,    0,    0,    0,    0,    0,    0,    0,
+    0,   14,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    1,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,
 };
 final static short yygindex[] = {                         0,
-    0,    8,   31,   11,    0,
+    0,   10,   27,   11,    0,
 };
-final static int YYTABLESIZE=259;
+final static int YYTABLESIZE=261;
 static short yytable[];
 static { yytable();}
 static void yytable(){
-yytable = new short[]{                         16,
-   12,   16,   15,    4,   15,    8,   10,   11,    4,    9,
-    8,    4,   12,    8,   18,   19,   23,   24,   28,   36,
-    1,   22,    0,    0,    0,    7,    6,   29,   31,   31,
-    7,    6,    0,    7,    6,    0,    0,    0,   12,    0,
-   12,   12,    0,   12,    0,    0,   25,   26,   27,    0,
-    0,    0,   39,   33,   34,    0,    0,   37,   30,    0,
-   12,   12,    0,   32,   38,   40,    0,    0,    0,    0,
+yytable = new short[]{                          6,
+   14,   10,    6,   12,   10,   13,    6,   20,   10,   25,
+   26,   11,   18,    1,   18,   17,   14,   17,   30,   21,
+   38,    9,    8,   24,    9,    8,    0,    0,    9,    8,
+    0,   31,   33,   33,    0,    0,    0,    0,   14,    0,
+   14,   14,    0,   14,   27,   28,   29,    0,    0,    0,
+    0,   35,   36,    0,   32,   39,    0,   34,    0,    0,
+   14,   14,   40,   42,    0,   41,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    3,
-    0,    5,    0,   12,    3,    0,    5,    3,    0,    5,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,   12,    0,   12,    0,    0,    0,
+    0,    0,    0,    0,    0,    5,    0,    7,    5,    0,
+    7,    0,    5,   14,    7,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,   14,    0,   14,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,   13,   14,   13,   14,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,    0,   12,   12,
+    3,    4,    0,    3,    4,    0,    0,    3,    4,   15,
+   16,   15,   16,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,   14,   14,   14,
+   14,
 };
 }
 static short yycheck[];
 static { yycheck(); }
 static void yycheck() {
-yycheck = new short[] {                         40,
-    0,   40,   43,   38,   43,   40,   91,   91,   38,    2,
-   40,   38,    5,   40,   61,    8,   42,   91,   41,   41,
-    0,   11,   -1,   -1,   -1,   60,   61,   20,   21,   22,
-   60,   61,   -1,   60,   61,   -1,   -1,   -1,   38,   -1,
-   40,   41,   -1,   43,   -1,   -1,   16,   17,   18,   -1,
-   -1,   -1,   93,   23,   24,   -1,   -1,   27,   93,   -1,
-   60,   61,   -1,   93,   34,   35,   -1,   -1,   -1,   -1,
+yycheck = new short[] {                         38,
+    0,   40,   38,   91,   40,   91,   38,   61,   40,   42,
+   91,    2,   40,    0,   40,   43,    7,   43,   41,   10,
+   41,   60,   61,   13,   60,   61,   -1,   -1,   60,   61,
+   -1,   22,   23,   24,   -1,   -1,   -1,   -1,   38,   -1,
+   40,   41,   -1,   43,   18,   19,   20,   -1,   -1,   -1,
+   -1,   25,   26,   -1,   93,   29,   -1,   93,   -1,   -1,
+   60,   61,   36,   37,   -1,   93,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  124,
-   -1,  126,   -1,   93,  124,   -1,  126,  124,   -1,  126,
+   -1,   -1,   -1,   -1,   -1,  124,   -1,  126,  124,   -1,
+  126,   -1,  124,   93,  126,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,  124,   -1,  126,   -1,   -1,   -1,
@@ -254,15 +260,16 @@ yycheck = new short[] {                         40,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,  257,  258,  257,  258,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+  259,  260,   -1,  259,  260,   -1,   -1,  259,  260,  257,
+  258,  257,  258,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-   -1,   -1,   -1,   -1,   -1,   -1,   -1,  257,  258,
+   -1,   -1,   -1,   -1,   -1,   -1,   -1,  257,  258,  259,
+  260,
 };
 }
 final static short YYFINAL=1;
-final static short YYMAXTOKEN=259;
+final static short YYMAXTOKEN=261;
 final static String yyname[] = {
 "end-of-file",null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
@@ -280,13 +287,15 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
-null,null,null,null,null,null,null,null,"NUM","WORD","NEG",
+null,null,null,null,null,null,null,null,"NUM","WORD","TRUESTR","FALSESTR","NEG",
 };
 final static String yyrule[] = {
 "$accept : input",
 "input : formulas",
 "formulas :",
 "formulas : formulas formula",
+"formula : TRUESTR",
+"formula : FALSESTR",
 "formula : '=' term term",
 "formula : '<' '=' term term",
 "formula : '&' '[' formulaarray ']'",
@@ -304,15 +313,16 @@ final static String yyrule[] = {
 "termarray : termarray term",
 };
 
-//#line 174 "FociParser.y"
+//#line 192 "FociParser.y"
 
 boolean loaded=false;
 ArrayList<AdvCondition> conditionPool;
+Map<String,String> revertMap;
 
 StreamTokenizer st;
 
 boolean dflag;
-boolean debugging=true;
+boolean debugging=false;
 int formulaNo=0;
 
 void pout(String s)
@@ -343,7 +353,7 @@ int yylex()
 
   yytext=st.sval;//string value
   
-  pout("yytext:"+yytext+"  char"+(char)tok+" nval: "+st.nval);
+  if(debugging)pout("yytext:"+yytext+"  char"+(char)tok+" nval: "+st.nval);
   
   if(tok==st.TT_EOL)
   {
@@ -360,6 +370,12 @@ int yylex()
 	yylval=new FociParserVal((Object)yytext);
 	//pout("yytext: "+yytext);
 	if(debugging)pout("TT_WORD recognized: "+(String)yylval.obj);
+	if(yytext.equals("true")){
+		return TRUESTR;
+	}
+	else if(yytext.equals("false")){
+		return FALSESTR;
+	}
 	//pout("WORD from yylex: yytext:"+yytext);
 	return WORD;
         //System.out.println("unknown word: "+yytext+" ,return first char.");
@@ -381,9 +397,11 @@ void initialize(){
 	conditionPool=new ArrayList<AdvCondition>();
 }
 
-int parseFile(File file)
+int parseFile(File file, Map<String,String> revertMap)
 {
   initialize();
+  this.revertMap=revertMap;
+
   FileReader fr;
   Reader r;
   FileInputStream fileIn;
@@ -437,8 +455,8 @@ public ArrayList<AdvCondition> getConditionPool()
 
 public static void main(String args[])
 {
-  FociParser par = new FociParser(false);
-  par.parseFile(new File(args[0]));
+  //FociParser par = new FociParser(false,map);
+  //par.parseFile(new File(args[0]));
 }
 
 //this program do not want to be a grammar checker although it does some check on the source.
@@ -463,7 +481,7 @@ public static void main(String args[])
 	 
 	 The above can be determined by model checker to help compiler learn the reachability.
 */
-//#line 403 "FociParser.java"
+//#line 421 "FociParser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -617,7 +635,7 @@ boolean doaction;
       {
 //########## USER-SUPPLIED ACTIONS ##########
 case 1:
-//#line 40 "FociParser.y"
+//#line 41 "FociParser.y"
 {
 	ArrayList<AdvCondition> al=(ArrayList<AdvCondition>)val_peek(0).obj;
 	System.out.println("Work completed.\nThe grammar of the foci output file is correct.\n In all, "+formulaNo+" predicates found.");
@@ -629,11 +647,11 @@ case 1:
 }
 break;
 case 2:
-//#line 51 "FociParser.y"
+//#line 52 "FociParser.y"
 {ArrayList<AdvCondition> al=new ArrayList<AdvCondition>();yyval=new FociParserVal(al);}
 break;
 case 3:
-//#line 53 "FociParser.y"
+//#line 54 "FociParser.y"
 {
  	ArrayList<AdvCondition> al=(ArrayList<AdvCondition>)val_peek(1).obj;
  	if(val_peek(0)!=null)
@@ -645,23 +663,37 @@ case 3:
  }
 break;
 case 4:
-//#line 65 "FociParser.y"
+//#line 66 "FociParser.y"
+{
+	 Condition c = new Condition(true);
+	 yyval=new FociParserVal(new AdvCondition(c));
+ }
+break;
+case 5:
+//#line 71 "FociParser.y"
+{
+	 Condition c = new Condition(false);
+	 yyval=new FociParserVal(new AdvCondition(c));
+ }
+break;
+case 6:
+//#line 77 "FociParser.y"
 {
 	 Condition c=new Condition((Expression)val_peek(1).obj,(Expression)val_peek(0).obj,ConType.equal);
 	 yyval=new FociParserVal(new AdvCondition(c));
 	 /*if(debugging)System.out.println("formula got: "+c.toString());*/
  }
 break;
-case 5:
-//#line 71 "FociParser.y"
+case 7:
+//#line 83 "FociParser.y"
 {
 	 Condition c=new Condition((Expression)val_peek(1).obj,(Expression)val_peek(0).obj,ConType.equalsmaller);
 	 yyval=new FociParserVal(new AdvCondition(c));
 	 
  }
 break;
-case 6:
-//#line 77 "FociParser.y"
+case 8:
+//#line 89 "FociParser.y"
 {
 	 ArrayList<AdvCondition> al=(ArrayList<AdvCondition>)val_peek(1).obj;
 	 boolean firstEle=true;
@@ -679,8 +711,8 @@ case 6:
 	 yyval=new FociParserVal(latestCon);
  }
 break;
-case 7:
-//#line 94 "FociParser.y"
+case 9:
+//#line 106 "FociParser.y"
 {
 	 ArrayList<AdvCondition> al=(ArrayList<AdvCondition>)val_peek(1).obj;
 	 boolean firstEle=true;
@@ -698,16 +730,16 @@ case 7:
 	 yyval=new FociParserVal(latestCon);
  }
 break;
-case 8:
-//#line 110 "FociParser.y"
+case 10:
+//#line 122 "FociParser.y"
 {AdvCondition c=(AdvCondition)val_peek(0).obj;c.negateSelf();yyval=new FociParserVal(c);}
 break;
-case 9:
-//#line 111 "FociParser.y"
+case 11:
+//#line 123 "FociParser.y"
 {yyval=val_peek(1);}
 break;
-case 10:
-//#line 115 "FociParser.y"
+case 12:
+//#line 127 "FociParser.y"
 {
 	 ArrayList<AdvCondition> al=new ArrayList<AdvCondition>();
 	 al.add((AdvCondition)val_peek(1).obj);
@@ -715,27 +747,33 @@ case 10:
 	 yyval=new FociParserVal(al);
  }
 break;
-case 11:
-//#line 122 "FociParser.y"
+case 13:
+//#line 134 "FociParser.y"
 {
 	 ArrayList<AdvCondition> al=(ArrayList<AdvCondition>)val_peek(1).obj;
 	 al.add((AdvCondition)val_peek(0).obj);	
 	 yyval=new FociParserVal(al);
  }
 break;
-case 12:
-//#line 129 "FociParser.y"
+case 14:
+//#line 141 "FociParser.y"
 {Expression e=new Expression(val_peek(0).ival);yyval=new FociParserVal(e);}
 break;
-case 13:
-//#line 131 "FociParser.y"
+case 15:
+//#line 143 "FociParser.y"
 {
-	Expression e=new Expression(new Variable(getStringValue(val_peek(0))));yyval=new FociParserVal(e);
+	 String withSuffix=getStringValue(val_peek(0));
+	 String withoutSuffix;
+	 if(revertMap.containsKey(withSuffix))
+		 withoutSuffix=revertMap.get(withSuffix);
+	 else
+		 withoutSuffix=withSuffix;
+	Expression e=new Expression(new Variable(withoutSuffix));yyval=new FociParserVal(e);
 	if(debugging)System.out.println("term is word: "+e.toString());
  }
 break;
-case 14:
-//#line 136 "FociParser.y"
+case 16:
+//#line 154 "FociParser.y"
 {
 	 ArrayList<Expression> al=(ArrayList<Expression>)val_peek(1).obj;
 	 boolean firstEle=true;
@@ -753,19 +791,19 @@ case 14:
 	 yyval=new FociParserVal(latestExp);
  }
 break;
-case 15:
-//#line 153 "FociParser.y"
+case 17:
+//#line 171 "FociParser.y"
 {
 	 Expression e=new Expression(new Expression(val_peek(2).ival),(Expression)val_peek(0).obj,ExpType.multiply);
 	 yyval=new FociParserVal(e);
  }
 break;
-case 16:
-//#line 157 "FociParser.y"
+case 18:
+//#line 175 "FociParser.y"
 {yyval=val_peek(1);}
 break;
-case 17:
-//#line 161 "FociParser.y"
+case 19:
+//#line 179 "FociParser.y"
 {
 	 ArrayList<Expression> al=new ArrayList<Expression>();
 	 al.add((Expression)val_peek(1).obj);
@@ -773,15 +811,15 @@ case 17:
 	 yyval=new FociParserVal(al);
  }
 break;
-case 18:
-//#line 168 "FociParser.y"
+case 20:
+//#line 186 "FociParser.y"
 {
 	 ArrayList<Expression> al=(ArrayList<Expression>)val_peek(1).obj;
 	 al.add((Expression)val_peek(0).obj);	
 	 yyval=new FociParserVal(al);
  }
 break;
-//#line 716 "FociParser.java"
+//#line 754 "FociParser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

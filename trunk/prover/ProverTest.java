@@ -41,7 +41,7 @@ public class ProverTest{
 			boolean im;
 
 			//im=p.imply(c1,c2);
-			im=p.isSatisfiable(cc);
+			im=p.isSatisfiable(cc.substitute(a,new Expression(new Expression(a),new Expression(b),ExpType.plus)));
 			if(im)System.out.println("success!");
 			else System.out.println("failure!");
 

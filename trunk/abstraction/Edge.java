@@ -1,3 +1,5 @@
+package abstraction;
+
 import java.util.ArrayList;
 
 public class Edge

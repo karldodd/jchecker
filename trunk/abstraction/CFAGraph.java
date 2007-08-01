@@ -1,4 +1,7 @@
-import java.util.ArrayList;
+package abstraction;
+
+import java.lang.*;
+import java.util.*;
 
 public class CFAGraph
 {

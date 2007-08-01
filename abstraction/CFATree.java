@@ -1,4 +1,9 @@
-import java.util.ArrayList;
+package abstraction;
+
+import tokens.*;
+import prover.*;
+
+import java.util.*;
 
 public class CFATree
 {

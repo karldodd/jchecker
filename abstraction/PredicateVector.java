@@ -1,3 +1,5 @@
+package abstraction;
+
 public class PredicateVector
 {
 	Predicate p;

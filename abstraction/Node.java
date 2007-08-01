@@ -1,4 +1,6 @@
-import java.util.ArrayList;
+package abstraction;
+
+import java.util.*;
 
 public class Node
 {
@@ -8,7 +10,7 @@ public class Node
 	boolean isErrorNode;
 	ArrayList<Edge> inEdge;
 	ArrayList<Edge> outEdge;
-	SpaceState ss;
+	StateSpace ss;
 	Stack<StateSpace> stateSpaceStack;
 
 	Node()
@@ -21,7 +23,7 @@ public class Node
 		stateSpaceStack = new Stack<StateSpace>();
 	}
 
-	Node(int n, boolean err, Edge ie, Edge oe, SpaceState s)
+	Node(int n, boolean err, Edge ie, Edge oe, StateSpace s)
 	{
 		id = n;			//need?
 		isErrorNode = err;
@@ -37,7 +39,7 @@ public class Node
 //		cg.addNode(this);
 	}
 
-	Node(boolean err, Edge ie, Edge oe, SpaceState s)
+	Node(boolean err, Edge ie, Edge oe, StateSpace s)
 	{
 		id = num++;	//need?
 		isErrorNode = err;

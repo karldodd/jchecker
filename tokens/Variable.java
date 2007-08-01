@@ -1,7 +1,7 @@
 package tokens;
 import java.lang.*;
 import java.util.*;
-public class Variable{
+public class Variable implements Cloneable{
 	private String name;
 	private Object value;
 	public Variable(String name){
@@ -23,6 +23,10 @@ public class Variable{
 	public static int getRandomIntSuffix(){
 		return (int)(100000.00*Math.random());
 	}
+	public Variable clone(){
+		return new Variable(this.name,this.value);
+	}
+	
 	/*
 	//'a' to 'a_suf'
 	public void addSuffix(String suf){

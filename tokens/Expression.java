@@ -1,7 +1,7 @@
 package tokens;
 import java.lang.*;
 import java.util.*;
-public class Expression{
+public class Expression implements Cloneable{
 	public int num;
 	public Variable v;
 	public ExpType type;
@@ -29,6 +29,51 @@ public class Expression{
 		this.type=type;
 		this.l=l;
 		this.r=r;
+	}
+
+	//to substitute every v in this exp with e,
+	//Attention: it returns a new instance. This instance will not be changed.
+	public Expression substitute(Variable v, Expression e){
+		switch(type){
+			case num: return this.clone();
+			case var: 
+				if(this.v.getName().equals(v.getName())){
+					return e.clone();
+				}
+				else{
+					return this.clone();
+				}
+			case plus:
+				return new Expression(l.substitute(v,e),r.substitute(v,e),ExpType.plus);
+			case minus:
+				return new Expression(l.substitute(v,e),r.substitute(v,e),ExpType.minus);
+			case multiply:
+				return new Expression(l.substitute(v,e),r.substitute(v,e),ExpType.multiply);
+			case negative:
+				return new Expression(l.substitute(v,e),null,ExpType.negative);
+			default:
+				System.err.println("Warning: unexpected ExpType"); 
+				return new Expression(Integer.MIN_VALUE);		
+		}	
+	}
+
+	protected Expression clone(){
+		switch(type){
+			case num: return new Expression(this.num);
+			case var:
+				return new Expression(this.v.clone());
+			case plus:
+				return new Expression(l.clone(),r.clone(),ExpType.plus);
+			case minus:
+				return new Expression(l.clone(),r.clone(),ExpType.minus);
+			case multiply:
+				return new Expression(l.clone(),r.clone(),ExpType.multiply);
+			case negative:
+				return new Expression(l.clone(),null,ExpType.negative);
+			default:
+				System.err.println("Warning: unexpected ExpType"); 
+				return new Expression(Integer.MIN_VALUE);		
+		}	
 	}
 	public String toString(){
 		switch(type){

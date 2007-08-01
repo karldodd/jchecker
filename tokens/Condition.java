@@ -4,7 +4,7 @@ import java.lang.*;
 import java.util.*;
 
 
-public class Condition extends Sentence{
+public class Condition extends Sentence implements Cloneable{
 	public Expression l;
 
 	public Expression r;
@@ -21,7 +21,12 @@ public class Condition extends Sentence{
 		this.r = r;
 		this.type = type;
 	}
-
+	public Condition clone(){
+		return new Condition(l.clone(),r.clone(),type);
+	}
+	public Condition substitute(Variable v, Expression e){
+		return new Condition(l.substitute(v,e),r.substitute(v,e),type);
+	}
 	public String toString() {
 		switch (type) {
 		// public enum ConType

@@ -4,7 +4,7 @@ import java.lang.*;
 import java.util.*;
 
 //a more powerful class for condition expressions
-public class AdvCondition implements EdgeLabel{
+public class AdvCondition implements EdgeLabel,Cloneable{
     public AdvCondition c1;
     public AdvCondition c2;
     
@@ -28,7 +28,23 @@ public class AdvCondition implements EdgeLabel{
 	this.c2=null;
 	this.jointType=AdvCondition.Type_ATOM;
     }
-    
+    public AdvCondition clone(){
+	if(this.jointType==AdvCondition.Type_ATOM){
+	    return new AdvCondition(this.atom.clone());
+	}
+	else{
+	    return new AdvCondition(c1.clone(),c2.clone(),jointType); 
+	}
+    }
+    public AdvCondition substitute(Variable v, Expression e){
+	if(this.jointType==AdvCondition.Type_ATOM){
+	    return new AdvCondition(this.atom.substitute(v,e));
+	}
+	else{
+	    return new AdvCondition(c1.substitute(v,e),c2.substitute(v,e),jointType); 
+	}
+    }
+
     public String toString(){
 	if(this.jointType==AdvCondition.Type_ATOM){
 	    return this.atom.toString();
@@ -103,5 +119,10 @@ public class AdvCondition implements EdgeLabel{
 	    c2.negateSelf();
 	    jointType=AdvCondition.Type_AND;
 	}
+    }
+    
+    //get the wp(es,this). This instance won't be changed.
+    public AdvCondition getWeakestPrecondition(EvaluationSentence es){
+	return this.substitute(es.v,es.e);
     }
 }

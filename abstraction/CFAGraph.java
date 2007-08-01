@@ -23,6 +23,11 @@ public class CFAGraph
 	{
 		return nodeList.get(1);
 	}
+
+	void changeNodeStateSpace(int index, StateSpace ss)
+	{
+		nodeList.get(index).changeStateSpace(ss);
+	}
 	
 	void display()
 	{

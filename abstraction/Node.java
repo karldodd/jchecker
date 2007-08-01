@@ -5,20 +5,30 @@ public class Node
 	static int num = 0;
 
 	int id;
-	boolean isErrorNode = false;
-	ArrayList<Edge> inEdge = new ArrayList<Edge>();
-	ArrayList<Edge> outEdge = new ArrayList<Edge>();
-	SpaceState ss = null;
+	boolean isErrorNode;
+	ArrayList<Edge> inEdge;
+	ArrayList<Edge> outEdge;
+	SpaceState ss;
+	Stack<StateSpace> stateSpaceStack;
 
 	Node()
 	{
 		id = 0;
+		isErrorNode = false;
+		inEdge = new ArrayList<Edge>();
+		outEdge = new ArrayList<Edge>();
+		ss = null;
+		stateSpaceStack = new Stack<StateSpace>();
 	}
 
 	Node(int n, boolean err, Edge ie, Edge oe, SpaceState s)
 	{
 		id = n;			//need?
 		isErrorNode = err;
+		inEdge = new ArrayList<Edge>();
+		outEdge = new ArrayList<Edge>();
+		ss = null;
+		stateSpaceStack = new Stack<StateSpace>();
 		if (ie != null)			//no need
 			inEdge.add(ie);
 		if (oe != null)			//no need
@@ -50,6 +60,11 @@ public class Node
 	boolean isError()
 	{
 		return isErrorNode;
+	}
+
+	void changeStateSpace(StateSpace ssCh)
+	{
+		ss = ssCh;
 	}
 
 	void display()

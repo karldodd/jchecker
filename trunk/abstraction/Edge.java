@@ -7,14 +7,14 @@ public class Edge
 	int id;
 	Node headNode;
 	Node tailNode;
-	Sentence stns;
+	Sentence sentence;
 
 	Edge()
 	{
 		id = 0;
 		headNode = null;
 		tailNode = null;
-		stns = null;
+		sentence = null;
 	}
 
 	Edge(int n, Node hn, Node tn, Sentence s)
@@ -22,7 +22,7 @@ public class Edge
 		id = n;
 		headNode = hn;
 		tailNode = tn;
-		stns = s;
+		sentence = s;
 	}
 
 	Edge(Node hn, Node tn, Sentence s)
@@ -30,7 +30,7 @@ public class Edge
 		id = num++;
 		headNode = hn;
 		tailNode = tn;
-		stns = s;
+		sentence = s;
 	}
 
 	void changeHeadNode(Node n)
@@ -47,6 +47,6 @@ public class Edge
 	{
 //		System.out.println("come here");
 		System.out.print("Edge id: " + id + " headnode: " + headNode.id + " tailnode: " + tailNode.id);
-		System.out.println(" Sentence: " + stns.str);
+		System.out.println(" Sentence: " + sentence.str);
 	}
 }

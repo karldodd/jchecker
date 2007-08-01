@@ -1,5 +1,11 @@
+import tokens.*;
+
+import java.util.*;
+
 public class Test
 {
+//You can see how redudant these create functions are! I hate it.
+
 	CFAGraph createGraph()
 	{
 		CFAGraph cg = new CFAGraph();
@@ -44,12 +50,28 @@ public class Test
 		return cg;
 	}
 
+	Predicate createPredicate(String s, int num, Contype ct)
+	{
+		Expression l = new Expression(new Variable(s));
+		Expression r = new Expression(num);
+		Condition c = new Condition(l, r, ct);
+		AdvCondition ac = new AdvCondition(c);
+		Predicate p = new Predicate(ac);
+
+		return p;
+	}
+
 	public static void main(String[] args)
 	{
 		Test t = new Test();
 		CFAGraph cg = t.createGraph();
 		cg.display();
 		CFATree ct = new CFATree(cg);
-		ct.beginForwardSearch();
+		Set<Predicate> pset = new Set<Predicate>();
+		Predicate p = createPredicate("x", 4, ConType.smaller);
+		pset.add(p);
+		StateSpace ssInit = StateSpace.createInitialStateSpace(pset);
+//		ct.changeNodeStateSpace(1, ss);
+		ct.beginForwardSearch(ssInit);
 	}
 }

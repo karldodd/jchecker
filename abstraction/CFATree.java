@@ -23,44 +23,67 @@ public class CFATree
 //		firstNode.changeStateSpace(ssInit);
 		firstNode.stateSpaceStack.push(ssInit);
 		forwardSearch(firstNode);
+
+		firstNode.stateSpaceStack.pop();
 	}
 
-	Node forwardSearch(Node node)
+	int forwardSearch(Node node)
 	{
 		Node nextNode;
 		StateSpace preSs = node.stateSpaceStack.peek();
 		StateSpace nextSs;
+		int numOfCallback = 1;	//default, delete tail node
 		
-		System.out.println(node.id);	//For test
+//		System.out.println(node.id);	//For test
 
 		if (node.isError())
 		{
-			backTrace();
+			numOfCallback = backTrace();
+			return numOfCallback;
+			//give a sign here, how many nodes should be removed
 
 			//There should be other process after that
 		}
-		else if (endCycle(edge))
-		{
-			backTrace();
-		}
+//		else if (endCycle(edge))
+//		{
+//			backTrace();
+//		}
 
 		else
 		{
 			for (Edge edge : node.outEdge)
 			{
-				recordTrace(edge);
-
 				nextNode = edge.tailNode;
 				nextSs = calStateSpace(preSs, edge);
+
+				if ( nextSs.stateSign == STATE_FALSE )
+				{
+					continue;
+				}
+				if ( nextNode.id < node.id )	//cycle back
+				{
+					StateSpace cycleSs = nextNode.stateSpaceStack.peek();
+					if ( nextSs.imply(cycleSs) )
+					{
+						continue;
+					}
+				}
+				recordTrace(edge);
 				nextNode.stateSpaceStack.push(nextSs);
 
-				forwardSearch(nextnode);
-				removeTrace(edge);
+				numOfCallback = forwardSearch(nextnode);
+				if ( num > 0 )
+				{
+					nextNode.stateSpaceStack.pop();
+					removeTrace(edge);
+					return num - 1;
+				}
 			}
-			System.out.println(node.id);	//For test
+//			System.out.println(node.id);	//For test
 		}
 
-		return node;
+		return numOfCallback;
+
 	}
 
 	StateSpace calStateSpace(StateSpace preSs, Edge edge)
@@ -227,10 +250,63 @@ public class CFATree
 
 	void removeTrace(Edge e)
 	{
-		edgeTrace.remove(e);
+		edgeTrace.remove( edgeTrace.size()-1 );	//last edge
 	}
 
 //	void expandTree() {}
-	void backTrace() {}
-	boolean endCycle() {}
+
+	int backTrace()
+	{
+		ArrayList<Edge> backEdgeTrace = new ArrayList<Edge>();
+
+		for (int i = edgeTrace.size() - 1; i >= 0; i--)
+		{
+			backEdgeTrace.add(edgeTrace.get(i));
+		}
+
+		ArrayList<Node> backNodeTrace = new ArrayList<Node>();
+		
+		for (Edge e : backEdgeTrace)
+		{
+			backNodeTrace.add(e.tailNode);
+		}
+		backNodeTrace.add(edgeTrace.get(0).headNode);
+
+		StateSpace backInitSs = new StateSpace(backNodeTrace.get(0).predVectorArray.peek());
+
+		for (int i = 0; i < edgeTrace.size(); i++)
+		{
+			StateSpace preSs = backNodeTrace.get(i);
+			Edge edge = backEdge.get(i);
+			StateSpace nextSs = calStateSpace(preSs, edge);
+
+			if ( nextSs.stateSign == STATE_FALSE )
+			{
+				//refinement
+				ArrayList<Edge> linkEdge = new ArrayList<Edge>();
+				for (int j = 0; j < i; j++)
+				{
+					//if isAssign
+					Sentence stn = wp(backEdgeTrace.get(j), backEdgeTrace.get(j-1));
+					linkSen.add(backEdgeTrace.get(j));
+					//if iscondition
+					linkSen.add(backEdgeTrace.get(j));
+					//add stateSpace of falsenode
+					//foci
+					//cal if reachable
+					//return numOfCallback
+					//change predicate
+					//...
+				}
+				int numOfCallback = refine();
+				return numOfCallback;
+			}
+		}
+
+		//This is true counter-example. End.
+		//display(edgeArray);
+		return edgeArray.size();	//pop out whole route
+	}
+
+//	boolean endCycle() {}
 }

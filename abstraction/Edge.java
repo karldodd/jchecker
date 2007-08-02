@@ -1,5 +1,6 @@
 package abstraction;
 
+import tokens.*;
 import java.util.ArrayList;
 
 public class Edge
@@ -49,6 +50,6 @@ public class Edge
 	{
 //		System.out.println("come here");
 		System.out.print("Edge id: " + id + " headnode: " + headNode.id + " tailnode: " + tailNode.id);
-		System.out.println(" Sentence: " + sentence.str);
+		System.out.println(" Sentence: " + sentence.toString());
 	}
 }

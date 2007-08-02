@@ -44,13 +44,13 @@ System.out.println("Work completed.\nThe grammar of the file is correct.\n   "+s
 }
  ;
 
-sentences:{ArrayList<Sentence> al=new ArrayList<Sentence>();$$=new ParserVal(al);} 
+sentences:{ArrayList<Sentence> al=new ArrayList<Sentence>();$$=new SourceParserVal(al);} 
  | sentences sentence 
  {
  	ArrayList<Sentence> al=(ArrayList<Sentence>)$1.obj;
  	if($2!=null)
  		al.add((Sentence)$2.obj);
- 	$$=new ParserVal(al);
+ 	$$=new SourceParserVal(al);
  	//warning $1 might have changed!
  }
  ;
@@ -62,11 +62,11 @@ sentence: evaluationsentence {sentenceNo++;}
  | errorsentence {sentenceNo++;}
  ;
 
-returnsentence: RETURN ';' {$$=new ParserVal(new ReturnSentence(null));}
- | RETURN expression ';'{$$=new ParserVal(new ReturnSentence((Expression)$2.obj));}
+returnsentence: RETURN ';' {$$=new SourceParserVal(new ReturnSentence(null));}
+ | RETURN expression ';'{$$=new SourceParserVal(new ReturnSentence((Expression)$2.obj));}
  ;
  
-errorsentence: ERROR ';' {$$=new ParserVal(new ErrorSentence());}
+errorsentence: ERROR ';' {$$=new SourceParserVal(new ErrorSentence());}
 ;
 
 decisionsentence: ifsentence
@@ -77,7 +77,7 @@ evaluationsentence: WORD '=' expression ';'
  {
  	Variable v=new Variable(getStringValue($1));
  	Expression e=(Expression)$3.obj;
- 	$$=new ParserVal(new EvaluationSentence(v,e));
+ 	$$=new SourceParserVal(new EvaluationSentence(v,e));
  }
  ;
 
@@ -91,28 +91,28 @@ words: WORD {}
 | words ',' WORD {}
 ;
 
-expression: NUM {Expression e=new Expression($1.ival);$$=new ParserVal(e);}
- | WORD {Expression e=new Expression(new Variable(getStringValue($1)));$$=new ParserVal(e);}
+expression: NUM {Expression e=new Expression($1.ival);$$=new SourceParserVal(e);}
+ | WORD {Expression e=new Expression(new Variable(getStringValue($1)));$$=new SourceParserVal(e);}
  | expression '+' expression
  {
  	Expression e=new Expression((Expression)$1.obj,(Expression)$3.obj,ExpType.plus);
- 	$$=new ParserVal(e);
+ 	$$=new SourceParserVal(e);
  }
  | expression '-' expression
  {
  	Expression e=new Expression((Expression)$1.obj,(Expression)$3.obj,ExpType.minus);
- 	$$=new ParserVal(e);
+ 	$$=new SourceParserVal(e);
  }
  | expression '*' expression
  {
  	Expression e=new Expression((Expression)$1.obj,(Expression)$3.obj,ExpType.multiply);
- 	$$=new ParserVal(e);
+ 	$$=new SourceParserVal(e);
  }
  //| expression '/' expression
  | '-' expression %prec NEG
  {
  	Expression e=new Expression((Expression)$2.obj,null,ExpType.negative);
- 	$$=new ParserVal(e);
+ 	$$=new SourceParserVal(e);
  }
  //| expression '^' expression
  | '(' expression ')'
@@ -121,46 +121,46 @@ expression: NUM {Expression e=new Expression($1.ival);$$=new ParserVal(e);}
  }
  ;
 
-advcondition: condition {$$=new ParserVal(new AdvCondition((Condition)$1.obj));}
+advcondition: condition {$$=new SourceParserVal(new AdvCondition((Condition)$1.obj));}
  /*expression '=' '=' expression
  {
  	Condition c=new Condition((Expression)$1.obj,(Expression)$4.obj,ConType.equal);
- 	$$=new ParserVal(new AdvCondition(c));
+ 	$$=new SourceParserVal(new AdvCondition(c));
  }
  | expression '!' '=' expression
  {
  	Condition c=new Condition((Expression)$1.obj,(Expression)$4.obj,ConType.notequal);
- 	$$=new ParserVal(new AdvCondition(c));
+ 	$$=new SourceParserVal(new AdvCondition(c));
  }
  | expression '<' '=' expression
  {
  	Condition c=new Condition((Expression)$1.obj,(Expression)$4.obj,ConType.equalsmaller);
- 	$$=new ParserVal(new AdvCondition(c));
+ 	$$=new SourceParserVal(new AdvCondition(c));
  }
  | expression '>' '=' expression
  {
  	Condition c=new Condition((Expression)$1.obj,(Expression)$4.obj,ConType.equallarger);
- 	$$=new ParserVal(new AdvCondition(c));
+ 	$$=new SourceParserVal(new AdvCondition(c));
  }
  | expression '<' expression
  {
  	Condition c=new Condition((Expression)$1.obj,(Expression)$3.obj,ConType.smaller);
- 	$$=new ParserVal(new AdvCondition(c));
+ 	$$=new SourceParserVal(new AdvCondition(c));
  }
  | expression '>' expression
  {
  	Condition c=new Condition((Expression)$1.obj,(Expression)$3.obj,ConType.larger);
- 	$$=new ParserVal(new AdvCondition(c));
+ 	$$=new SourceParserVal(new AdvCondition(c));
  }
  */
 | advcondition '&' '&' advcondition
 {
- $$=new ParserVal(new AdvCondition((AdvCondition)$1.obj,(AdvCondition)$4.obj,AdvCondition.Type_AND)); 
+ $$=new SourceParserVal(new AdvCondition((AdvCondition)$1.obj,(AdvCondition)$4.obj,AdvCondition.Type_AND)); 
 }
 
 | advcondition '|' '|' advcondition
 {
- $$=new ParserVal(new AdvCondition((AdvCondition)$1.obj,(AdvCondition)$4.obj,AdvCondition.Type_OR));
+ $$=new SourceParserVal(new AdvCondition((AdvCondition)$1.obj,(AdvCondition)$4.obj,AdvCondition.Type_OR));
 }
 
 | '(' advcondition ')'
@@ -177,7 +177,7 @@ ifsentence: IF '(' advcondition ')' evaluationsentence
 	EvaluationSentence es=(EvaluationSentence)$5.obj;
 	DecisionSentence ds=new DecisionSentence(c,DecisionType.ifsentence);
 	ds.add(es);
-	$$=new ParserVal(ds);
+	$$=new SourceParserVal(ds);
 }
 | IF '(' advcondition ')' decisionsentence
 {
@@ -185,7 +185,7 @@ ifsentence: IF '(' advcondition ')' evaluationsentence
 	DecisionSentence old=(DecisionSentence)$5.obj;
 	DecisionSentence ds=new DecisionSentence(c,DecisionType.ifsentence);
 	ds.add(old);
-	$$=new ParserVal(ds);
+	$$=new SourceParserVal(ds);
 }
 | IF '(' advcondition ')' '{' sentences '}'
 {
@@ -193,7 +193,7 @@ ifsentence: IF '(' advcondition ')' evaluationsentence
 	ArrayList<Sentence> al=(ArrayList<Sentence>)$6.obj;
 	DecisionSentence ds=new DecisionSentence(c,DecisionType.ifsentence);
 	ds.addAll(al);
-	$$=new ParserVal(ds);
+	$$=new SourceParserVal(ds);
 }
 | IF '(' advcondition ')' '{' sentences '}' ELSE '{' sentences '}'
 {
@@ -203,7 +203,7 @@ ifsentence: IF '(' advcondition ')' evaluationsentence
 	ds.addAll(al);
 	ArrayList<Sentence> al2=(ArrayList<Sentence>)$10.obj;
 	ds.addAllForElse(al2);
-	$$=new ParserVal(ds);
+	$$=new SourceParserVal(ds);
 }
 ;
 
@@ -213,7 +213,7 @@ whilesentence: WHILE '(' advcondition ')' evaluationsentence
 	EvaluationSentence es=(EvaluationSentence)$5.obj;
 	DecisionSentence ds=new DecisionSentence(c,DecisionType.whilesentence);
 	ds.add(es);
-	$$=new ParserVal(ds);
+	$$=new SourceParserVal(ds);
 }
 | WHILE '(' advcondition ')' decisionsentence
 {
@@ -221,7 +221,7 @@ whilesentence: WHILE '(' advcondition ')' evaluationsentence
 	DecisionSentence old=(DecisionSentence)$5.obj;
 	DecisionSentence ds=new DecisionSentence(c,DecisionType.whilesentence);
 	ds.add(old);
-	$$=new ParserVal(ds);
+	$$=new SourceParserVal(ds);
 }
 | WHILE '(' advcondition ')' '{' sentences '}'
 {
@@ -229,39 +229,39 @@ whilesentence: WHILE '(' advcondition ')' evaluationsentence
 	ArrayList<Sentence> al=(ArrayList<Sentence>)$6.obj;
 	DecisionSentence ds=new DecisionSentence(c,DecisionType.whilesentence);
 	ds.addAll(al);
-	$$=new ParserVal(ds);
+	$$=new SourceParserVal(ds);
 }
 ;
 
 condition: expression '=' '=' expression
  {
  	Condition c=new Condition((Expression)$1.obj,(Expression)$4.obj,ConType.equal);
- 	$$=new ParserVal(c);
+ 	$$=new SourceParserVal(c);
  }
  | expression '!' '=' expression
  {
  	Condition c=new Condition((Expression)$1.obj,(Expression)$4.obj,ConType.notequal);
- 	$$=new ParserVal(c);
+ 	$$=new SourceParserVal(c);
  }
  | expression '<' '=' expression
  {
  	Condition c=new Condition((Expression)$1.obj,(Expression)$4.obj,ConType.equalsmaller);
- 	$$=new ParserVal(c);
+ 	$$=new SourceParserVal(c);
  }
  | expression '>' '=' expression
  {
  	Condition c=new Condition((Expression)$1.obj,(Expression)$4.obj,ConType.equallarger);
- 	$$=new ParserVal(c);
+ 	$$=new SourceParserVal(c);
  }
  | expression '<' expression
  {
  	Condition c=new Condition((Expression)$1.obj,(Expression)$3.obj,ConType.smaller);
- 	$$=new ParserVal(c);
+ 	$$=new SourceParserVal(c);
  }
  | expression '>' expression
  {
  	Condition c=new Condition((Expression)$1.obj,(Expression)$3.obj,ConType.larger);
- 	$$=new ParserVal(c);
+ 	$$=new SourceParserVal(c);
  }
 /*
  | '(' condition ')'
@@ -319,7 +319,7 @@ int yylex()
   }
   else if(tok==st.TT_NUMBER)
   {
-    yylval = new ParserVal((int)st.nval);
+    yylval = new SourceParserVal((int)st.nval);
     return NUM;
   }
   else if(tok==st.TT_WORD)
@@ -340,7 +340,7 @@ int yylex()
       return ERROR;
     else
     {
-	yylval= new ParserVal((Object)yytext);
+	yylval= new SourceParserVal((Object)yytext);
 	//pout("WORD from yylex: yytext:"+yytext);
 	return WORD;
         //System.out.println("unknown word: "+yytext+" ,return first char.");
@@ -351,7 +351,7 @@ int yylex()
   return tok;
 }
 
-String getStringValue(ParserVal pv)
+String getStringValue(SourceParserVal pv)
 {
 	return (String)pv.obj;
 }
@@ -361,7 +361,7 @@ private void initialize(){
 	sentencePool=new ArrayList<Sentence>();
 }
 
-int parseFile(File file)
+public int parseFile(File file)
 {
   initialize();
 
@@ -418,14 +418,14 @@ public ArrayList<Sentence> getSentencePool(){
 		return new ArrayList<Sentence>();
 	}
 }
-
+/*
 public static void main(String args[])
 {
   Parser par = new Parser(false);
   int a=par.parseFile(new File("source.c"));
 
 }
-
+*/
 
 //this program do not want to be a grammar checker although it does some check on the source.
 

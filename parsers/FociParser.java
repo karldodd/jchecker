@@ -13,7 +13,7 @@
 
 
 
-package prover;
+package parsers;
 
 
 
@@ -397,7 +397,7 @@ void initialize(){
 	conditionPool=new ArrayList<AdvCondition>();
 }
 
-int parseFile(File file, Map<String,String> revertMap)
+public int parseFile(File file, Map<String,String> revertMap)
 {
   initialize();
   this.revertMap=revertMap;

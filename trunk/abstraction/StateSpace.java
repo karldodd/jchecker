@@ -15,16 +15,16 @@ public class StateSpace{
 	StateSpace()
 	{
 		predVectorArray = new ArrayList<PredicateVector>();
-		stateSign = STATE_TRUE;
+		stateSign = State.STATE_TRUE;
 	}
 
 	StateSpace(ArrayList<Predicate> predArray)
 	{
 		for (Predicate p : predArray)
 		{
-			predVectorArray.add(new PredicateVector(p, STATE_TRUE));
+			predVectorArray.add(new PredicateVector(p, State.STATE_TRUE));
 		}
-		stateSign = STATE_TRUE;
+		stateSign = State.STATE_TRUE;
 	}
 
 	StateSpace add(PredicateVector predVect)

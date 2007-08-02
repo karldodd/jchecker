@@ -125,4 +125,14 @@ public class AdvCondition implements EdgeLabel,Cloneable{
     public AdvCondition getWeakestPrecondition(EvaluationSentence es){
 	return this.substitute(es.v,es.e);
     }
+
+    public AdvCondition getWeakestPrecondition(AdvCondition c){
+	   return new AdvCondition(this.clone(),c.clone(),Type_AND); 
+    }
+
+    public AdvCondition getNegativeCopy(){
+	AdvCondition c=this.clone();
+	c.negateSelf();
+	return c;
+    }
 }

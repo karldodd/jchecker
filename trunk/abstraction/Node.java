@@ -90,4 +90,19 @@ public class Node
 				e.display();
 		}
 	}
+	
+    //Constructor created by karldodd
+    Node(boolean isErrorNode)
+    {
+	id = num++;
+	this.isErrorNode = isErrorNode;
+	inEdge = new ArrayList<Edge>();
+	outEdge = new ArrayList<Edge>();
+	ss = null;
+	stateSpaceStack = new Stack<StateSpace>();
+    }
+
+    void setErrorNode(boolean boolval){
+	this.isErrorNode=boolval;
+    }
 }

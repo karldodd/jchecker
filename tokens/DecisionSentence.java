@@ -5,7 +5,7 @@ public class DecisionSentence extends Sentence{
 	public AdvCondition c;
 	public ArrayList<Sentence> sentences;
 	public ArrayList<Sentence> elsesentences;
-	DecisionType type;
+	public DecisionType type;
 	public DecisionSentence(AdvCondition c, DecisionType type){
 		this.c=c;
 		this.type=type;

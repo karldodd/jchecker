@@ -86,14 +86,14 @@ public class CFAGraph
 	else if(s instanceof EvaluationSentence){
 	    if(intendedEndNode==null){
 		Node newNode=new Node(false);
-		Edge newEdge=new Edge(lastActiveNode,newNode,s);
+		Edge newEdge=new Edge(lastActiveNode,newNode,(EdgeLabel)s);
 		lastActiveNode.addOutEdge(newEdge);
 		newNode.addInEdge(newEdge);
 		this.addNode(newNode);
 		return newNode;
 	    }
 	    else{
-		Edge newEdge=new Edge(lastActiveNode,intendedEndNode,s);
+		Edge newEdge=new Edge(lastActiveNode,intendedEndNode,(EdgeLabel)s);
 		lastActiveNode.addOutEdge(newEdge);
 		intendedEndNode.addInEdge(newEdge);
 		return intendedEndNode;
@@ -101,32 +101,63 @@ public class CFAGraph
 	}
 	else if(s instanceof DecisionSentence){
 	    DecisionSentence ds=(DecisionSentence)s;
-	    Node l,r;
-	    if(ds.sentences.size()==0&&intendedEndNode!=null)
-		l=intendedEndNode;
-	    else
-		l=new Node(false);
-	    if(ds.elsesentences.size()==0&&intendedEndNode!=null)
-		r=intendedEndNode;
-	    else
-		r=new Node(false);
-	    Edge lEdge=new Edge(lastActiveNode,l,(EdgeLabel)(ds.c));
-	    Edge rEdge=new Edge(lastActiveNode,r,(EdgeLabel)(ds.c));
-	    lastActiveNode.addOutEdge(lEdge);
-	    lastActiveNode.addOutEdge(rEdge);
-	    l.addInEdge(lEdge);
-	    r.addInEdge(rEdge);
-	    this.addNode(l);
-	    this.addNode(r);
-	    Node lastActiveNodeFromLeft=createGraphFromSentenceArray(ds.sentences,l,intendedEndNode);
-	    Node lastActiveNodeFromRight=createGraphFromSentenceArray(ds.elsesentences,r,intendedEndNode);
-	    if(lastActiveNodeFromLeft==null)return lastActiveNodeFromRight;
-	    if(lastActiveNodeFromRight==null)return lastActiveNodeFromLeft;
-	    if(lastActiveNodeFromLeft==lastActiveNodeFromRight&&lastActiveNodeFromLeft==intendedEndNode)
-		return lastActiveNodeFromLeft;
+	    if(ds.type==DecisionType.ifsentence){
+		Node l,r;
+		if(ds.sentences.size()==0&&intendedEndNode!=null)
+		    l=intendedEndNode;
+		else
+		    l=new Node(false);
+	
+		Edge lEdge=new Edge(lastActiveNode,l,(EdgeLabel)(ds.c));
+		lastActiveNode.addOutEdge(lEdge);
+		l.addInEdge(lEdge);
+		this.addNode(l);
+		Node lastActiveNodeFromLeft=createGraphFromSentenceArray(ds.sentences,l,intendedEndNode);
+
+		if(ds.elsesentences.size()==0&&intendedEndNode!=null)
+		    r=intendedEndNode;
+		else if(ds.elsesentences.size()==0&&intendedEndNode==null&&lastActiveNodeFromLeft!=null)
+		    r=lastActiveNodeFromLeft;
+		else
+		    r=new Node(false);
+		Edge rEdge=new Edge(lastActiveNode,r,(EdgeLabel)(ds.c));
+		lastActiveNode.addOutEdge(rEdge);
+		r.addInEdge(rEdge);
+		this.addNode(r);
+
+		Node lastActiveNodeFromRight=createGraphFromSentenceArray(ds.elsesentences,r,lastActiveNodeFromLeft);
+		if(lastActiveNodeFromLeft==null)return lastActiveNodeFromRight;
+		if(lastActiveNodeFromRight==null)return lastActiveNodeFromLeft;
+		if(lastActiveNodeFromLeft==lastActiveNodeFromRight&&lastActiveNodeFromLeft==intendedEndNode)
+		    return lastActiveNodeFromLeft;
+		else{
+		    System.out.println("Intended node is not returned.");
+		    System.out.println("Unexpected Node got when creating CFA graph... Returning lastActiveNode");
+		    return lastActiveNodeFromLeft;
+		}
+	    }
 	    else{
-		System.out.println("Unexpected Node got when creating CFA graph... Returning intendedEndNode");
-		return intendedEndNode;
+		Node l,r;
+		if(ds.sentences.size()==0&&intendedEndNode!=null)
+		    l=intendedEndNode;
+		else
+		    l=new Node(false);
+		Edge lEdge=new Edge(lastActiveNode,l,(EdgeLabel)(ds.c));
+		lastActiveNode.addOutEdge(lEdge);
+		l.addInEdge(lEdge);
+		this.addNode(l);
+		Node lastActiveNodeFromLeft=createGraphFromSentenceArray(ds.sentences,l,lastActiveNode);
+		
+		if(intendedEndNode!=null)
+		    r=intendedEndNode;
+		else
+		    r=new Node(false);
+		Edge rEdge=new Edge(lastActiveNode,r,(EdgeLabel)(ds.c));
+		lastActiveNode.addOutEdge(rEdge);
+		r.addInEdge(rEdge);
+		this.addNode(r);
+
+		return r;
 	    }
 	}
 	else{

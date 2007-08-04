@@ -287,10 +287,17 @@ public class CFATree
 				for (int j = 0; j < i; j++)
 				{
 					//if isAssign
-					Sentence stn = wp(backEdgeTrace.get(j), backEdgeTrace.get(j-1));
-					linkSen.add(backEdgeTrace.get(j));
+					Sentence senten = backEdgeTrace.get(j);
+					if ( senten.isAssignment() )
+					{
+						Sentence stn = wp(backEdgeTrace.get(j), backEdgeTrace.get(j-1));
+						linkSen.add(backEdgeTrace.get(j));
+					}
 					//if iscondition
-					linkSen.add(backEdgeTrace.get(j));
+					if ( senten.isCondition() )
+					{					
+						linkSen.add(backEdgeTrace.get(j));
+					}
 					//add stateSpace of falsenode
 					//foci
 					//cal if reachable
@@ -298,6 +305,14 @@ public class CFATree
 					//change predicate
 					//...
 				}
+				//add stateSpace of falsenode
+				linkSen.add(stateSpace);
+				//foci
+				callFoci(linkSen);
+				//cal if reachable
+				//return numOfCallback
+				//change predicate
+				//...
 				int numOfCallback = refine();
 				return numOfCallback;
 			}

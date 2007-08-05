@@ -27,6 +27,7 @@ public class CFATree
 		firstNode.stateSpaceStack.pop();
 	}
 
+	//karldodd: what does this function return? what does numOfCallBack mean?
 	int forwardSearch(Node node)
 	{
 		Node nextNode;
@@ -62,7 +63,7 @@ public class CFATree
 				}
 				if ( nextNode.id < node.id )	//cycle back
 				{
-					StateSpace cycleSs = nextNode.stateSpaceStack.peek();
+					StateSpace cycleSs = nextNode.stateSpaceStack.peek();//karldodd: why only peek , not all?
 					if ( nextSs.imply(cycleSs) )
 					{
 						continue;
@@ -72,10 +73,12 @@ public class CFATree
 				nextNode.stateSpaceStack.push(nextSs);
 
 				numOfCallback = forwardSearch(nextnode);
+
+				//karldodd: what is num?
 				if ( num > 0 )
 				{
 					nextNode.stateSpaceStack.pop();
-					removeTrace(edge);
+					removeTrace(edge); //karldodd: what does revomeTrace(edge) mean?
 					return num - 1;
 				}
 			}
@@ -193,6 +196,7 @@ public class CFATree
 		return nextSs;
 	}
 
+	//karldodd: what is truePred and pred?
 	State calAssignment(Predicate truePred, Predicate pred, State predState, Sentence sen)
 	{
 		if (truePred.imply(sen.negtive()))
@@ -207,7 +211,7 @@ public class CFATree
 		{
 			return STATE_NEG;
 		}
-		return STAE_TRUE;
+		return STATE_TRUE;
 	}
 
 	State calCondition(Predicate pred, State predState, Sentence sen)
@@ -248,6 +252,7 @@ public class CFATree
 		edgeTrace.add(e);
 	}
 
+	//karldodd: but where is the parameter e?
 	void removeTrace(Edge e)
 	{
 		edgeTrace.remove( edgeTrace.size()-1 );	//last edge
@@ -279,6 +284,7 @@ public class CFATree
 */
 //		StateSpace backInitSs = StateSpace.createInitialStateSpace(backNodeTrace.get(0).predVectorArray.peek());
 
+		//Karldodd: There is no edge.predVectorArray...
 		cloneNodeTrace.get(cloneNodeTrace.size()-1).initStateSpace(edgeTrace.get(edgeTrace.size()-1).predVetorArray.peek());
 
 		for (int i = cloneEdgeTrace.size()-1;  i >= 0;  i--)
@@ -287,6 +293,7 @@ public class CFATree
 			Edge edge = cloneEdgeTrace.get(i);
 			StateSpace nextSs = calStateSpace(preSs, edge);
 
+			//karldodd: we should intersect the "nextSs" with the former one, and test if it is satifiable.
 			if ( nextSs.stateSign == STATE_FALSE )
 			{
 				//refinement
@@ -370,12 +377,16 @@ public class CFATree
 		{
 			Node newHeadNode = new Node(e.headNode.id);
 			Node newTailNode = new Node(e.tailNode.id);
+			//karldodd: what does this mean?
 			Edge cloneEdge = new Edge
+			//karldodd: I cannot understand Edge.clone()
 			newList.add(e.clone());
 		}
 		return newList;
 	}
 
+
+	//karldodd: Node.headNode is invalid
 	ArrayList<Node> clone(ArrayList<Node> preList)
 	{
 		int i;

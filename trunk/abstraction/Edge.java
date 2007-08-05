@@ -45,6 +45,7 @@ public class Edge
 		label = l;
 	}
 
+	//karldodd: what do newHeadNode do?
 	Edge clone(Edge preEdge)
 	{
 		Edge newEdge = new Edge();

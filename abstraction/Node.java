@@ -23,6 +23,16 @@ public class Node
 		stateSpaceStack = new Stack<StateSpace>();
 	}
 
+	Node(int i)
+	{
+		id = i;
+		isErrorNode = false;
+		inEdge = new ArrayList<Edge>();
+		outEdge = new ArrayList<Edge>();
+		ss = null;
+		stateSpaceStack = new Stack<StateSpace>();
+	}
+
 	Node(int n, boolean err, Edge ie, Edge oe, StateSpace s)
 	{
 		id = n;			//need?
@@ -67,6 +77,11 @@ public class Node
 	void changeStateSpace(StateSpace ssCh)
 	{
 		ss = ssCh;
+	}
+
+	void initStateSpace(StateSpace preSs)
+	{
+		ss = StateSpace.initialStateSpace(preSs);	
 	}
 
 	void display()

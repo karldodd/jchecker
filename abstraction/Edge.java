@@ -21,6 +21,14 @@ public class Edge
 		label = null;
 	}
 
+	Edge(int i, EdgeLabel l)
+	{
+		id = i;
+		headNode = null;
+		tailNode = null;
+		label = l;
+	}
+
 	Edge(int n, Node hn, Node tn, EdgeLabel l)
 	{
 		id = n;
@@ -35,6 +43,13 @@ public class Edge
 		headNode = hn;
 		tailNode = tn;
 		label = l;
+	}
+
+	Edge clone(Edge preEdge)
+	{
+		Edge newEdge = new Edge();
+		newEdge.id = preEdge.id;
+		Node newHeadNode = new Node();
 	}
 
 	void changeHeadNode(Node n)

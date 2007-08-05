@@ -257,13 +257,18 @@ public class CFATree
 
 	int backTrace()
 	{
-		ArrayList<Edge> backEdgeTrace = new ArrayList<Edge>();
+		ArrayList<Edge> cloneEdgeTrace = new ArrayList<edge>();
+		ArrayList<Node> cloneNodeTrace = new ArrayList<Node>();
 
+		createRefineRoute(cloneEdgeTrace, cloneNodeTrace);
+/*
+		//add edge trace from bottom to top
 		for (int i = edgeTrace.size() - 1; i >= 0; i--)
 		{
 			backEdgeTrace.add(edgeTrace.get(i));
 		}
 
+		//add nodes
 		ArrayList<Node> backNodeTrace = new ArrayList<Node>();
 		
 		for (Edge e : backEdgeTrace)
@@ -271,56 +276,116 @@ public class CFATree
 			backNodeTrace.add(e.tailNode);
 		}
 		backNodeTrace.add(edgeTrace.get(0).headNode);
+*/
+//		StateSpace backInitSs = StateSpace.createInitialStateSpace(backNodeTrace.get(0).predVectorArray.peek());
 
-		StateSpace backInitSs = new StateSpace(backNodeTrace.get(0).predVectorArray.peek());
+		cloneNodeTrace.get(cloneNodeTrace.size()-1).initStateSpace(edgeTrace.get(edgeTrace.size()-1).predVetorArray.peek());
 
-		for (int i = 0; i < edgeTrace.size(); i++)
+		for (int i = cloneEdgeTrace.size()-1;  i >= 0;  i--)
 		{
-			StateSpace preSs = backNodeTrace.get(i);
-			Edge edge = backEdge.get(i);
+			StateSpace preSs = cloneNodeTrace.get(i+1).ss;
+			Edge edge = cloneEdgeTrace.get(i);
 			StateSpace nextSs = calStateSpace(preSs, edge);
 
 			if ( nextSs.stateSign == STATE_FALSE )
 			{
 				//refinement
-				ArrayList<Edge> linkEdge = new ArrayList<Edge>();
-				for (int j = 0; j < i; j++)
+				ArrayList<EdgeLabel> linkLabel = new ArrayList<EdgeLabel>();
+				EdgeLabel newLabel = cloneEdgeTrace.get(cloneEdgeTrace.size()-1).label;
+				for (int j = cloneEdgeTrace.size()-2;  j >= i;  j--)
 				{
 					//if isAssign
-					Sentence senten = backEdgeTrace.get(j);
-					if ( senten.isAssignment() )
+					EdgeLabel label = cloneEdgeTrace.get(j).label;
+					if ( label.isAssignment() )
 					{
-						Sentence stn = wp(backEdgeTrace.get(j), backEdgeTrace.get(j-1));
-						linkSen.add(backEdgeTrace.get(j));
+						newlabel = wp(newLabel, Label);
 					}
 					//if iscondition
-					if ( senten.isCondition() )
-					{					
-						linkSen.add(backEdgeTrace.get(j));
+					if ( label.isCondition() )
+					{	
+						//do nothing
 					}
-					//add stateSpace of falsenode
-					//foci
-					//cal if reachable
-					//return numOfCallback
-					//change predicate
-					//...
 				}
+				linkLabel.add(newLabel);
 				//add stateSpace of falsenode
-				linkSen.add(stateSpace);
-				//foci
-				callFoci(linkSen);
-				//cal if reachable
-				//return numOfCallback
-				//change predicate
-				//...
-				int numOfCallback = refine();
+				for (PredicateVector pv : nextSs)
+				{
+					linkLabel.add(pv.getPredicate());
+				}
+				//call foci
+				Prover p = ProverFatory.getProverByName("focivampyre");
+				Set<Predicate> pSet = p.getInterpolation(linkLabel);
+
+				int numOfCallback = 0;
+				boolean endCyle = false;
+				for (Predicate p : pSet)
+				{
+					cloneNodeTrace.get(0).createInitialSpace(p);
+					StateSpae preSs = cloneNodeTrace.get(0).ss;
+					for (int i = 0; i < cloneEdgeTrace.size(); i++)
+					{
+						StateSpace nextSs = calStateSpace(preSs, cloneEdgeTrace(i).label);
+						if( nextSs == STATE_FALSE )
+						{
+							numOfCallback = cloneEdgeTrace.size() - i;
+							endCycle = true;
+							break;
+						}
+					}
+					if (endCycle)  break;
+				}
+
 				return numOfCallback;
+				break;	
 			}
 		}
 
 		//This is true counter-example. End.
-		//display(edgeArray);
-		return edgeArray.size();	//pop out whole route
+		display(cloneEdgeTrace, cloneNodeTrace);
+		return cloneEdgeTrace.size();	//pop out whole route
+	}
+
+	void cloneRefineRoute(ArrayList<Edge> eTrace, ArrayList<Node> nTrace)
+	{
+		Node n = new Node(edgeTrace.get(0).headNode.id);
+		nTrace.add(n);
+		for (int i=0; i<edgeTrace.size(); i++)
+		{
+			Edge e = edgeTrace.get(i);
+			Node n = new Node(e.tailNode.id);
+			nTrace.add(n);
+			Edge newEdge = new Edge(e.id, e.label);
+			newEdge.headNode = nTrace.get(i);
+			newEdge.tailNode = nTrace.get(i+1);
+			nTrace.get(i).addOutEdge(newEdge);
+			nTrace.get(i+1).addInEdge(newEdge);
+			eTrace.add(newEdge);
+		}
+	}
+
+	ArrayList<Edge> clone(ArrayList<Edge> preList)
+	{
+		ArrayList<Edge> newList = new ArrayList<Edge>();
+		for (Edge e : preList)
+		{
+			Node newHeadNode = new Node(e.headNode.id);
+			Node newTailNode = new Node(e.tailNode.id);
+			Edge cloneEdge = new Edge
+			newList.add(e.clone());
+		}
+		return newList;
+	}
+
+	ArrayList<Node> clone(ArrayList<Node> preList)
+	{
+		int i;
+		ArrayList<Node> newList = new ArrayList<Node>();
+		for (i=0; i<preList.size(); i++ )
+		{
+			newList.add(preList.get(i).headNode);
+		}
+		newList.add(preList.get(i-1).tailNode);
+		return newList;
 	}
 
 //	boolean endCycle() {}

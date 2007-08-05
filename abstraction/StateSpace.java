@@ -33,6 +33,16 @@ public class StateSpace{
 		return this;
 	}
 
+	public static StateSpace createInitialStateSpace(StateSpace preSs)
+	{
+		StateSpace newSs = new StateSpace();
+
+		for (PredicateVector pv : preSs.predVectorArray)
+		{
+			newSs.add(new PredicateVector(pv.getPredicate(), State.STATE_TRUE));
+		}
+	}
+
 /*
 	public static StateSpace createInitialStateSpace(Set<Predicate> pset)
 	{

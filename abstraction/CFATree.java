@@ -16,40 +16,29 @@ public class CFATree
 		cg = g;
 	}
 
-	void beginForwardSearch(ArrayList<Predicate> predArray)
+	public void beginForwardSearch(ArrayList<Predicate> predArray)
 	{
 		Node firstNode = cg.firstNode();
-		StateSpace ssInit = new StateSpace(predArray);
-//		firstNode.changeStateSpace(ssInit);
-		firstNode.stateSpaceStack.push(ssInit);
+		StateSpace ssInit = StateSpace.createInitialStateSpace(predArray);
+		firstNode.pushStateSpace(ssInit);
 		forwardSearch(firstNode);
 
-		firstNode.stateSpaceStack.pop();
+		firstNode.popStateSpace();
 	}
 
-	//karldodd: what does this function return? what does numOfCallBack mean?
 	int forwardSearch(Node node)
 	{
 		Node nextNode;
-		StateSpace preSs = node.stateSpaceStack.peek();
+		StateSpace preSs = node.peekStateSpace();
 		StateSpace nextSs;
-		int numOfCallback = 1;	//default, delete tail node
+		int numBack = 1;	//default, delete end node
 		
-//		System.out.println(node.id);	//For test
-
 		if (node.isError())
 		{
-			numOfCallback = backTrace();
-			return numOfCallback;
-			//give a sign here, how many nodes should be removed
-
-			//There should be other process after that
+			//numBack means how many nodes should back
+			numBack = backTrace();
+			return numBack;
 		}
-//		else if (endCycle(edge))
-//		{
-//			backTrace();
-//		}
-
 		else
 		{
 			for (Edge edge : node.outEdge)
@@ -57,138 +46,61 @@ public class CFATree
 				nextNode = edge.tailNode;
 				nextSs = calStateSpace(preSs, edge);
 
-				if ( nextSs.stateSign == STATE_FALSE )
+				if ( nextSs.isFalse() )
 				{
+					//can't walk, continue next route
 					continue;
 				}
 				if ( nextNode.id < node.id )	//cycle back
 				{
-					StateSpace cycleSs = nextNode.stateSpaceStack.peek();//karldodd: why only peek , not all?
-					if ( nextSs.imply(cycleSs) )
+					if ( node.impliedBy(nextSs) )
 					{
 						continue;
 					}
 				}
 				recordTrace(edge);
-				nextNode.stateSpaceStack.push(nextSs);
+				nextNode.pushStateSpace(nextSs);
 
-				numOfCallback = forwardSearch(nextnode);
+				numBack = forwardSearch(nextNode);
 
-				//karldodd: what is num?
-				if ( numOfCallback > 0 )
+				if ( numBack > 0 )
 				{
-					nextNode.stateSpaceStack.pop();
-					removeTrace(edge); //karldodd: what does revomeTrace(edge) mean?
-					return numOfCallback - 1;
+					nextNode.popStateSpace();
+					removeTrace();
+					return numBack - 1;
 				}
 			}
-//			System.out.println(node.id);	//For test
 		}
 
-		return numOfCallback;
+		return numBack;
 
 	}
 
 	StateSpace calStateSpace(StateSpace preSs, Edge edge)
 	{
-		//The process of calculating...
-/*
-		for (predPre in StateSpacePre, predCur in node)
-		{
-			sen = edge.sentence;
-			if ( predPre implies !sen )
-			{
-				prenext = pfalse;
-				return ;
-			}
-			else if ( predCur implies wp(sen, predPre) )
-			{
-				prenext = predpre;
-			}
-			else if ( predcur implies wp(sen, !predpre) )
-			{
-				prenext = !predpre;
-			}
-			else
-			{
-				prenext = ptrue;
-			}
-		}
-*/
-
-/*
- *Below is pseudo-code
-
-		StateSpace ss = n.getStateSpace();
-		Map<Predicate, State> pMap = ss.getNewestPredicate();
-//		Predicate pNew = ss.getNewestPredicate();
-		Sentence sen = e.getSentence();
-		StateSpace result;
-		if ( sen.isAssignment() )
-		{
-
-//			Set<Map.Entry<Predicate, State>> ssSet = ss.entrySet();
-//			for ( Map.Entry<Predicate, State> me : ssSet )
-//			{}
-
-			if ( pNew.implies(sen.negtive()) ) //ss implies !condition(sen)
-			{
-				ssNext = false;
-			}
-			else if ( ss implies wp(ss, pred) )
-			{
-				ssNext = ss;
-			}
-			else if ( ss implies wp(ss, !pred) )
-			{
-				ssNext = !ss;
-			}
-			else
-			{
-				ssNext = true;
-			}
-		}
-		if ( sen.isCondition() )
-		{
-			if ( ss implies sen )
-			{
-				ssNext = ss;
-			}
-			else if (ss implies !sen )
-			{
-				back();	//??
-			}
-		}
-		StateSpace wpSs = calWpSs(sen, pre); //pre = ss?
-		
-
-		return e.tailNode;
- *
- */
  		StateSpace nextSs = new StateSpace();
-		Sentence sen = edge.sentence;
+		EdgeLabel label = edge.label;
 
 		for ( PredicateVector predVect : preSs.predVectArray)
 		{
 			Predicate pred = predVect.getPredicate();
 			State predState = predVect.getState();
-			Predicate truePred = calTruePredicate(pred, predState);
+			Predicate predWithState = new Predicate(predVect.getAdvConditionByState());
 			State nextState;
 
-			if (sen.isAssignment())
+			if (label instanceof EvaluationSentence)
 			{
-				nextState = calAssignment(truePred, pred, predState, sen);
+				nextState = calAssignment(predWithState, pred, predState, label);
 			}
-			if (sen.isCondition())
+			if (label instanceof AdvCondition)
 			{
-				nextState = calCondition(pred, predState, sen);
+				nextState = calCondition(pred, predState, label);
 			}
 			
 			if (nextState == STATE_FALSE)
 			{
 				nextSs.stateSign = STATE_FALSE;
-				//return STATE_FALSE;	//or not?
-				//backTrace();
+				return nextSs;
 			}
 			nextSs.add(new PredicateVector(pred, nextState));
 		}
@@ -196,18 +108,18 @@ public class CFATree
 		return nextSs;
 	}
 
-	//karldodd: what is truePred and pred?
-	State calAssignment(Predicate truePred, Predicate pred, State predState, Sentence sen)
+	//karldodd: what is predWithState and pred?
+	State calAssignment(Predicate predWithState, Predicate pred, State predState, Sentence sen)
 	{
-		if (truePred.imply(sen.getNegativeCopy)
+		if (predWithState.imply(sen.getNegativeCopy)
 		{
 			return STATE_FALSE;
 		}
-		if (truePred.imply(weakestPrecondition(sen, pre)))
+		if (predWithState.imply(weakestPrecondition(sen, pre)))
 		{
 			return STATE_POS;
 		}
-		if (truePred.imply(weakestPrecondition(sen, pre.negtive())))
+		if (predWithState.imply(weakestPrecondition(sen, pre.negtive())))
 		{
 			return STATE_NEG;
 		}
@@ -252,13 +164,10 @@ public class CFATree
 		edgeTrace.add(e);
 	}
 
-	//karldodd: but where is the parameter e?
-	void removeTrace(Edge e)
+	void removeTrace()
 	{
 		edgeTrace.remove( edgeTrace.size()-1 );	//last edge
 	}
-
-//	void expandTree() {}
 
 	int backTrace()
 	{
@@ -323,7 +232,7 @@ public class CFATree
 				Prover p = ProverFatory.getProverByName("focivampyre");
 				Set<Predicate> pSet = p.getInterpolation(linkLabel);
 
-				int numOfCallback = 0;
+				int numBack = 0;
 				boolean endCyle = false;
 				for (Predicate p : pSet)
 				{
@@ -334,7 +243,7 @@ public class CFATree
 						StateSpace nextSs = calStateSpace(preSs, cloneEdgeTrace(i).label);
 						if( nextSs == STATE_FALSE )
 						{
-							numOfCallback = cloneEdgeTrace.size() - i;
+							numBack = cloneEdgeTrace.size() - i;
 							endCycle = true;
 							break;
 						}
@@ -342,7 +251,7 @@ public class CFATree
 					if (endCycle)  break;
 				}
 
-				return numOfCallback;
+				return numBack;
 				break;	
 			}
 		}
@@ -369,35 +278,4 @@ public class CFATree
 			eTrace.add(newEdge);
 		}
 	}
-/*
-	ArrayList<Edge> clone(ArrayList<Edge> preList)
-	{
-		ArrayList<Edge> newList = new ArrayList<Edge>();
-		for (Edge e : preList)
-		{
-			Node newHeadNode = new Node(e.headNode.id);
-			Node newTailNode = new Node(e.tailNode.id);
-			//karldodd: what does this mean?
-			Edge cloneEdge = new Edge
-			//karldodd: I cannot understand Edge.clone()
-			newList.add(e.clone());
-		}
-		return newList;
-	}
-
-
-	//karldodd: Node.headNode is invalid
-	ArrayList<Node> clone(ArrayList<Node> preList)
-	{
-		int i;
-		ArrayList<Node> newList = new ArrayList<Node>();
-		for (i=0; i<preList.size(); i++ )
-		{
-			newList.add(preList.get(i).headNode);
-		}
-		newList.add(preList.get(i-1).tailNode);
-		return newList;
-	}
-*/
-//	boolean endCycle() {}
 }

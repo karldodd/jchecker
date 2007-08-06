@@ -1,16 +1,41 @@
 package abstraction;
 
 import tokens.*;
+import prover.*;
 
 import java.lang.*;
 import java.util.*;
 
-public class StateSpace{
-	//LinkedHashMap<Predicate,State> map;
-	//private ArrayList<State> states;
-
+public class StateSpace
+{
 	ArrayList<PredicateVector> predVectorArray;
 	State stateSign;
+
+	public static StateSpace createInitialStateSpace(ArrayList<Predicate> predArray)
+	{
+		StateSpace ss = new StateSpace();
+
+		for (Predicate p : predArray)
+		{
+			ss.predVectorArray.add(new PredicateVector(p, State.STATE_TRUE));
+		}
+		ss.stateSign = State.STATE_TRUE;
+
+		return ss;
+	}
+
+	public static StateSpace createInitialStateSpace(StateSpace preSs)
+	{
+		StateSpace ss = new StateSpace();
+
+		for (PredicateVector pv : preSs.predVectorArray)
+		{
+			ss.predVectorArray.add(new PredicateVector(pv.getPredicate(), State.STATE_TRUE));
+		}
+		ss.stateSign = State.STATE_TRUE;
+
+		return ss;
+	}
 
 	StateSpace()
 	{
@@ -18,97 +43,28 @@ public class StateSpace{
 		stateSign = State.STATE_TRUE;
 	}
 
-	StateSpace(ArrayList<Predicate> predArray)
+	boolean isFalse()
 	{
-		for (Predicate p : predArray)
+		return (stateSign==State.STATE_FALSE);
+	}
+	
+	boolean imply(StateSpace rightSs)
+	{
+		List<AdvCondition> leftAdvList = new List<AdvCondition>();
+		List<AdvCondition> rightAdvList = new List<AdvCondition>();
+
+		for (PredicateVector pv : predVectorArray)
 		{
-			predVectorArray.add(new PredicateVector(p, State.STATE_TRUE));
+			leftAdvList.add(pv.getAdvConditionByState());
 		}
-		stateSign = State.STATE_TRUE;
-	}
-
-	StateSpace add(PredicateVector predVect)
-	{
-		predVectorArray.add(predVect);
-		return this;
-	}
-
-	public static StateSpace createInitialStateSpace(StateSpace preSs)
-	{
-		StateSpace newSs = new StateSpace();
-
-		for (PredicateVector pv : preSs.predVectorArray)
+		leftAdvCondition = AdvCondition.intersectAll(leftAdvList);
+		for (PredicateVector pv : rightSs.predVectorArray)
 		{
-			newSs.add(new PredicateVector(pv.getPredicate(), State.STATE_TRUE));
+			rightAdvList.add(pv.getAdvConditionByState());
 		}
-		return newSs;
+		rightAdvCondition = AdvCondition.intersectAll(rightAdvCondition);
+
+		Prover p = ProverFatory.getProverByName("focivampyre");
+		return p.imply(leftAdvCondition, rightAdvCondition);
 	}
-
-/*
-	public static StateSpace createInitialStateSpace(Set<Predicate> pset)
-	{
-		StateSpace ss=new StateSpace();
-		//State s=new State(p,State.STATE_POS);
-		for(Predicate p: pset)
-			ss.map.put(p, State.STATE_TRUE);
-		//ss.states.add(s);
-		return ss;
-	}
-
-	//if p already exists, return the former state
-	//if p does not exist, return null
-	public State setPredicateState(Predicate p, State s)
-	{
-		return map.put(p,s);
-	}
-	
-	public boolean containsPredicate(Predicate p)
-	{
-		return map.containsKey(p);
-	}
-
-	public Set<Predicate> getPredicates()
-	{
-		return map.keySet();
-	}
-	
-	public State getStateByPredicate(Predicate p) throws Exception{
-		if(map.containsKey(p))return map.get(p);
-		else 
-		{
-			throw new Exception("predicate does not exist!");
-		}
-		//return null;
-	}
-	
-	
-	public StateSpace getNextStateSpace(EvaluationSentence s){
-		
-		return null;
-	}
-	
-	public boolean imply(StateSpace ss){
-		
-	}
-*/
-
-	/*
-		false if while  []=> -gi ,this routine is disabled.
-		true else statespace not changed
-		
-		predicate  []=> wp(sentence,predicate)
-		!predicate []=> wp(sentence,predicate)
-		true
-
-		wp(0<4)
-
-		if while back, if [new]=>[old], stop now.
-
-		wp calculation
-
-		wp(condition,condition)=condition^condition
-
-		getPredicates imply isSatisfyable()
-		
-	*/
 }

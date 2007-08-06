@@ -13,52 +13,14 @@ public class Node
 	StateSpace ss;
 	Stack<StateSpace> stateSpaceStack;
 
-	Node()
+	Node(boolean isErrorNode)
 	{
-		id = 0;
-		isErrorNode = false;
+		id = num++;
+		this.isErrorNode = isErrorNode;
 		inEdge = new ArrayList<Edge>();
 		outEdge = new ArrayList<Edge>();
 		ss = null;
 		stateSpaceStack = new Stack<StateSpace>();
-	}
-
-	Node(int i)
-	{
-		id = i;
-		isErrorNode = false;
-		inEdge = new ArrayList<Edge>();
-		outEdge = new ArrayList<Edge>();
-		ss = null;
-		stateSpaceStack = new Stack<StateSpace>();
-	}
-
-	Node(int n, boolean err, Edge ie, Edge oe, StateSpace s)
-	{
-		id = n;			//need?
-		isErrorNode = err;
-		inEdge = new ArrayList<Edge>();
-		outEdge = new ArrayList<Edge>();
-		ss = null;
-		stateSpaceStack = new Stack<StateSpace>();
-		if (ie != null)			//no need
-			inEdge.add(ie);
-		if (oe != null)			//no need
-			outEdge.add(oe);
-		ss = s;
-//		cg.addNode(this);
-	}
-
-	Node(boolean err, Edge ie, Edge oe, StateSpace s)
-	{
-		id = num++;	//need?
-		isErrorNode = err;
-		inEdge = new ArrayList<Edge>();
-		outEdge = new ArrayList<Edge>();
-		inEdge.add(ie);
-		outEdge.add(oe);
-		ss = s;
-//		cg.addNode(this);
 	}
 
 	void addInEdge(Edge e)
@@ -76,14 +38,39 @@ public class Node
 		return isErrorNode;
 	}
 
-	void changeStateSpace(StateSpace ssCh)
+    	void setErrorNode(boolean boolval)
 	{
-		ss = ssCh;
+		this.isErrorNode = boolval;
+	}
+
+	void pushStateSpace(StateSpace ss)
+	{
+		stateSpaceStack.push(ss);	
+	
+	}
+	void popStateSpace()
+	{
+		stateSpaceStack.pop();	
+	}
+
+	StateSpace peekStateSpace(StateSpace ss)
+	{
+		return stateSpaceStack.peek();	
 	}
 
 	void initStateSpace(StateSpace preSs)
 	{
 		ss = StateSpace.createInitialStateSpace(preSs);	
+	}
+
+	boolean implyBy(StateSpace judgeSs)
+	{
+		for (int i=stateSpaceStack.size()-1; i>=0; i--)
+		{
+			if ( judgeSs.imply(stateSpaceStack.get(i)) )
+				return true;
+		}
+		return false;
 	}
 
 	void display()
@@ -107,19 +94,5 @@ public class Node
 				e.display();
 		}
 	}
-	
-    //Constructor created by karldodd
-    Node(boolean isErrorNode)
-    {
-	id = num++;
-	this.isErrorNode = isErrorNode;
-	inEdge = new ArrayList<Edge>();
-	outEdge = new ArrayList<Edge>();
-	ss = null;
-	stateSpaceStack = new Stack<StateSpace>();
-    }
 
-    void setErrorNode(boolean boolval){
-	this.isErrorNode=boolval;
-    }
 }

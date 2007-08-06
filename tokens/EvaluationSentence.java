@@ -45,4 +45,15 @@ public class EvaluationSentence extends Sentence implements EdgeLabel{
 
 		return "= "+map.get(v.getName())+" "+exp;
 	}
+
+	public AdvCondition toAdvCondition(){
+		Expression l=new Expression(this.v);
+		Expression r=this.e;
+		Condition c=new Condition(l,r,ConType.equal);
+		return (new AdvCondition(c)).clone();
+	}
+
+	public AdvCondition getNegativeCopy(){
+		return this.toAdvCondition().getNegativeCopy();
+	}
 }

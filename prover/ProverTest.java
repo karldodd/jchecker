@@ -41,7 +41,9 @@ public class ProverTest{
 			boolean im;
 
 			//im=p.imply(c1,c2);
-			im=p.isSatisfiable(cc.substitute(a,new Expression(new Expression(a),new Expression(b),ExpType.plus)));
+			ArrayList<AdvCondition> array=new ArrayList<AdvCondition>();
+			array.add(cc.substitute(a,new Expression(new Expression(a),new Expression(b),ExpType.plus)));
+			im=p.isSatisfiable(array);
 			if(im)System.out.println("success!");
 			else System.out.println("failure!");
 

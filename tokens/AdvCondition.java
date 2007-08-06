@@ -135,4 +135,15 @@ public class AdvCondition implements EdgeLabel,Cloneable{
 	c.negateSelf();
 	return c;
     }
+
+    public static AdvCondition intersectAll(List<AdvCondition> list){
+	//if(list.size()==1)return list.get(0);
+	int size=list.size();
+	int index=0;
+	AdvCondition left=list.get(index++);
+	while(index<size){
+		left=new AdvCondition(left,list.get(index++),AdvCondition.Type_AND);
+	}
+	return left;
+    }
 }

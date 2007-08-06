@@ -1,5 +1,11 @@
-a=-(a-b)-c-d*e+7-10;
-b=c;
+//a=-(a-b)-c-d*e+7-10;
+b=3;
+while(b<5)b=b+1;
+if(b==5)
+{a=1;}
+else{ ERROR;}
+
+
 /*int c,b,a,d,e;
 while(c<1){b=c+1-5*6+7;c=c+1;}
 
@@ -7,7 +13,7 @@ if (c<d&&c>d-5||(a>=0)){ERROR;} else {a=b;c=d;e=e+1;}
 
 return c-d;*/
 //ay = bj + 1;
-b = c -2 +3 *b ;
+//b = c -2 +3 *b ;
 //下面在原基础上不断添加实验新的语法（在jchecker2上做）
 //i=1;
 /*int w;

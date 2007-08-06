@@ -36,7 +36,7 @@ public class CFAGraph
 		nodeList.get(index).changeStateSpace(ss);
 	}
 	
-	void display()
+	public void display()
 	{
 		//This function is only for test
 		for (Node n : nodeList)

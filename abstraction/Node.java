@@ -53,6 +53,8 @@ public class Node
 	{
 		id = num++;	//need?
 		isErrorNode = err;
+		inEdge = new ArrayList<Edge>();
+		outEdge = new ArrayList<Edge>();
 		inEdge.add(ie);
 		outEdge.add(oe);
 		ss = s;
@@ -81,7 +83,7 @@ public class Node
 
 	void initStateSpace(StateSpace preSs)
 	{
-		ss = StateSpace.initialStateSpace(preSs);	
+		ss = StateSpace.createInitialStateSpace(preSs);	
 	}
 
 	void display()

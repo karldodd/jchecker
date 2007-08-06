@@ -51,6 +51,7 @@ public class Edge
 		Edge newEdge = new Edge();
 		newEdge.id = preEdge.id;
 		Node newHeadNode = new Node();
+		return null;
 	}
 
 	void changeHeadNode(Node n)

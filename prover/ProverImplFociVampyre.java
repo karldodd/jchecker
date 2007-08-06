@@ -26,7 +26,7 @@ public class ProverImplFociVampyre implements Prover{
 	}*/
 
 	//if the edges are satisfiable, throw Exception
-	public Set<Predicate> getInterpolation(List<EdgeLabel> edges) throws Exception{
+	public List<Predicate> getInterpolation(List<EdgeLabel> edges) throws Exception{
 		StringBuilder sb=new StringBuilder("");
 		boolean firstElement=true;
 
@@ -73,7 +73,7 @@ public class ProverImplFociVampyre implements Prover{
 		fp.parseFile(fout,revertMap);
 		ArrayList<AdvCondition> interpolations=fp.getConditionPool();
 
-		HashSet<Predicate> predicates=new HashSet<Predicate>();
+		ArrayList<Predicate> predicates=new ArrayList<Predicate>();
 		for(AdvCondition ac : interpolations)
 		{
 			if(debugging)System.out.println("Getting predicate: "+ac.toString());
@@ -90,9 +90,9 @@ public class ProverImplFociVampyre implements Prover{
 	}
 
 	//to tell if the condition is satisfiable
-	public boolean isSatisfiable(AdvCondition c)
+	public boolean isSatisfiable(List<AdvCondition> clist)
 	{
-		
+		AdvCondition c = AdvCondition.intersectAll(clist);
 		boolean result=false;
 		boolean gotresult=false;
 		try{

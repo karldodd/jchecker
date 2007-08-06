@@ -48,23 +48,36 @@ public class StateSpace
 		return (stateSign==State.STATE_FALSE);
 	}
 	
+	void add(PredicateVector pv)
+	{
+		predVectorArray.add(pv);
+	}
+
 	boolean imply(StateSpace rightSs)
 	{
-		List<AdvCondition> leftAdvList = new List<AdvCondition>();
-		List<AdvCondition> rightAdvList = new List<AdvCondition>();
+		ArrayList<AdvCondition> leftAdvList = new ArrayList<AdvCondition>();
+		ArrayList<AdvCondition> rightAdvList = new ArrayList<AdvCondition>();
+		boolean result = false;
 
 		for (PredicateVector pv : predVectorArray)
 		{
 			leftAdvList.add(pv.getAdvConditionByState());
 		}
-		leftAdvCondition = AdvCondition.intersectAll(leftAdvList);
+		AdvCondition leftAdvCondition = AdvCondition.intersectAll(leftAdvList);
 		for (PredicateVector pv : rightSs.predVectorArray)
 		{
 			rightAdvList.add(pv.getAdvConditionByState());
 		}
-		rightAdvCondition = AdvCondition.intersectAll(rightAdvCondition);
+		AdvCondition rightAdvCondition = AdvCondition.intersectAll(rightAdvList);
 
-		Prover p = ProverFatory.getProverByName("focivampyre");
-		return p.imply(leftAdvCondition, rightAdvCondition);
+		try {
+		Prover p = ProverFactory.getProverByName("focivampyre");
+		result = p.imply(leftAdvCondition, rightAdvCondition);
+		}
+		catch (Exception e)
+		{
+			System.out.println(e);
+		}
+		return result;
 	}
 }

@@ -11,6 +11,14 @@ public class Edge
 	Node tailNode;
         EdgeLabel label;
 
+	Edge(int id, EdgeLabel l)
+	{
+		this.id = id;
+		headNode = null;
+		tailNode = null;
+		label = l;
+	}
+
 	Edge(Node hn, Node tn, EdgeLabel l)
 	{
 		id = num++;

@@ -40,4 +40,5 @@ public class PredicateVector
 			System.err.println("Unexpected state of a predicate, returning null");
 			return null;
 		}
+	}
 }

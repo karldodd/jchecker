@@ -13,6 +13,16 @@ public class Node
 	StateSpace ss;
 	Stack<StateSpace> stateSpaceStack;
 
+	Node(int id)
+	{
+		this.id = id;
+		this.isErrorNode = false;
+		inEdge = new ArrayList<Edge>();
+		outEdge = new ArrayList<Edge>();
+		ss = null;
+		stateSpaceStack = new Stack<StateSpace>();
+	}
+
 	Node(boolean isErrorNode)
 	{
 		id = num++;
@@ -53,7 +63,7 @@ public class Node
 		stateSpaceStack.pop();	
 	}
 
-	StateSpace peekStateSpace(StateSpace ss)
+	StateSpace peekStateSpace()
 	{
 		return stateSpaceStack.peek();	
 	}
@@ -61,6 +71,12 @@ public class Node
 	void initStateSpace(StateSpace preSs)
 	{
 		ss = StateSpace.createInitialStateSpace(preSs);	
+	}
+
+	void initStateSpace(Predicate p)
+	{
+		ss = new StateSpace();
+		ss.add(new PredicateVector(p, State.STATE_TRUE));
 	}
 
 	boolean implyBy(StateSpace judgeSs)

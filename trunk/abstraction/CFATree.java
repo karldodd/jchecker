@@ -53,7 +53,7 @@ public class CFATree
 				}
 				if ( nextNode.id < node.id )	//cycle back
 				{
-					if ( node.impliedBy(nextSs) )
+					if ( node.implyBy(nextSs) )
 					{
 						continue;
 					}
@@ -81,7 +81,7 @@ public class CFATree
  		StateSpace nextSs = new StateSpace();
 		EdgeLabel label = edge.label;
 
-		for ( PredicateVector predVect : preSs.predVectArray)
+		for ( PredicateVector predVect : preSs.predVectorArray)
 		{
 			Predicate pred = predVect.getPredicate();
 			State predState = predVect.getState();
@@ -97,9 +97,9 @@ public class CFATree
 				nextState = calCondition(pred, predState, label);
 			}
 			
-			if (nextState == STATE_FALSE)
+			if (nextState == State.STATE_FALSE)
 			{
-				nextSs.stateSign = STATE_FALSE;
+				nextSs.stateSign = State.STATE_FALSE;
 				return nextSs;
 			}
 			nextSs.add(new PredicateVector(pred, nextState));
@@ -108,57 +108,64 @@ public class CFATree
 		return nextSs;
 	}
 
-	//karldodd: what is predWithState and pred?
-	State calAssignment(Predicate predWithState, Predicate pred, State predState, Sentence sen)
+	State calAssignment(Predicate predWithState, Predicate pred, State predState, EdgeLabel label)
 	{
-		if (predWithState.imply(sen.getNegativeCopy)
+		AdvCondition cPredWithState = predWithState.getAdvCondition();
+		AdvCondition cPred = pred.getAdvCondition();
+		Prover p = ProverFactory.getProverByName("focivampyre");
+
+		if (p.imply(cPredWithState, label.getNegativeCopy()))
 		{
-			return STATE_FALSE;
+			return State.STATE_FALSE;
 		}
-		if (predWithState.imply(weakestPrecondition(sen, pre)))
+		if (p.imply( cPredWithState, cPred.getWeakestPrecondition((EvaluationSentence)label) ))
 		{
-			return STATE_POS;
+			return State.STATE_POS;
 		}
-		if (predWithState.imply(weakestPrecondition(sen, pre.negtive())))
+		if (p.imply( cPredWithState, cPred.getNegativeCopy().getWeakestPrecondition((EvaluationSentence)label) ))
 		{
-			return STATE_NEG;
+			return State.STATE_NEG;
 		}
-		return STATE_TRUE;
+		return State.STATE_TRUE;
 	}
 
-	State calCondition(Predicate pred, State predState, Sentence sen)
+	State calCondition(Predicate pred, State predState, EdgeLabel label)
 	{
-		if (sen.imply(pred))
+		AdvCondition cPred = pred.getAdvCondition();
+		Prover p = ProverFactory.getProverByName("focivampyre");
+
+		if ( p.imply((AdvCondition)label, cPred) )
 		{
-			switch(predState)
+/*			switch(predState)
 			{
-				case STATE_POS: return STATE_POS;
-				case STATE_NEG: return STATE_FALSE;
-				case STATE_TRUE: return STATE_POS;
+				case State.STATE_POS: return State.STATE_POS;
+				case State.STATE_NEG: return State.STATE_FALSE;
+				case State.STATE_TRUE: return State.STATE_POS;
 				//case STATE_NEG: return STATE_FALSE;
 				//defaults: return predState;
 			}
+*/
+			if (predState == State.STATE_NEG) return State.STATE_FALSE;
+			else return predState;
 		}
-		if (sen.imply(pred.negtive()))
+		if ( p.imply((AdvCondition)label, cPred.getNegativeCopy()) )
 		{
-			
+/*
 			switch(predState)
 			{
-				case STATE_POS: return STATE_FALSE;
-				case STATE_NEG: return STATE_NEG;
-				case STATE_TRUE: return STATE_NEG;
+				case State.STATE_POS: return State.STATE_FALSE;
+				case State.STATE_NEG: return State.STATE_NEG;
+				case State.STATE_TRUE: return State.STATE_NEG;
 				//case STATE_POS: return STATE_FALSE;
 				//defaults: return predState;
 			}
+*/			
+			if (predState == State.STATE_POS) return State.STATE_FALSE;
+			else return predState;
 		}
 		return predState;	//inherit
 	}
 	
-	Predicate calTruePredicate(Predicate p, State s)
-	{
-		return p.calTruePredicate(s);
-	}
-
 	void recordTrace(Edge e)
 	{
 		edgeTrace.add(e);
@@ -171,79 +178,81 @@ public class CFATree
 
 	int backTrace()
 	{
-		ArrayList<Edge> cloneEdgeTrace = new ArrayList<edge>();
+		ArrayList<Edge> cloneEdgeTrace = new ArrayList<Edge>();
 		ArrayList<Node> cloneNodeTrace = new ArrayList<Node>();
+		ArrayList<AdvCondition> advConditionList = new ArrayList<AdvCondition>();
+		Prover p = ProverFactory.getProverByName("focivampyre");
 
-		createRefineRoute(cloneEdgeTrace, cloneNodeTrace);
-/*
-		//add edge trace from bottom to top
-		for (int i = edgeTrace.size() - 1; i >= 0; i--)
-		{
-			backEdgeTrace.add(edgeTrace.get(i));
-		}
-
-		//add nodes
-		ArrayList<Node> backNodeTrace = new ArrayList<Node>();
-		
-		for (Edge e : backEdgeTrace)
-		{
-			backNodeTrace.add(e.tailNode);
-		}
-		backNodeTrace.add(edgeTrace.get(0).headNode);
-*/
-//		StateSpace backInitSs = StateSpace.createInitialStateSpace(backNodeTrace.get(0).predVectorArray.peek());
-
-		//Karldodd: There is no edge.predVectorArray...
-		cloneNodeTrace.get(cloneNodeTrace.size()-1).initStateSpace(edgeTrace.get(edgeTrace.size()-1).tailNode.predVetorArray.peek());
+		cloneRefineRoute(cloneEdgeTrace, cloneNodeTrace);
+		cloneNodeTrace.get(cloneNodeTrace.size()-1).initStateSpace(edgeTrace.get(edgeTrace.size()-1).tailNode.peekStateSpace());
 
 		for (int i = cloneEdgeTrace.size()-1;  i >= 0;  i--)
 		{
-			StateSpace preSs = cloneNodeTrace.get(i+1).ss;
+			Node curNode = cloneNodeTrace.get(i+1);
+			StateSpace preSs = curNode.ss;
 			Edge edge = cloneEdgeTrace.get(i);
 			StateSpace nextSs = calStateSpace(preSs, edge);
+			for (int j=0; j<advConditionList.size(); j++)
+			{
+				advConditionList.remove(j);
+			}
+			
+			for (PredicateVector pv : nextSs.predVectorArray)
+			{
+				advConditionList.add(pv.getPredicate().getAdvCondition());
+			}
+			int id = curNode.id;
+			Node primitiveNode = cg.getNode(id);
+			StateSpace primitiveSs = primitiveNode.peekStateSpace();
+			for (PredicateVector pv : primitiveSs.predVectorArray)
+			{
+				advConditionList.add(pv.getAdvConditionByState());
+			}
+//			AdvCondition testAdvCondition = AdvCondition.intersectall(advConditionList);
 
 			//karldodd: we should intersect the "nextSs" with the former one, and test if it is satifiable.
-			if ( nextSs.stateSign == STATE_FALSE )
+			if ( ! p.isSatisfiable(advConditionList) )
 			{
 				//refinement
-				ArrayList<EdgeLabel> linkLabel = new ArrayList<EdgeLabel>();
+				ArrayList<EdgeLabel> linkLabel = new ArrayList<EdgeLabel>();	//need remove all?
 				EdgeLabel newLabel = cloneEdgeTrace.get(cloneEdgeTrace.size()-1).label;
+				linkLabel.add((AdvCondition)newLabel);	//without judge?
 				for (int j = cloneEdgeTrace.size()-2;  j >= i;  j--)
 				{
-					//if isAssign
+					//if isAssignment
 					EdgeLabel label = cloneEdgeTrace.get(j).label;
-					if ( label.isAssignment() )
+					if ( label instanceof EvaluationSentence )
 					{
-						newlabel = wp(newLabel, Label);
+						newLabel = (EdgeLabel)((AdvCondition)newLabel).getWeakestPrecondition((EvaluationSentence)label);
 					}
-					//if iscondition
-					if ( label.isCondition() )
+					//if isCondition
+					if ( label instanceof AdvCondition )
 					{	
-						//do nothing
+						newLabel = label;
 					}
+					linkLabel.add(newLabel);
 				}
-				linkLabel.add(newLabel);
 				//add stateSpace of falsenode
-				for (PredicateVector pv : nextSs)
+				for (PredicateVector pv : primitiveSs.predVectorArray)
 				{
-					linkLabel.add(pv.getPredicate());
+					linkLabel.add((EdgeLabel)(pv.getAdvConditionByState()));
 				}
+//				testAdvCondition = AdvCondition.intersectAll(linkLabel);
 				//call foci
-				Prover p = ProverFatory.getProverByName("focivampyre");
-				Set<Predicate> pSet = p.getInterpolation(linkLabel);
+				ArrayList<Predicate> pList = p.getInterpolation(linkLabel);
 
 				int numBack = 0;
-				boolean endCyle = false;
-				for (Predicate p : pSet)
+				boolean endCycle = false;
+				for (Predicate pBack : pList)
 				{
-					cloneNodeTrace.get(0).createInitialSpace(p);
-					StateSpae preSs = cloneNodeTrace.get(0).ss;
-					for (int i = 0; i < cloneEdgeTrace.size(); i++)
+					cloneNodeTrace.get(0).initStateSpace(pBack);
+					StateSpace preSsBack = cloneNodeTrace.get(0).ss;
+					for (int k = 0; k < cloneEdgeTrace.size(); k++)
 					{
-						StateSpace nextSs = calStateSpace(preSs, cloneEdgeTrace(i).label);
-						if( nextSs == STATE_FALSE )
+						StateSpace nextSsBack = calStateSpace(preSsBack, cloneEdgeTrace.get(k));
+						if( nextSsBack.isFalse() )
 						{
-							numBack = cloneEdgeTrace.size() - i;
+							numBack = cloneEdgeTrace.size() - k;
 							endCycle = true;
 							break;
 						}
@@ -251,7 +260,8 @@ public class CFATree
 					if (endCycle)  break;
 				}
 
-				return numBack;
+				if (endCycle) return numBack;
+				
 				break;	
 			}
 		}
@@ -264,18 +274,29 @@ public class CFATree
 	void cloneRefineRoute(ArrayList<Edge> eTrace, ArrayList<Node> nTrace)
 	{
 		Node n = new Node(edgeTrace.get(0).headNode.id);
+		Edge e, newEdge;
 		nTrace.add(n);
 		for (int i=0; i<edgeTrace.size(); i++)
 		{
-			Edge e = edgeTrace.get(i);
-			Node n = new Node(e.tailNode.id);
+			e = edgeTrace.get(i);
+			n = new Node(e.tailNode.id);
 			nTrace.add(n);
-			Edge newEdge = new Edge(e.id, e.label);
+			newEdge = new Edge(e.id, e.label);
 			newEdge.headNode = nTrace.get(i);
 			newEdge.tailNode = nTrace.get(i+1);
 			nTrace.get(i).addOutEdge(newEdge);
 			nTrace.get(i+1).addInEdge(newEdge);
 			eTrace.add(newEdge);
 		}
+	}
+
+	void display(ArrayList<Edge> eTrace, ArrayList<Node> nTrace)
+	{
+		for (int i=0; i<eTrace.size(); i++)
+		{
+			System.out.print(nTrace.get(i).id + "  " + eTrace.get(i).id);
+			System.out.println("");
+		}
+		System.out.println(nTrace.get(nTrace.size()-1).id);
 	}
 }

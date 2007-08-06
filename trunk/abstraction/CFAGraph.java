@@ -32,6 +32,11 @@ public class CFAGraph
 		return nodeList.get(1);
 	}
 
+	Node getNode(int id)
+	{
+		return nodeList.get(id);
+	}
+
 	public void display()
 	{
 		//This function is only for test

@@ -75,11 +75,11 @@ public class CFATree
 				numOfCallback = forwardSearch(nextnode);
 
 				//karldodd: what is num?
-				if ( num > 0 )
+				if ( numOfCallback > 0 )
 				{
 					nextNode.stateSpaceStack.pop();
 					removeTrace(edge); //karldodd: what does revomeTrace(edge) mean?
-					return num - 1;
+					return numOfCallback - 1;
 				}
 			}
 //			System.out.println(node.id);	//For test
@@ -199,7 +199,7 @@ public class CFATree
 	//karldodd: what is truePred and pred?
 	State calAssignment(Predicate truePred, Predicate pred, State predState, Sentence sen)
 	{
-		if (truePred.imply(sen.negtive()))
+		if (truePred.imply(sen.getNegativeCopy)
 		{
 			return STATE_FALSE;
 		}
@@ -285,7 +285,7 @@ public class CFATree
 //		StateSpace backInitSs = StateSpace.createInitialStateSpace(backNodeTrace.get(0).predVectorArray.peek());
 
 		//Karldodd: There is no edge.predVectorArray...
-		cloneNodeTrace.get(cloneNodeTrace.size()-1).initStateSpace(edgeTrace.get(edgeTrace.size()-1).predVetorArray.peek());
+		cloneNodeTrace.get(cloneNodeTrace.size()-1).initStateSpace(edgeTrace.get(edgeTrace.size()-1).tailNode.predVetorArray.peek());
 
 		for (int i = cloneEdgeTrace.size()-1;  i >= 0;  i--)
 		{
@@ -369,7 +369,7 @@ public class CFATree
 			eTrace.add(newEdge);
 		}
 	}
-
+/*
 	ArrayList<Edge> clone(ArrayList<Edge> preList)
 	{
 		ArrayList<Edge> newList = new ArrayList<Edge>();
@@ -398,6 +398,6 @@ public class CFATree
 		newList.add(preList.get(i-1).tailNode);
 		return newList;
 	}
-
+*/
 //	boolean endCycle() {}
 }

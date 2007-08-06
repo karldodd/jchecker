@@ -41,6 +41,7 @@ public class StateSpace{
 		{
 			newSs.add(new PredicateVector(pv.getPredicate(), State.STATE_TRUE));
 		}
+		return newSs;
 	}
 
 /*

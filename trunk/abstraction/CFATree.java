@@ -46,8 +46,29 @@ public class CFATree
 		
 		if (node.isError())
 		{
-			//numBack means how many nodes should back
-			numBack = backTrace();
+			//numBack means how many nodes should back, predBack returns predicate to be added
+			Predicate predBack = null;
+			numBack = backTrace(predBack);
+			Stack<StateSpace> reverseStack = new Stack<StateSpace>();
+			StateSpace ss = null;
+			for (int i=edgeTrace.size()-1-numBack; i>=0; i--)
+			{
+				ss = edgeTrace.get(i).tailNode.popStateSpace();
+				reverseStack.push(ss);
+			}
+			reverseStack.push( edgeTrace.get(0).headNode.popStateSpace()  );
+
+			StateSpace addSs = new StateSpace();
+			addSs.add( new PredicateVector(predBack, State.STATE_TRUE) );
+			ss = StateSpace.merge(reverseStack.pop(), addSs);
+			edgeTrace.get(0).headNode.pushStateSpace(ss);
+			for (int i=0; i<edgeTrace.size()-1-numBack; i++)
+			{
+				addSs = calStateSpace(addSs, edgeTrace.get(i));
+				ss = StateSpace.merge(reverseStack.pop(), addSs);
+				edgeTrace.get(i).tailNode.pushStateSpace(ss);
+			}
+
 			return numBack;
 		}
 		else
@@ -150,30 +171,11 @@ public class CFATree
 
 		if ( p.imply((AdvCondition)label, cPred) )
 		{
-/*			switch(predState)
-			{
-				case State.STATE_POS: return State.STATE_POS;
-				case State.STATE_NEG: return State.STATE_FALSE;
-				case State.STATE_TRUE: return State.STATE_POS;
-				//case STATE_NEG: return STATE_FALSE;
-				//defaults: return predState;
-			}
-*/
 			if (predState == State.STATE_NEG) return State.STATE_FALSE;
 			else return predState;
 		}
 		if ( p.imply((AdvCondition)label, cPred.getNegativeCopy()) )
 		{
-/*
-			switch(predState)
-			{
-				case State.STATE_POS: return State.STATE_FALSE;
-				case State.STATE_NEG: return State.STATE_NEG;
-				case State.STATE_TRUE: return State.STATE_NEG;
-				//case STATE_POS: return STATE_FALSE;
-				//defaults: return predState;
-			}
-*/			
 			if (predState == State.STATE_POS) return State.STATE_FALSE;
 			else return predState;
 		}
@@ -190,7 +192,7 @@ public class CFATree
 		edgeTrace.remove( edgeTrace.size()-1 );	//last edge
 	}
 
-	int backTrace()
+	int backTrace(Predicate predBack)
 	{
 		ArrayList<Edge> cloneEdgeTrace = new ArrayList<Edge>();
 		ArrayList<Node> cloneNodeTrace = new ArrayList<Node>();
@@ -227,7 +229,6 @@ public class CFATree
 			{
 				advConditionList.add(pv.getAdvConditionByState());
 			}
-//			AdvCondition testAdvCondition = AdvCondition.intersectall(advConditionList);
 
 			//karldodd: we should intersect the "nextSs" with the former one, and test if it is satifiable.
 			if ( ! p.isSatisfiable(advConditionList) )
@@ -239,27 +240,12 @@ public class CFATree
 				for (int j = cloneEdgeTrace.size()-1;  j >= i;  j--)
 				{
 					linkLabel.add(cloneEdgeTrace.get(j).label);
-/*					
-					//if isAssignment
-					EdgeLabel label = cloneEdgeTrace.get(j).label;
-					if ( label instanceof EvaluationSentence )
-					{
-						newLabel = (EdgeLabel)((AdvCondition)newLabel).getWeakestPrecondition((EvaluationSentence)label);
-					}
-					//if isCondition
-					if ( label instanceof AdvCondition )
-					{	
-						newLabel = label;
-					}
-					linkLabel.add(newLabel);
-*/					
 				}
 				//add stateSpace of falsenode
 				for (PredicateVector pv : primitiveSs.predVectorArray)
 				{
 					linkLabel.add((EdgeLabel)(pv.getAdvConditionByState()));
 				}
-//				testAdvCondition = AdvCondition.intersectAll(linkLabel);
 				//call foci
 				List<Predicate> pList=null;
 				try{
@@ -281,6 +267,7 @@ public class CFATree
 						if( nextSsBack.isFalse() )
 						{
 							numBack = cloneEdgeTrace.size() - k;
+							predBack = pBack;
 							endCycle = true;
 							break;
 						}

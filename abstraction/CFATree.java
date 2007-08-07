@@ -236,8 +236,10 @@ public class CFATree
 				ArrayList<EdgeLabel> linkLabel = new ArrayList<EdgeLabel>();	//need remove all?
 				EdgeLabel newLabel = cloneEdgeTrace.get(cloneEdgeTrace.size()-1).label;
 				linkLabel.add((AdvCondition)newLabel);	//without judge?
-				for (int j = cloneEdgeTrace.size()-2;  j >= i;  j--)
+				for (int j = cloneEdgeTrace.size()-1;  j >= i;  j--)
 				{
+					linkLabel.add(cloneEdgeTrace.get(j).label);
+/*					
 					//if isAssignment
 					EdgeLabel label = cloneEdgeTrace.get(j).label;
 					if ( label instanceof EvaluationSentence )
@@ -250,6 +252,7 @@ public class CFATree
 						newLabel = label;
 					}
 					linkLabel.add(newLabel);
+*/					
 				}
 				//add stateSpace of falsenode
 				for (PredicateVector pv : primitiveSs.predVectorArray)

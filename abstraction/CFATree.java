@@ -9,6 +9,17 @@ public class CFATree
 {
 	ArrayList<Edge> edgeTrace;
 	CFAGraph cg;
+        
+        public static Prover getProverInstance(){
+	    try{
+	    	Prover p = ProverFactory.getProverByName("focivampyre");
+		return p;
+	    }
+	    catch(Exception e){
+		System.err.println("Error: Prover not found...");
+		return null;
+	    }
+	}
 
 	CFATree(CFAGraph g)
 	{
@@ -92,11 +103,14 @@ public class CFATree
 			{
 				nextState = calAssignment(predWithState, pred, predState, label);
 			}
-			if (label instanceof AdvCondition)
+			else if (label instanceof AdvCondition)
 			{
 				nextState = calCondition(pred, predState, label);
 			}
-			
+			else{
+				System.err.println("Unexpected EdgeLabel (neither Evaluation nor AdvCondition");
+				nextState=null;
+			}	
 			if (nextState == State.STATE_FALSE)
 			{
 				nextSs.stateSign = State.STATE_FALSE;
@@ -112,7 +126,7 @@ public class CFATree
 	{
 		AdvCondition cPredWithState = predWithState.getAdvCondition();
 		AdvCondition cPred = pred.getAdvCondition();
-		Prover p = ProverFactory.getProverByName("focivampyre");
+		Prover p=getProverInstance();
 
 		if (p.imply(cPredWithState, label.getNegativeCopy()))
 		{
@@ -132,7 +146,7 @@ public class CFATree
 	State calCondition(Predicate pred, State predState, EdgeLabel label)
 	{
 		AdvCondition cPred = pred.getAdvCondition();
-		Prover p = ProverFactory.getProverByName("focivampyre");
+		Prover p =getProverInstance();
 
 		if ( p.imply((AdvCondition)label, cPred) )
 		{
@@ -181,10 +195,12 @@ public class CFATree
 		ArrayList<Edge> cloneEdgeTrace = new ArrayList<Edge>();
 		ArrayList<Node> cloneNodeTrace = new ArrayList<Node>();
 		ArrayList<AdvCondition> advConditionList = new ArrayList<AdvCondition>();
-		Prover p = ProverFactory.getProverByName("focivampyre");
+	
 
 		cloneRefineRoute(cloneEdgeTrace, cloneNodeTrace);
 		cloneNodeTrace.get(cloneNodeTrace.size()-1).initStateSpace(edgeTrace.get(edgeTrace.size()-1).tailNode.peekStateSpace());
+
+		Prover p=getProverInstance();
 
 		for (int i = cloneEdgeTrace.size()-1;  i >= 0;  i--)
 		{
@@ -192,6 +208,9 @@ public class CFATree
 			StateSpace preSs = curNode.ss;
 			Edge edge = cloneEdgeTrace.get(i);
 			StateSpace nextSs = calStateSpace(preSs, edge);
+
+			
+
 			for (int j=0; j<advConditionList.size(); j++)
 			{
 				advConditionList.remove(j);
@@ -239,7 +258,13 @@ public class CFATree
 				}
 //				testAdvCondition = AdvCondition.intersectAll(linkLabel);
 				//call foci
-				ArrayList<Predicate> pList = p.getInterpolation(linkLabel);
+				List<Predicate> pList=null;
+				try{
+				    pList = p.getInterpolation(linkLabel);
+				}
+				catch(Exception e){
+				    System.err.println("Fatal error: fail to calculate interpolation.");
+				}
 
 				int numBack = 0;
 				boolean endCycle = false;

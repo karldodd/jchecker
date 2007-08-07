@@ -56,7 +56,6 @@ public class Node
 	void pushStateSpace(StateSpace ss)
 	{
 		stateSpaceStack.push(ss);	
-	
 	}
 
 	StateSpace popStateSpace()

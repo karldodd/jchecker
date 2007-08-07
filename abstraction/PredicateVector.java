@@ -41,4 +41,9 @@ public class PredicateVector
 			return null;
 		}
 	}
+
+	public Predicate getPredicateByState()
+	{
+		return new Predicate(this.getAdvConditionByState());
+	}
 }

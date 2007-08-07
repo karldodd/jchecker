@@ -9,26 +9,30 @@ public class CFATree
 {
 	ArrayList<Edge> edgeTrace;
 	CFAGraph cg;
-        
-        public static Prover getProverInstance(){
-	    try{
-	    	Prover p = ProverFactory.getProverByName("focivampyre");
-		return p;
-	    }
-	    catch(Exception e){
-		System.err.println("Error: Prover not found...");
-		return null;
-	    }
-	}
 
 	CFATree(CFAGraph g)
 	{
 		edgeTrace = new ArrayList<Edge>();
 		cg = g;
 	}
+        
+        public static Prover getProverInstance()
+	{
+	    try
+	    {
+	    	Prover p = ProverFactory.getProverByName("focivampyre");
+		return p;
+	    }
+	    catch(Exception e)
+	    {
+		System.err.println("Error: Prover not found...");
+		return null;
+	    }
+	}
 
 	public void beginForwardSearch(ArrayList<Predicate> predArray)
 	{
+		//initial state space of first node and start searching
 		Node firstNode = cg.firstNode();
 		StateSpace ssInit = StateSpace.createInitialStateSpace(predArray);
 		firstNode.pushStateSpace(ssInit);
@@ -42,37 +46,21 @@ public class CFATree
 		Node nextNode;
 		StateSpace preSs = node.peekStateSpace();
 		StateSpace nextSs;
-		int numBack = 0;	//default, delete end node
+		//numBack means how many nodes should back, predToAdd returns predicate to be added
+		int numBack = 0;	//default value is 0, stands for leaf node
 		
 		if (node.isError())
 		{
-			//numBack means how many nodes should back, predBack returns predicate to be added
-			Predicate predBack = null;
-			numBack = backTrace(predBack);
-			Stack<StateSpace> reverseStack = new Stack<StateSpace>();
-			StateSpace ss = null;
-			for (int i=edgeTrace.size()-1-numBack; i>=0; i--)
-			{
-				ss = edgeTrace.get(i).tailNode.popStateSpace();
-				reverseStack.push(ss);
-			}
-			reverseStack.push( edgeTrace.get(0).headNode.popStateSpace()  );
-
-			StateSpace addSs = new StateSpace();
-			addSs.add( new PredicateVector(predBack, State.STATE_TRUE) );
-			ss = StateSpace.merge(reverseStack.pop(), addSs);
-			edgeTrace.get(0).headNode.pushStateSpace(ss);
-			for (int i=0; i<edgeTrace.size()-1-numBack; i++)
-			{
-				addSs = calStateSpace(addSs, edgeTrace.get(i));
-				ss = StateSpace.merge(reverseStack.pop(), addSs);
-				edgeTrace.get(i).tailNode.pushStateSpace(ss);
-			}
+			//encounter error node
+			Predicate predToAdd = null;		//new predicate should be added
+			numBack = backTrace(predToAdd);
+			addNewPredicate(numBack, predToAdd);
 
 			return numBack;
 		}
 		else
 		{
+			//iterate whole tree
 			for (Edge edge : node.outEdge)
 			{
 				nextNode = edge.tailNode;
@@ -85,7 +73,7 @@ public class CFATree
 				}
 				if ( nextNode.id < node.id )	//cycle back
 				{
-					if ( node.implyBy(nextSs) )
+					if ( node.implyBy(nextSs) )	//next state space implies previous state space of this same node
 					{
 						continue;
 					}
@@ -95,7 +83,7 @@ public class CFATree
 
 				numBack = forwardSearch(nextNode);
 
-				if ( numBack > 0 )
+				if ( numBack > 0 )			//numBack > 0 means it's not the end of recall
 				{
 					nextNode.popStateSpace();
 					removeTrace();
@@ -115,9 +103,10 @@ public class CFATree
 
 		for ( PredicateVector predVect : preSs.predVectorArray)
 		{
-			Predicate pred = predVect.getPredicate();
-			State predState = predVect.getState();
-			Predicate predWithState = new Predicate(predVect.getAdvConditionByState());
+			//calculate each predicate in state space
+			Predicate pred = predVect.getPredicate();		//(primitive predicate, predicate's state) and predicate
+			State predState = predVect.getState();			//i.e. (x>4, STATE_NEG) and x<=4
+			Predicate predWithState = predVect.getPredicateByState();
 			State nextState;
 
 			if (label instanceof EvaluationSentence)
@@ -128,11 +117,12 @@ public class CFATree
 			{
 				nextState = calCondition(pred, predState, label);
 			}
-			else{
+			else
+			{
 				System.err.println("Unexpected EdgeLabel (neither Evaluation nor AdvCondition");
 				nextState=null;
 			}	
-			if (nextState == State.STATE_FALSE)
+			if (nextState == State.STATE_FALSE)		//if next state space is false, return
 			{
 				nextSs.stateSign = State.STATE_FALSE;
 				return nextSs;
@@ -147,8 +137,9 @@ public class CFATree
 	{
 		AdvCondition cPredWithState = predWithState.getAdvCondition();
 		AdvCondition cPred = pred.getAdvCondition();
-		Prover p=getProverInstance();
-
+		Prover p = getProverInstance();
+		
+		//method to calculate evaluation sentence
 		if (p.imply(cPredWithState, label.getNegativeCopy()))
 		{
 			return State.STATE_FALSE;
@@ -169,6 +160,7 @@ public class CFATree
 		AdvCondition cPred = pred.getAdvCondition();
 		Prover p =getProverInstance();
 
+		//method to calculate condition sentence
 		if ( p.imply((AdvCondition)label, cPred) )
 		{
 			if (predState == State.STATE_NEG) return State.STATE_FALSE;
@@ -189,39 +181,44 @@ public class CFATree
 
 	void removeTrace()
 	{
-		edgeTrace.remove( edgeTrace.size()-1 );	//last edge
+		edgeTrace.remove( edgeTrace.size()-1 );	//remove last edge
 	}
 
-	int backTrace(Predicate predBack)
+	int backTrace(Predicate predToAdd)
 	{
 		ArrayList<Edge> cloneEdgeTrace = new ArrayList<Edge>();
 		ArrayList<Node> cloneNodeTrace = new ArrayList<Node>();
 		ArrayList<AdvCondition> advConditionList = new ArrayList<AdvCondition>();
-	
-
-		cloneRefineRoute(cloneEdgeTrace, cloneNodeTrace);
-		cloneNodeTrace.get(cloneNodeTrace.size()-1).initStateSpace(edgeTrace.get(edgeTrace.size()-1).tailNode.peekStateSpace());
-
 		Prover p=getProverInstance();
+	
+		//first, clone the route of CFA tree
+		cloneRefineRoute(cloneEdgeTrace, cloneNodeTrace);
+
+		//initial last node's state space by last node's state space in CFA tree
+		cloneNodeTrace.get(cloneNodeTrace.size()-1).initStateSpace(edgeTrace.get(edgeTrace.size()-1).tailNode.peekStateSpace());
 
 		for (int i = cloneEdgeTrace.size()-1;  i >= 0;  i--)
 		{
+			//recall
 			Node curNode = cloneNodeTrace.get(i+1);
 			StateSpace preSs = curNode.ss;
 			Edge edge = cloneEdgeTrace.get(i);
 			StateSpace nextSs = calStateSpace(preSs, edge);
 
-			
-
+			//empty advConditionList
 			for (int j=0; j<advConditionList.size(); j++)
 			{
 				advConditionList.remove(j);
 			}
 			
+			//add AdvCondition of state space recalled
 			for (PredicateVector pv : nextSs.predVectorArray)
 			{
 				advConditionList.add(pv.getPredicate().getAdvCondition());
 			}
+
+			//add AdvCondition of state space of primitive node
+			//that is recall state space intersect primitive state space
 			int id = curNode.id;
 			Node primitiveNode = cg.getNode(id);
 			StateSpace primitiveSs = primitiveNode.peekStateSpace();
@@ -230,58 +227,18 @@ public class CFATree
 				advConditionList.add(pv.getAdvConditionByState());
 			}
 
-			//karldodd: we should intersect the "nextSs" with the former one, and test if it is satifiable.
+			//test if it is satifiable.
 			if ( ! p.isSatisfiable(advConditionList) )
 			{
 				//refinement
-				ArrayList<EdgeLabel> linkLabel = new ArrayList<EdgeLabel>();	//need remove all?
-				EdgeLabel newLabel = cloneEdgeTrace.get(cloneEdgeTrace.size()-1).label;
-				linkLabel.add((AdvCondition)newLabel);	//without judge?
-				for (int j = cloneEdgeTrace.size()-1;  j >= i;  j--)
-				{
-					linkLabel.add(cloneEdgeTrace.get(j).label);
-				}
-				//add stateSpace of falsenode
-				for (PredicateVector pv : primitiveSs.predVectorArray)
-				{
-					linkLabel.add((EdgeLabel)(pv.getAdvConditionByState()));
-				}
-				//call foci
-				List<Predicate> pList=null;
-				try{
-				    pList = p.getInterpolation(linkLabel);
-				}
-				catch(Exception e){
-				    System.err.println("Fatal error: fail to calculate interpolation.");
-				}
-
 				int numBack = 0;
-				boolean endCycle = false;
-				for (Predicate pBack : pList)
-				{
-					cloneNodeTrace.get(0).initStateSpace(pBack);
-					StateSpace preSsBack = cloneNodeTrace.get(0).ss;
-					for (int k = 0; k < cloneEdgeTrace.size(); k++)
-					{
-						StateSpace nextSsBack = calStateSpace(preSsBack, cloneEdgeTrace.get(k));
-						if( nextSsBack.isFalse() )
-						{
-							numBack = cloneEdgeTrace.size() - k;
-							predBack = pBack;
-							endCycle = true;
-							break;
-						}
-					}
-					if (endCycle)  break;
-				}
-
-				if (endCycle) return numBack;
-				
-				break;	
+				numBack = refineRoute(predToAdd, cloneEdgeTrace, cloneNodeTrace, i, primitiveSs);
+				if (numBack > 0) return numBack;
+				break;	//pseudo counter instance can't be judged after all predicates used, treat it as true counter instance
 			}
 		}
 
-		//This is true counter-example. End.
+		//this is true counter instance, end
 		display(cloneEdgeTrace, cloneNodeTrace);
 		return cloneEdgeTrace.size();	//pop out whole route
 	}
@@ -303,6 +260,88 @@ public class CFATree
 			nTrace.get(i+1).addInEdge(newEdge);
 			eTrace.add(newEdge);
 		}
+	}
+
+	int refineRoute(Predicate predToAdd, ArrayList<Edge> cloneEdgeTrace, ArrayList<Node> cloneNodeTrace, int numStopNode, StateSpace primitiveSs)
+	{
+		Prover p = getProverInstance();
+		ArrayList<EdgeLabel> linkLabel = new ArrayList<EdgeLabel>();
+
+		//add edge labels
+		EdgeLabel newLabel = cloneEdgeTrace.get(cloneEdgeTrace.size()-1).label;
+		linkLabel.add(newLabel);
+		for (int j = cloneEdgeTrace.size()-1;  j >= numStopNode;  j--)
+		{
+			linkLabel.add(cloneEdgeTrace.get(j).label);
+		}
+
+		//add stateSpace of false node
+		for (PredicateVector pv : primitiveSs.predVectorArray)
+		{
+			linkLabel.add((EdgeLabel)(pv.getAdvConditionByState()));
+		}
+
+		//calculate interpolation
+		List<Predicate> pList = null;
+		try
+		{
+		    pList = p.getInterpolation(linkLabel);
+		}
+		catch(Exception e)
+		{
+		    System.err.println("Fatal error: fail to calculate interpolation.");
+		}
+
+		//refine route for each interpolation predicate
+		int numBack = 0;
+		for (Predicate pBack : pList)
+		{
+			//from head node of clone node trace
+			cloneNodeTrace.get(0).initStateSpace(pBack);
+			StateSpace preSs = cloneNodeTrace.get(0).ss;
+			for (int k = 0; k < cloneEdgeTrace.size(); k++)
+			{
+				StateSpace nextSs = calStateSpace(preSs, cloneEdgeTrace.get(k));
+				if( nextSs.isFalse() )
+				{
+					numBack = cloneEdgeTrace.size() - k;
+					predToAdd = pBack;
+					return numBack;
+				}
+			}
+		}
+		
+		predToAdd = null;
+		return numBack;	//for every predicates, can't refine, end
+	}
+
+	void addNewPredicate(int numBack, Predicate predToAdd)
+	{
+		//add new predicate and state space
+		//first "pour" previous state space to another stack and then "pour" back, facilitating the calculation
+
+		//pour out
+		Stack<StateSpace> reverseStack = new Stack<StateSpace>();
+		StateSpace ss = null;
+		for (int i=edgeTrace.size()-1-numBack; i>=0; i--)
+		{
+			ss = edgeTrace.get(i).tailNode.popStateSpace();
+			reverseStack.push(ss);
+		}
+		reverseStack.push( edgeTrace.get(0).headNode.popStateSpace()  );
+
+		//merge old and new state space and pour in
+		StateSpace addSs = new StateSpace();
+		addSs.add( new PredicateVector(predToAdd, State.STATE_TRUE) );	//initial state space of new predicate
+		ss = StateSpace.merge(reverseStack.pop(), addSs);		//merge
+		edgeTrace.get(0).headNode.pushStateSpace(ss);
+		for (int i=0; i<edgeTrace.size()-1-numBack; i++)
+		{
+			addSs = calStateSpace(addSs, edgeTrace.get(i));		//calculate only new predicate
+			ss = StateSpace.merge(reverseStack.pop(), addSs);	//merge
+			edgeTrace.get(i).tailNode.pushStateSpace(ss);		//pour back
+		}
+	
 	}
 
 	void display(ArrayList<Edge> eTrace, ArrayList<Node> nTrace)

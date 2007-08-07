@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="Jchecker" default="run" basedir="." >
+	<property name="src" value="."/>
+	<property name="dest" value="bin"/>
+	<property name="jchecker_jar" value="jchecker.jar" />
+	<target name="init">
+		<mkdir dir="${dest}"/>
+	</target>
+	<target name="compile" depends="init">
+		<javac srcdir="${src}" destdir="${dest}"/>
+	</target>
+	<target name="build" depends="compile">
+		<jar jarfile="${jchecker_jar}" basedir="${dest}"/>
+	</target>
+	<target name="run" depends="build">
+		<java classname="ui.console.AppStarter" classpath="${jchecker_jar}"/>
+	</target>
+</project>

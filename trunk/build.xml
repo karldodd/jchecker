@@ -3,6 +3,7 @@
 	<property name="src" value="."/>
 	<property name="dest" value="bin"/>
 	<property name="jchecker_jar" value="jchecker.jar" />
+	<property name="inputfile" value="source.c" />
 	<target name="init">
 		<mkdir dir="${dest}"/>
 	</target>
@@ -13,6 +14,8 @@
 		<jar jarfile="${jchecker_jar}" basedir="${dest}"/>
 	</target>
 	<target name="run" depends="build">
-		<java classname="ui.console.AppStarter" classpath="${jchecker_jar}"/>
+		<java classname="ui.console.AppStarter" classpath="${jchecker_jar}" >
+			<arg value="${inputfile}" />
+		</java>
 	</target>
 </project>

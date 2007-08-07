@@ -42,7 +42,7 @@ public class CFATree
 		Node nextNode;
 		StateSpace preSs = node.peekStateSpace();
 		StateSpace nextSs;
-		int numBack = 1;	//default, delete end node
+		int numBack = 0;	//default, delete end node
 		
 		if (node.isError())
 		{

@@ -58,9 +58,10 @@ public class Node
 		stateSpaceStack.push(ss);	
 	
 	}
-	void popStateSpace()
+
+	StateSpace popStateSpace()
 	{
-		stateSpaceStack.pop();	
+		return stateSpaceStack.pop();	
 	}
 
 	StateSpace peekStateSpace()

@@ -53,6 +53,20 @@ public class StateSpace
 		predVectorArray.add(pv);
 	}
 
+	public static StateSpace merge(StateSpace ss1, StateSpace ss2)
+	{
+		StateSpace ss3 = new StateSpace();
+		for (PredicateVector pv : ss1.predVectorArray)
+		{
+			ss3.predVectorArray.add(pv);
+		}
+		for (PredicateVector pv : ss2.predVectorArray)
+		{
+			ss3.predVectorArray.add(pv);
+		}
+		return ss3;
+	}
+
 	boolean imply(StateSpace rightSs)
 	{
 		ArrayList<AdvCondition> leftAdvList = new ArrayList<AdvCondition>();

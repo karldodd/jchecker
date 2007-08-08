@@ -280,7 +280,7 @@ public class ProverImplFociVampyre implements Prover{
       		//File f=new File(".");
 		//File tempFile=new File(f.getCanonicalPath()+"/"+fileName);
 		//System.out.println(tempFile.getAbsolutePath());
-		System.out.println("Writing:\n"+s);
+		//System.out.println("Writing:\n"+s);
 		File tempFile=File.createTempFile("for","vamfoci");
 		tempFile.deleteOnExit();
 

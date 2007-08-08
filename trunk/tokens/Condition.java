@@ -132,15 +132,15 @@ public class Condition extends Sentence implements Cloneable{
 		// {equal,notequal,larger,smaller,equallarger,equalsmaller}
 		if (this.type == ConType.equal)
 			this.type = ConType.notequal;
-		if (this.type == ConType.notequal)
+		else if (this.type == ConType.notequal)
 			this.type = ConType.equal;
-		if (this.type == ConType.larger)
+		else if (this.type == ConType.larger)
 			this.type = ConType.equalsmaller;
-		if (this.type == ConType.smaller)
+		else if (this.type == ConType.smaller)
 			this.type = ConType.equallarger;
-		if (this.type == ConType.equallarger)
+		else if (this.type == ConType.equallarger)
 			this.type = ConType.smaller;
-		if (this.type == ConType.equalsmaller)
+		else if (this.type == ConType.equalsmaller)
 			this.type = ConType.larger;
 	}
 }

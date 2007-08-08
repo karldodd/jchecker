@@ -131,7 +131,7 @@ public class CFAGraph
 					r=lastActiveNodeFromLeft;
 				else
 					r=new Node(false);
-				Edge rEdge=new Edge(lastActiveNode,r,(EdgeLabel)(ds.c));
+				Edge rEdge=new Edge(lastActiveNode,r,(EdgeLabel)(ds.c.getNegativeCopy()));
 				lastActiveNode.addOutEdge(rEdge);
 				r.addInEdge(rEdge);
 				this.addNode(r);
@@ -165,7 +165,7 @@ public class CFAGraph
 					r=intendedEndNode;
 				else
 					r=new Node(false);
-				Edge rEdge=new Edge(lastActiveNode,r,(EdgeLabel)(ds.c));
+				Edge rEdge=new Edge(lastActiveNode,r,(EdgeLabel)(ds.c.getNegativeCopy()));
 				lastActiveNode.addOutEdge(rEdge);
 				r.addInEdge(rEdge);
 				this.addNode(r);

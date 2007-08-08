@@ -146,4 +146,9 @@ public class AdvCondition implements EdgeLabel,Cloneable{
 	}
 	return left;
     }
+
+    public static AdvCondition intersect(AdvCondition c1, AdvCondition c2)
+    {
+    	return new AdvCondition(c1, c2, AdvCondition.Type_AND);
+    }
 }

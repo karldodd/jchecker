@@ -94,4 +94,13 @@ public class StateSpace
 		}
 		return result;
 	}
+
+	void display()
+	{
+		System.out.println("state sign is: " + stateSign);
+		for (PredicateVector pv : predVectorArray)
+		{
+			pv.display();
+		}
+	}
 }

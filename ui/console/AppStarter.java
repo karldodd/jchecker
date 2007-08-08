@@ -32,8 +32,14 @@ public class AppStarter{
 	}
 	else{
 	    CFAGraph graph=CFAGraph.createCFAGraphFromCode(sourceFile);
-	    print("CFAGraph constructed.");
-	    graph.display();
+//	    print("CFAGraph constructed.");
+//	    graph.display();
+
+	    print("");
+	    CFATree tree = new CFATree(graph);
+	    ArrayList<Predicate> list = new ArrayList<Predicate>();
+	    list.add(new Predicate(new AdvCondition(new Condition(new Expression(new Variable("b")), new Expression(4), ConType.smaller))));
+	    tree.beginForwardSearch(list);
 	}
 
     }

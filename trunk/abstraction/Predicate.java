@@ -27,6 +27,10 @@ public class Predicate
 	public String toLFString()
 	{
 		return c.toLFString();
-	}	
+	}
 
+	void display()
+	{
+		System.out.println("predicate is: " + c.toString());
+	}
 }

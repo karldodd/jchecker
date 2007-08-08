@@ -46,4 +46,11 @@ public class PredicateVector
 	{
 		return new Predicate(this.getAdvConditionByState());
 	}
+
+	void display()
+	{
+		System.out.println("predicate vector display:");
+		p.display();
+		System.out.println("state is: " + s);
+	}
 }

@@ -96,19 +96,33 @@ public class Node
 		System.out.println("inEdge:");
 		for (Edge e : inEdge)
 		{
-			if (e == null)
-				System.out.println("null");
-			else
-				e.display();
+			e.display();
 		}
 		System.out.println("outEdge:");
 		for (Edge e : outEdge)
 		{
-			if (e == null)
-				System.out.println("null");
-			else
-				e.display();
+			e.display();
 		}
+		if (ss != null)
+		{
+			System.out.println("single state space: ");
+			ss.display();
+		}
+		if (stateSpaceStack.empty())
+		{
+			System.out.println("state space stack is empty");
+		}
+		else
+		{
+			System.out.println("state space stack: ");
+			for (int i=0; i<stateSpaceStack.size(); i++)
+			{
+				System.out.println(i + " state space:");
+				stateSpaceStack.get(i).display();
+			}
+			System.out.println("end state space stack");
+		}
+		System.out.println("");
 	}
 
 }

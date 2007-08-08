@@ -323,7 +323,7 @@ public class CFATree
 		//pour out
 		Stack<StateSpace> reverseStack = new Stack<StateSpace>();
 		StateSpace ss = null;
-		for (int i=edgeTrace.size()-1-numBack; i>=0; i--)
+		for (int i=edgeTrace.size()-1; i>=0; i--)
 		{
 			ss = edgeTrace.get(i).tailNode.popStateSpace();
 			reverseStack.push(ss);
@@ -335,7 +335,7 @@ public class CFATree
 		addSs.add( new PredicateVector(predToAdd, State.STATE_TRUE) );	//initial state space of new predicate
 		ss = StateSpace.merge(reverseStack.pop(), addSs);		//merge
 		edgeTrace.get(0).headNode.pushStateSpace(ss);
-		for (int i=0; i<edgeTrace.size()-1-numBack; i++)
+		for (int i=0; i<edgeTrace.size()-numBack; i++)
 		{
 			addSs = calStateSpace(addSs, edgeTrace.get(i));		//calculate only new predicate
 			ss = StateSpace.merge(reverseStack.pop(), addSs);	//merge

@@ -76,7 +76,8 @@ public class RefineRoute
 			EdgeLabel label = edgeTrace.get(i).label;
 			if (label instanceof AdvCondition)
 			{
-				lastAdvCondition = AdvCondition.intersect(lastAdvCondition, (AdvCondition)label);
+				if (lastAdvCondition.isTrue(p)) lastAdvCondition = (AdvCondition)label;
+				else lastAdvCondition = AdvCondition.intersect(lastAdvCondition, (AdvCondition)label);
 			}
 			else if (label instanceof EvaluationSentence)
 			{
@@ -89,6 +90,7 @@ public class RefineRoute
 			StateSpace pSs = primitiveSsTrace.get(i);
 			for (PredicateVector pv : pSs.predVectorArray)
 			{
+				if (pv.getAdvConditionByState().isTrue(p)) continue;
 				advConditionList.add(pv.getAdvConditionByState());
 			}
 		CommonMethod.comehere();

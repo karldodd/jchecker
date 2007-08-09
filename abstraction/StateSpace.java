@@ -37,18 +37,17 @@ public class StateSpace
 		return ss;
 	}
 
-	StateSpace()
+	public StateSpace()
 	{
 		predVectorArray = new ArrayList<PredicateVector>();
 		stateSign = State.STATE_TRUE;
 	}
 
-	public  StateSpace(PredicateVector pv)
+	public StateSpace(PredicateVector pv)
 	{
-		StateSpace ss = new StateSpace();
-
-		ss.predVectorArray.add(pv);
-		ss.stateSign = State.STATE_TRUE;
+		predVectorArray = new ArrayList<PredicateVector>();
+		predVectorArray.add(pv);
+		stateSign = State.STATE_TRUE;
 	}
 
 	boolean isFalse()

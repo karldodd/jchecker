@@ -81,10 +81,11 @@ public class ProverImplFociVampyre implements Prover{
 			if(!ac.isTrue(this)){
 				Predicate p=new Predicate(ac);
 				predicates.add(p);
-			}	
+				//System.out.println("Now predicate number: "+ predicates.size());
+			}
 		}
 		
-		System.out.println("predicates' size: " + predicates.size());
+		//System.out.println("predicates' size: " + predicates.size());
 		return predicates;
 	}
 

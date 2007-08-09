@@ -45,6 +45,7 @@ input: formulas
 	{
 		System.out.println(s.toString());
 	}
+	conditionPool=al;
 	//predicatePool=al;
 }
 ;

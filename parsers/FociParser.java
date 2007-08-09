@@ -19,15 +19,19 @@ package parsers;
 
 //#line 1 "FociParser.y"
 
-/*package prover;*/
+/*package prover;
+*/
 
 import java.lang.*;
-/*import java.lang.Math;*/
+/*import java.lang.Math;
+*/
 import java.io.*;
 import java.util.*;
 
-/*load self-defined token-library*/
-/*import tokens.Sentence;*/
+/*load self-defined token-library
+*/
+/*import tokens.Sentence;
+*/
 import tokens.*;
 import abstraction.*;
 
@@ -643,7 +647,8 @@ case 1:
 	{
 		System.out.println(s.toString());
 	}
-	/*predicatePool=al;*/
+	//predicatePool=al;
+	conditionPool=al;
 }
 break;
 case 2:
@@ -657,9 +662,11 @@ case 3:
  	if(val_peek(0)!=null)
  		al.add((AdvCondition)val_peek(0).obj);
  	yyval=new FociParserVal(al);
-	/*if(debugging)System.out.println("formula inserted: "+((AdvCondition)$2.obj).toString());*/
+	/*if(debugging)System.out.println("formula inserted: "+((AdvCondition)$2.obj).toString());
+*/
 	formulaNo++;
- 	/*warning $1 might have changed!*/
+ 	/*warning $1 might have changed!
+*/
  }
 break;
 case 4:
@@ -681,7 +688,8 @@ case 6:
 {
 	 Condition c=new Condition((Expression)val_peek(1).obj,(Expression)val_peek(0).obj,ConType.equal);
 	 yyval=new FociParserVal(new AdvCondition(c));
-	 /*if(debugging)System.out.println("formula got: "+c.toString());*/
+	 /*if(debugging)System.out.println("formula got: "+c.toString());
+*/
  }
 break;
 case 7:

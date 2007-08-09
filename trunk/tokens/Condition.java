@@ -22,9 +22,12 @@ public class Condition extends Sentence implements Cloneable{
 		this.type = type;
 	}
 	public Condition clone(){
+		if(this.type==ConType.T||this.type==ConType.F)
+			return new Condition(null,null,type);
 		return new Condition(l.clone(),r.clone(),type);
 	}
 	public Condition substitute(Variable v, Expression e){
+		if(this.type==ConType.T||this.type==ConType.F)return this.clone();
 		return new Condition(l.substitute(v,e),r.substitute(v,e),type);
 	}
 	public String toString() {
@@ -142,5 +145,13 @@ public class Condition extends Sentence implements Cloneable{
 			this.type = ConType.smaller;
 		else if (this.type == ConType.equalsmaller)
 			this.type = ConType.larger;
+		else if (this.type == ConType.T)
+			this.type = ConType.F;
+		else if (this.type == ConType.F)
+			this.type = ConType.T;
+		else{
+			System.err.println("Unexpected condition type. Exit");
+			System.exit(1);
+		}
 	}
 }

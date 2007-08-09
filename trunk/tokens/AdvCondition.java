@@ -1,5 +1,7 @@
 package tokens;
 
+import prover.*;
+
 import java.lang.*;
 import java.util.*;
 
@@ -152,9 +154,10 @@ public class AdvCondition implements EdgeLabel,Cloneable{
     	return new AdvCondition(c1, c2, AdvCondition.Type_AND);
     }
 
-    public boolean isTrue()
+    public boolean isTrue(Prover p)
     {
-	if (atom == null) return false;
-    	else return atom.type==ConType.T;
+	//if(jointType==Type_ATOM&&atom.type==ConType.T)return true;
+	AdvCondition ctrue=new AdvCondition(new Condition(true));
+	return p.imply(ctrue,this);
     }
 }

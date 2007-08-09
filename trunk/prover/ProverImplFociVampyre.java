@@ -77,8 +77,11 @@ public class ProverImplFociVampyre implements Prover{
 		for(AdvCondition ac : interpolations)
 		{
 			if(debugging)System.out.println("Getting predicate: "+ac.toString());
-			Predicate p=new Predicate(ac);
-			predicates.add(p);
+			//filter the true conditions: we don't need true to be our predicate.
+			if(!ac.isTrue(this)){
+				Predicate p=new Predicate(ac);
+				predicates.add(p);
+			}	
 		}
 		
 		return predicates;

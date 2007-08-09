@@ -40,7 +40,7 @@ import abstraction.*;
 input: formulas 
 {
 	ArrayList<AdvCondition> al=(ArrayList<AdvCondition>)$1.obj;
-	System.out.println("Work completed.\nThe grammar of the foci output file is correct.\n In all, "+formulaNo+" predicates found.");
+	System.out.println("Work completed.\nIn all, "+formulaNo+" predicates found.");
 	for (AdvCondition s: al)
 	{
 		System.out.println(s.toString());

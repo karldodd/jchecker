@@ -17,7 +17,7 @@ package parsers;
 
 
 
-//#line 2 "jchecker2.y"
+//#line 2 "parsers/jchecker2.y"
 import java.lang.*;
 /*import java.lang.Math;*/
 import java.io.*;
@@ -367,7 +367,7 @@ final static String yyrule[] = {
 "condition : expression '>' expression",
 };
 
-//#line 278 "jchecker2.y"
+//#line 278 "parsers/jchecker2.y"
 boolean sentenceLoaded=false;
 ArrayList<Sentence> sentencePool;
 
@@ -404,7 +404,7 @@ int yylex()
 
   yytext=st.sval;//string value
   
-  pout("yytext:"+yytext+"  char"+(char)tok+" nval: "+st.nval);
+  //pout("yytext:"+yytext+"  char"+(char)tok+" nval: "+st.nval);
   
   if(tok==st.TT_EOL)
   {
@@ -469,7 +469,7 @@ public int parseFile(File file)
   {
 	fileIn = new FileInputStream(file);
 	inReader = new InputStreamReader(fileIn);
-    st = new StreamTokenizer(inReader); 
+    st = new StreamTokenizer(inReader);
 
     st.slashStarComments(true);
 	st.slashSlashComments(true);
@@ -680,7 +680,7 @@ boolean doaction;
       {
 //########## USER-SUPPLIED ACTIONS ##########
 case 1:
-//#line 36 "jchecker2.y"
+//#line 36 "parsers/jchecker2.y"
 {ArrayList<Sentence> al=(ArrayList<Sentence>)val_peek(0).obj;
 System.out.println("Work completed.\nThe grammar of the file is correct.\n   "+sentenceNo+ " sentence(s) caught in all.  "+al.size());
 	for (Sentence s: al)
@@ -692,11 +692,11 @@ System.out.println("Work completed.\nThe grammar of the file is correct.\n   "+s
 }
 break;
 case 2:
-//#line 47 "jchecker2.y"
+//#line 47 "parsers/jchecker2.y"
 {ArrayList<Sentence> al=new ArrayList<Sentence>();yyval=new SourceParserVal(al);}
 break;
 case 3:
-//#line 49 "jchecker2.y"
+//#line 49 "parsers/jchecker2.y"
 {
  	ArrayList<Sentence> al=(ArrayList<Sentence>)val_peek(1).obj;
  	if(val_peek(0)!=null)
@@ -706,35 +706,35 @@ case 3:
  }
 break;
 case 4:
-//#line 58 "jchecker2.y"
+//#line 58 "parsers/jchecker2.y"
 {sentenceNo++;}
 break;
 case 6:
-//#line 60 "jchecker2.y"
+//#line 60 "parsers/jchecker2.y"
 {sentenceNo++;}
 break;
 case 7:
-//#line 61 "jchecker2.y"
+//#line 61 "parsers/jchecker2.y"
 {sentenceNo++;}
 break;
 case 8:
-//#line 62 "jchecker2.y"
+//#line 62 "parsers/jchecker2.y"
 {sentenceNo++;}
 break;
 case 9:
-//#line 65 "jchecker2.y"
+//#line 65 "parsers/jchecker2.y"
 {yyval=new SourceParserVal(new ReturnSentence(null));}
 break;
 case 10:
-//#line 66 "jchecker2.y"
+//#line 66 "parsers/jchecker2.y"
 {yyval=new SourceParserVal(new ReturnSentence((Expression)val_peek(1).obj));}
 break;
 case 11:
-//#line 69 "jchecker2.y"
+//#line 69 "parsers/jchecker2.y"
 {yyval=new SourceParserVal(new ErrorSentence());}
 break;
 case 14:
-//#line 77 "jchecker2.y"
+//#line 77 "parsers/jchecker2.y"
 {
  	Variable v=new Variable(getStringValue(val_peek(3)));
  	Expression e=(Expression)val_peek(1).obj;
@@ -742,89 +742,89 @@ case 14:
  }
 break;
 case 15:
-//#line 86 "jchecker2.y"
+//#line 86 "parsers/jchecker2.y"
 {yyval=null;}
 break;
 case 16:
-//#line 87 "jchecker2.y"
+//#line 87 "parsers/jchecker2.y"
 {yyval=null;}
 break;
 case 17:
-//#line 90 "jchecker2.y"
+//#line 90 "parsers/jchecker2.y"
 {}
 break;
 case 18:
-//#line 91 "jchecker2.y"
+//#line 91 "parsers/jchecker2.y"
 {}
 break;
 case 19:
-//#line 94 "jchecker2.y"
+//#line 94 "parsers/jchecker2.y"
 {Expression e=new Expression(val_peek(0).ival);yyval=new SourceParserVal(e);}
 break;
 case 20:
-//#line 95 "jchecker2.y"
+//#line 95 "parsers/jchecker2.y"
 {Expression e=new Expression(new Variable(getStringValue(val_peek(0))));yyval=new SourceParserVal(e);}
 break;
 case 21:
-//#line 97 "jchecker2.y"
+//#line 97 "parsers/jchecker2.y"
 {
  	Expression e=new Expression((Expression)val_peek(2).obj,(Expression)val_peek(0).obj,ExpType.plus);
  	yyval=new SourceParserVal(e);
  }
 break;
 case 22:
-//#line 102 "jchecker2.y"
+//#line 102 "parsers/jchecker2.y"
 {
  	Expression e=new Expression((Expression)val_peek(2).obj,(Expression)val_peek(0).obj,ExpType.minus);
  	yyval=new SourceParserVal(e);
  }
 break;
 case 23:
-//#line 107 "jchecker2.y"
+//#line 107 "parsers/jchecker2.y"
 {
  	Expression e=new Expression((Expression)val_peek(2).obj,(Expression)val_peek(0).obj,ExpType.multiply);
  	yyval=new SourceParserVal(e);
  }
 break;
 case 24:
-//#line 113 "jchecker2.y"
+//#line 113 "parsers/jchecker2.y"
 {
  	Expression e=new Expression((Expression)val_peek(0).obj,null,ExpType.negative);
  	yyval=new SourceParserVal(e);
  }
 break;
 case 25:
-//#line 119 "jchecker2.y"
+//#line 119 "parsers/jchecker2.y"
 {
  	yyval=val_peek(1);
  }
 break;
 case 26:
-//#line 124 "jchecker2.y"
+//#line 124 "parsers/jchecker2.y"
 {yyval=new SourceParserVal(new AdvCondition((Condition)val_peek(0).obj));}
 break;
 case 27:
-//#line 157 "jchecker2.y"
+//#line 157 "parsers/jchecker2.y"
 {
  yyval=new SourceParserVal(new AdvCondition((AdvCondition)val_peek(3).obj,(AdvCondition)val_peek(0).obj,AdvCondition.Type_AND)); 
 }
 break;
 case 28:
-//#line 162 "jchecker2.y"
+//#line 162 "parsers/jchecker2.y"
 {
  yyval=new SourceParserVal(new AdvCondition((AdvCondition)val_peek(3).obj,(AdvCondition)val_peek(0).obj,AdvCondition.Type_OR));
 }
 break;
 case 29:
-//#line 167 "jchecker2.y"
+//#line 167 "parsers/jchecker2.y"
 {yyval=val_peek(1);}
 break;
 case 30:
-//#line 171 "jchecker2.y"
+//#line 171 "parsers/jchecker2.y"
 {yyval=val_peek(0);((AdvCondition)yyval.obj).negateSelf();}
 break;
 case 31:
-//#line 175 "jchecker2.y"
+//#line 175 "parsers/jchecker2.y"
 {
 	AdvCondition c=(AdvCondition)val_peek(2).obj;
 	EvaluationSentence es=(EvaluationSentence)val_peek(0).obj;
@@ -834,7 +834,7 @@ case 31:
 }
 break;
 case 32:
-//#line 183 "jchecker2.y"
+//#line 183 "parsers/jchecker2.y"
 {
 	AdvCondition c=(AdvCondition)val_peek(2).obj;
 	DecisionSentence old=(DecisionSentence)val_peek(0).obj;
@@ -844,7 +844,7 @@ case 32:
 }
 break;
 case 33:
-//#line 191 "jchecker2.y"
+//#line 191 "parsers/jchecker2.y"
 {
 	AdvCondition c=(AdvCondition)val_peek(4).obj;
 	ArrayList<Sentence> al=(ArrayList<Sentence>)val_peek(1).obj;
@@ -854,7 +854,7 @@ case 33:
 }
 break;
 case 34:
-//#line 199 "jchecker2.y"
+//#line 199 "parsers/jchecker2.y"
 {
 	AdvCondition c=(AdvCondition)val_peek(8).obj;
 	ArrayList<Sentence> al=(ArrayList<Sentence>)val_peek(5).obj;
@@ -866,7 +866,7 @@ case 34:
 }
 break;
 case 35:
-//#line 211 "jchecker2.y"
+//#line 211 "parsers/jchecker2.y"
 {
 	AdvCondition c=(AdvCondition)val_peek(2).obj;
 	EvaluationSentence es=(EvaluationSentence)val_peek(0).obj;
@@ -876,7 +876,7 @@ case 35:
 }
 break;
 case 36:
-//#line 219 "jchecker2.y"
+//#line 219 "parsers/jchecker2.y"
 {
 	AdvCondition c=(AdvCondition)val_peek(2).obj;
 	DecisionSentence old=(DecisionSentence)val_peek(0).obj;
@@ -886,7 +886,7 @@ case 36:
 }
 break;
 case 37:
-//#line 227 "jchecker2.y"
+//#line 227 "parsers/jchecker2.y"
 {
 	AdvCondition c=(AdvCondition)val_peek(4).obj;
 	ArrayList<Sentence> al=(ArrayList<Sentence>)val_peek(1).obj;
@@ -896,42 +896,42 @@ case 37:
 }
 break;
 case 38:
-//#line 237 "jchecker2.y"
+//#line 237 "parsers/jchecker2.y"
 {
  	Condition c=new Condition((Expression)val_peek(3).obj,(Expression)val_peek(0).obj,ConType.equal);
  	yyval=new SourceParserVal(c);
  }
 break;
 case 39:
-//#line 242 "jchecker2.y"
+//#line 242 "parsers/jchecker2.y"
 {
  	Condition c=new Condition((Expression)val_peek(3).obj,(Expression)val_peek(0).obj,ConType.notequal);
  	yyval=new SourceParserVal(c);
  }
 break;
 case 40:
-//#line 247 "jchecker2.y"
+//#line 247 "parsers/jchecker2.y"
 {
  	Condition c=new Condition((Expression)val_peek(3).obj,(Expression)val_peek(0).obj,ConType.equalsmaller);
  	yyval=new SourceParserVal(c);
  }
 break;
 case 41:
-//#line 252 "jchecker2.y"
+//#line 252 "parsers/jchecker2.y"
 {
  	Condition c=new Condition((Expression)val_peek(3).obj,(Expression)val_peek(0).obj,ConType.equallarger);
  	yyval=new SourceParserVal(c);
  }
 break;
 case 42:
-//#line 257 "jchecker2.y"
+//#line 257 "parsers/jchecker2.y"
 {
  	Condition c=new Condition((Expression)val_peek(2).obj,(Expression)val_peek(0).obj,ConType.smaller);
  	yyval=new SourceParserVal(c);
  }
 break;
 case 43:
-//#line 262 "jchecker2.y"
+//#line 262 "parsers/jchecker2.y"
 {
  	Condition c=new Condition((Expression)val_peek(2).obj,(Expression)val_peek(0).obj,ConType.larger);
  	yyval=new SourceParserVal(c);

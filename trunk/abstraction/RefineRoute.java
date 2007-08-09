@@ -45,6 +45,10 @@ public class RefineRoute
 		}
 		primitiveSsTrace.add(temp.get(0));
 		eTrace.get(i-1).tailNode.pushStateSpace(temp.get(0));
+		
+		CommonMethod.display(edgeTrace);
+		CommonMethod.println();
+		CommonMethod.display(primitiveSsTrace);
 
 	}
 	

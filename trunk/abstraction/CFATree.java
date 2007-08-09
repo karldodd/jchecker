@@ -22,7 +22,6 @@ public class CFATree
 		Node firstNode = cg.firstNode();
 		StateSpace ssInit = StateSpace.createInitialStateSpace(predArray);
 		firstNode.pushStateSpace(ssInit);
-		firstNode.display();
 		forwardSearch(firstNode);
 
 		firstNode.popStateSpace();
@@ -56,8 +55,6 @@ public class CFATree
 			{
 				nextNode = edge.tailNode;
 				nextSs = StateSpace.calStateSpace(preSs, edge);
-
-				nextSs.display();
 
 				if ( nextSs.isFalse() )
 				{

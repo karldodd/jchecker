@@ -238,32 +238,36 @@ public class CFATree
 
 		//initial last node's state space by last node's state space in CFA tree
 		AdvCondition lastAdvCondition = new AdvCondition(new Condition(true));
-		cloneNodeTrace.get(cloneNodeTrace.size()-1).popStateSpace();
+		//cloneNodeTrace.get(cloneNodeTrace.size()-1).display();
+		//cloneNodeTrace.get(cloneNodeTrace.size()-1).popStateSpace();
+
+		//print("here here");
 
 
 		//cloneNodeTrace.get(cloneNodeTrace.size()-1).initStateSpace(edgeTrace.get(edgeTrace.size()-1).tailNode.peekStateSpace());
-		print("display last node");
-		cloneNodeTrace.get(cloneNodeTrace.size()-1).display();
-		print("");
+		//print("display last node");
+		//cloneNodeTrace.get(cloneNodeTrace.size()-1).display();
+		//print("");
 
 		for (int i = cloneEdgeTrace.size()-1;  i >= 0;  i--)
 		{
-			//recall
-			if (cloneEdgeTrace.get(i).label instanceof AdvCondition)
-			{
-				lastAdvCondition = AdvCondition.intersect(lastAdvCondition, (AdvCondition)(cloneEdgeTrace.get(i).label));
-			}
-			if (cloneEdgeTrace.get(i).label instanceof EvaluationSentence)
-			{
-				lastAdvCondition = lastAdvCondition.getWeakestPrecondition((EvaluationSentence)cloneEdgeTrace.get(i).label);
-			}
-
 			Node curNode = cloneNodeTrace.get(i);
 
 			//empty advConditionList
 			for (int j=0; j<advConditionList.size(); j++)
 			{
 				advConditionList.remove(j);
+			}
+
+			//recall
+			if (cloneEdgeTrace.get(i).label instanceof AdvCondition)
+			{
+				if (lastAdvCondition.isTrue()) lastAdvCondition = (AdvCondition)(cloneEdgeTrace.get(i).label);
+				else lastAdvCondition = AdvCondition.intersect(lastAdvCondition, (AdvCondition)(cloneEdgeTrace.get(i).label));
+			}
+			else if (cloneEdgeTrace.get(i).label instanceof EvaluationSentence)
+			{
+				lastAdvCondition = lastAdvCondition.getWeakestPrecondition((EvaluationSentence)cloneEdgeTrace.get(i).label);
 			}
 			advConditionList.add(lastAdvCondition);
 			
@@ -272,12 +276,24 @@ public class CFATree
 			StateSpace primitiveSs = cloneSsTrace.get(i);
 			for (PredicateVector pv : primitiveSs.predVectorArray)
 			{
-				advConditionList.add(pv.getAdvConditionByState());
+				if (pv.getState() == State.STATE_TRUE) continue;					
+				else advConditionList.add(pv.getAdvConditionByState());
 			}
+
+			print("");
+			System.out.println(i);
+			for (int l=0; l<advConditionList.size(); l++)
+			{
+				print(advConditionList.get(l).toString());
+			}
+			print("");
+			if (advConditionList.size()<=1) continue;
 
 			//test if it is satifiable.
 			if ( ! p.isSatisfiable(advConditionList) )
 			{
+				print("exit");
+				System.exit(0);
 				//refinement
 				int numBack = 0;
 				numBack = refineRoute(predToAdd, cloneEdgeTrace, cloneNodeTrace, i, primitiveSs);
@@ -291,7 +307,7 @@ public class CFATree
 		return cloneEdgeTrace.size();	//pop out whole route
 	}
 
-	void cloneRefineRoute(ArrayList<Edge> eTrace, ArrayList<Node> nTrace, ArrayList<StateSpace> cloneSsTrace)
+	void cloneRefineRoute(ArrayList<Edge> eTrace, ArrayList<Node> nTrace, ArrayList<StateSpace> ssTrace)
 	{
 		int i;
 		Node n = new Node(edgeTrace.get(0).headNode.id);
@@ -309,19 +325,33 @@ public class CFATree
 			nTrace.get(i+1).addInEdge(newEdge);
 			eTrace.add(newEdge);
 		}
+		
+		//display(eTrace, nTrace);
+		//System.exit(0);
+
 		ArrayList<StateSpace> temp = new ArrayList<StateSpace>();
 		temp.add(edgeTrace.get(edgeTrace.size()-1).tailNode.popStateSpace());
-		for (i=edgeTrace.size(); i>=0; i++)
+		for (i=edgeTrace.size()-1; i>=0; i--)
 		{
 			temp.add(edgeTrace.get(i).headNode.popStateSpace());
 		}
 		for (i=0; i<temp.size()-1; i++)
 		{
-			cloneSsTrace.add(temp.get(temp.size()-1-i));
-			edgeTrace.get(i).headNode.pushStateSpace(cloneSsTrace.get(i));
+			ssTrace.add(temp.get(temp.size()-1-i));
+			edgeTrace.get(i).headNode.pushStateSpace(ssTrace.get(i));
 		}
-		cloneSsTrace.add(temp.get(0));
-		edgeTrace.get(i).tailNode.pushStateSpace(cloneSsTrace.get(0));
+		ssTrace.add(temp.get(0));
+		edgeTrace.get(i-1).tailNode.pushStateSpace(ssTrace.get(0));
+//		print("here here here");
+
+/*
+		for (i=0; i<nTrace.size(); i++)
+		{
+			//nTrace.get(i).display();
+			ssTrace.get(i).display();
+		}
+			System.exit(0);
+*/			
 	}
 
 	int refineRoute(Predicate predToAdd, ArrayList<Edge> cloneEdgeTrace, ArrayList<Node> cloneNodeTrace, int numStopNode, StateSpace primitiveSs)

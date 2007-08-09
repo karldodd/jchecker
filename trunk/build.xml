@@ -108,7 +108,8 @@
 			    <arg value="${parserpackage}"/>
 			    <arg value="-f"/>
 		</exec>
-		<echo>yacc done</echo>
+		<echo>foci parser done</echo>
+		<echo>OK: yacc done</echo>
     	</target>
 
 </project>

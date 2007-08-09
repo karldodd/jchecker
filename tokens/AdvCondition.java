@@ -151,4 +151,10 @@ public class AdvCondition implements EdgeLabel,Cloneable{
     {
     	return new AdvCondition(c1, c2, AdvCondition.Type_AND);
     }
+
+    public boolean isTrue()
+    {
+	if (atom == null) return false;
+    	else return atom.type==ConType.T;
+    }
 }

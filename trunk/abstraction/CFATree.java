@@ -25,6 +25,8 @@ public class CFATree
 		forwardSearch(firstNode);
 
 		firstNode.popStateSpace();
+		
+		System.out.println("Forward search has finished successfully.");
 	}
 
 	int forwardSearch(Node node)
@@ -37,15 +39,8 @@ public class CFATree
 		
 		if (node.isError())
 		{
-			//encounter error node			
-			List<Predicate> predToAdd = null;		//new predicate should be added
-			numBack = backTrace(predToAdd);			
-			
-			if (!predToAdd.isEmpty())
-			{		
-				addNewPredicate(numBack, predToAdd);
-			}
-			
+			//encounter error node				
+			numBack = backTrace();		
 			return numBack;
 		}
 		else
@@ -84,25 +79,15 @@ public class CFATree
 
 		return numBack;
 
-	}	
-	
-	void recordTrace(Edge e)
-	{
-		edgeTrace.add(e);
-	}
+	}		
 
-	void removeTrace()
-	{
-		edgeTrace.remove( edgeTrace.size()-1 );	//remove last edge
-	}
-
-	int backTrace(List<Predicate> predToAdd)
+	int backTrace()
 	{
 		RefineRoute rr = new RefineRoute(edgeTrace);
 		rr.refine();	
 		int numBack = rr.numBack();
-		predToAdd = rr.predToAdd();		
-
+		ArrayList<Predicate> predToAdd = rr.predToAdd();
+		
 		//this is true counter instance, end
 		if (numBack == 0)
 		{
@@ -110,10 +95,11 @@ public class CFATree
 			return edgeTrace.size();	//pop out whole route
 		}
 		
+		addNewPredicate(numBack, predToAdd);		
 		return numBack;
 	}
 	
-	void addNewPredicate(int numBack, List<Predicate> pToAdd)
+	void addNewPredicate(int numBack, ArrayList<Predicate> pToAdd)
 	{
 		//add new predicate and state space
 		//first "pour" previous state space to another stack and then "pour" back, facilitating the calculation
@@ -131,12 +117,16 @@ public class CFATree
 		//merge old and new state space and pour in		
 		ArrayList<StateSpace> addSs = new ArrayList<StateSpace>();
 		ArrayList<StateSpace> temp = null;
+		//head node
 		for (Predicate predToAdd : pToAdd)
 		{
-			addSs.add(new StateSpace(new PredicateVector(predToAdd, State.STATE_TRUE)));	//initial state space of new predicate
-			ss = StateSpace.merge(reverseStack.pop(), addSs);		//merge
-			edgeTrace.get(0).headNode.pushStateSpace(ss);
-		}
+			//initial state space of new predicate
+			addSs.add(new StateSpace(new PredicateVector(predToAdd, State.STATE_TRUE)));
+		}	
+		ss = StateSpace.merge(reverseStack.pop(), addSs);		//merge
+		edgeTrace.get(0).headNode.pushStateSpace(ss);
+		
+		//calculate state space and merge
 		for (int i=0; i<edgeTrace.size()-numBack; i++)
 		{
 			Edge e = edgeTrace.get(i);
@@ -149,7 +139,30 @@ public class CFATree
 			ss = StateSpace.merge(reverseStack.pop(), addSs);	//merge
 			e.tailNode.pushStateSpace(ss);		//pour back
 		}
+		
+		//remain state spaces pour back
+		for (int i=edgeTrace.size()-numBack; i<edgeTrace.size(); i++)
+		{
+			edgeTrace.get(i).tailNode.pushStateSpace(reverseStack.pop());
+		}
+/*		
+		for (Edge ee : edgeTrace)
+		{
+			ee.headNode.display();
+			System.out.println("");
+		}
+		edgeTrace.get(edgeTrace.size()-1).tailNode.display();
+*/	
+	}
 	
+	void recordTrace(Edge e)
+	{
+		edgeTrace.add(e);
+	}
+
+	void removeTrace()
+	{
+		edgeTrace.remove( edgeTrace.size()-1 );	//remove last edge
 	}
 
 	void display(ArrayList<Edge> eTrace, ArrayList<Node> nTrace)

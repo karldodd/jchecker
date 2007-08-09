@@ -11,17 +11,17 @@ public class RefineRoute
 	ArrayList<Predicate> predToAdd;
 	ArrayList<Edge> edgeTrace;
 	ArrayList<StateSpace> ssTrace;
-	ArrayList<StateSpace> primitiveSsTrace;
-	ArrayList<StateSpace> temp;	
+	ArrayList<StateSpace> primitiveSsTrace; 	
 		
 	RefineRoute(ArrayList<Edge> eTrace)
 	{
+		//clone route
 		numBack = 0;
 		predToAdd = new ArrayList<Predicate>();
 		edgeTrace = new ArrayList<Edge>();
 		ssTrace = new ArrayList<StateSpace>();
 		primitiveSsTrace = new ArrayList<StateSpace>();
-		temp = new ArrayList<StateSpace>();
+		ArrayList<StateSpace> temp = new ArrayList<StateSpace>();
 		
 		int i;		
 		Edge e, newEdge;
@@ -46,16 +46,6 @@ public class RefineRoute
 		}
 		primitiveSsTrace.add(temp.get(0));
 		eTrace.get(i-1).tailNode.pushStateSpace(temp.get(0));
-		
-		System.out.println(edgeTrace.size());
-//		CommonMethod.display(edgeTrace);
-		for (StateSpace ss : primitiveSsTrace)
-			{
-				ss.display();
-			}
-		CommonMethod.println();
-//		CommonMethod.display(primitiveSsTrace);
-
 	}
 	
 	void refine()
@@ -69,19 +59,21 @@ public class RefineRoute
 		
 		for (int i = edgeTrace.size()-1;  i >= 0;  i--)
 		{
+			
 			//empty advConditionList
 			advConditionList.clear();			
 
 			//recall
-			EdgeLabel label = edgeTrace.get(i).label;
+			EdgeLabel label = edgeTrace.get(i).label;			
 			if (label instanceof AdvCondition)
 			{
-				if (lastAdvCondition.isTrue(p)) lastAdvCondition = (AdvCondition)label;
-				else lastAdvCondition = AdvCondition.intersect(lastAdvCondition, (AdvCondition)label);
+				//if (lastAdvCondition.isTrue(p)) lastAdvCondition = (AdvCondition)label;
+				//else 
+				lastAdvCondition = AdvCondition.intersect(lastAdvCondition, (AdvCondition)label);
 			}
 			else if (label instanceof EvaluationSentence)
 			{
-				lastAdvCondition = lastAdvCondition.getWeakestPrecondition((EvaluationSentence)label);
+				lastAdvCondition = lastAdvCondition.getWeakestPrecondition((EvaluationSentence)label);			
 			}
 			advConditionList.add(lastAdvCondition);
 			
@@ -90,25 +82,19 @@ public class RefineRoute
 			StateSpace pSs = primitiveSsTrace.get(i);
 			for (PredicateVector pv : pSs.predVectorArray)
 			{
-				if (pv.getAdvConditionByState().isTrue(p)) continue;
+				//if (pv.getAdvConditionByState().isTrue(p)) continue;
 				advConditionList.add(pv.getAdvConditionByState());
 			}
-		CommonMethod.comehere();
-		for (AdvCondition ac : advConditionList)
-		{
-			System.out.println(ac.toString());
-		}
-		CommonMethod.comehere();
+		
 			//test if it is satifiable.
 			if ( ! p.isSatisfiable(advConditionList) )
-			{	CommonMethod.comehere();
-				List<Predicate> pList = calInterpolation(i, pSs);
-				System.out.println(pList.size());
+			{
+				List<Predicate> pList = calInterpolation(i, pSs);				
 				refineFromHead(pList);
 				//pseudo counter instance can't be judged after all predicates used, treat it as true counter instance
 				if (numBack > 0) break;	
 			}
-		}
+		}		
 	}
 	
 	List<Predicate> calInterpolation(int numStopNode, StateSpace pSs)
@@ -147,7 +133,7 @@ public class RefineRoute
 		//refine route for each interpolation predicate
 		ArrayList<Predicate> pTemp = new ArrayList<Predicate>();
 		for (int j=0; j<pList.size(); j++)
-		{
+		{			
 			pTemp.add(pList.get(j));
 			StateSpace preSs = StateSpace.createInitialStateSpace(pTemp);
 			
@@ -158,7 +144,7 @@ public class RefineRoute
 				if( nextSs.isFalse() )
 				{
 					numBack = edgeTrace.size() - k;
-					predToAdd = pTemp;
+					predToAdd = pTemp;					
 					return;
 				}
 				

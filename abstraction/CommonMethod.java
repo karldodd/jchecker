@@ -3,6 +3,8 @@ package abstraction;
 import prover.*;
 import tokens.*;
 
+import java.util.*;
+
 public class CommonMethod
 {
 	public static Prover getProverInstance()
@@ -33,39 +35,61 @@ public class CommonMethod
 		}
 		System.out.println(nTrace.get(nTrace.size()-1).id);
 	}
-
-	public static void display(ArrayList<Edge> eTrace)
+/*
+	public static void display(ArrayList<Object> list)
 	{
-		System.out.print(eTrace.get(0).headNode.id);
-		for (Edge e : eTrace)
+		if (list.size()==0)return;
+		if (list.get(0) instanceof Edge)
 		{
-			System.out.print(" " + e.tailNode.id);
+			System.out.print(((Edge)list.get(0)).headNode.id);
+			for (Object e : list)
+			{
+				System.out.print(" " + ((Edge)e).tailNode.id);
+			}
+		}
+		else if (list.get(0) instanceof Predicate)
+		{			
+			for (Object l : list)
+			{
+				((Predicate)l).display();
+			}
+		}
+		else if (list.get(0) instanceof StateSpace)
+		{			
+			for (Object l : list)
+			{
+				((StateSpace)l).display();
+			}
 		}
 	}
-	
-	public static void display(ArrayList<Predicate> list)
+*/
+/*
+	public static void display(ArrayList<Edge> list)
 	{
-		for (Predicate l : list)
-		{
-			l.display();
-		}
+		System.out.print(list.get(0).headNode.id);
+			for (Edge e : list)
+			{
+				System.out.print(" " + e.tailNode.id);
+			}
 	}
-	
+*/
+/*	
 	public static void display(ArrayList<StateSpace> list)
 	{
-		for (StateSpace l : list)
-		{
-			l.display();
-		}
+		
+			for (StateSpace l : list)
+			{
+				l.display();				
+			}
 	}
-	
-	public static void print(String s)
-	{
-		System.out.println(s);
-	}
-	
-	public static println()
+*/	
+	public static void println()
 	{
 		System.out.println();
 	} 
+	
+	public static void comehere()
+	{
+		System.out.println("here");
+	}
 }

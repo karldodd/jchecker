@@ -262,8 +262,7 @@ public class CFATree
 			//recall
 			if (cloneEdgeTrace.get(i).label instanceof AdvCondition)
 			{
-				if (lastAdvCondition.isTrue()) lastAdvCondition = (AdvCondition)(cloneEdgeTrace.get(i).label);
-				else lastAdvCondition = AdvCondition.intersect(lastAdvCondition, (AdvCondition)(cloneEdgeTrace.get(i).label));
+				lastAdvCondition = (AdvCondition)(cloneEdgeTrace.get(i).label);
 			}
 			else if (cloneEdgeTrace.get(i).label instanceof EvaluationSentence)
 			{
@@ -292,8 +291,8 @@ public class CFATree
 			//test if it is satifiable.
 			if ( ! p.isSatisfiable(advConditionList) )
 			{
-				print("exit");
-				System.exit(0);
+				//print("exit");
+				//System.exit(0);
 				//refinement
 				int numBack = 0;
 				numBack = refineRoute(predToAdd, cloneEdgeTrace, cloneNodeTrace, i, primitiveSs);
@@ -359,31 +358,56 @@ public class CFATree
 		Prover p = getProverInstance();
 		ArrayList<EdgeLabel> linkLabel = new ArrayList<EdgeLabel>();
 
-		//add edge labels
-		EdgeLabel newLabel = cloneEdgeTrace.get(cloneEdgeTrace.size()-1).label;
-		linkLabel.add(newLabel);
-		for (int j = cloneEdgeTrace.size()-1;  j >= numStopNode;  j--)
-		{
-			linkLabel.add(cloneEdgeTrace.get(j).label);
-		}
-
 		//add state space of false node
 		for (PredicateVector pv : primitiveSs.predVectorArray)
 		{
 			linkLabel.add((EdgeLabel)(pv.getAdvConditionByState()));
 		}
+		//add edge labels
+		//EdgeLabel newLabel = cloneEdgeTrace.get(cloneEdgeTrace.size()-1).label;
+		//linkLabel.add(newLabel);
+		for (int j = numStopNode;  j < cloneEdgeTrace.size();  j++)
+		{
+			linkLabel.add(cloneEdgeTrace.get(j).label);
+		}
+
+		print("here here here");
+
+		print("");
+		for (int l=0; l<linkLabel.size(); l++)
+		{
+			print(linkLabel.get(l).toString());
+		}
+		print("");
 
 		//calculate interpolation
 		List<Predicate> pList = null;
 		try
 		{
-		    pList = p.getInterpolation(linkLabel);
+			pList = p.getInterpolation(linkLabel);
+			System.out.println("size is: " + pList.size());
 		}
 		catch(Exception e)
 		{
 		    System.err.println("Fatal error: fail to calculate interpolation.");
 		}
 
+		print("");
+		print("interpolation is:");
+/*		
+		for (Predicate predi : pList)
+		{
+			if (predi.getAdvCondition().isTrue())
+			{
+				pList.remove(predi);
+			}
+		}
+*/
+		for (Predicate predi : pList)
+		{
+			predi.display();
+		}
+		print("");
 		//refine route for each interpolation predicate
 		int numBack = 0;
 		for (Predicate pBack : pList)
@@ -398,6 +422,8 @@ public class CFATree
 				{
 					numBack = cloneEdgeTrace.size() - k;
 					predToAdd = pBack;
+					print("new predicate");
+					predToAdd.display();
 					return numBack;
 				}
 			}

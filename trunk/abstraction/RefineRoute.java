@@ -12,7 +12,7 @@ public class RefineRoute
 	ArrayList<Edge> edgeTrace;
 	ArrayList<StateSpace> ssTrace;
 	ArrayList<StateSpace> primitiveSsTrace;
-	ArrayList<StateSpace> temp = new ArrayList<StateSpace>();	
+	ArrayList<StateSpace> temp;	
 		
 	RefineRoute(ArrayList<Edge> eTrace)
 	{
@@ -21,6 +21,7 @@ public class RefineRoute
 		edgeTrace = new ArrayList<Edge>();
 		ssTrace = new ArrayList<StateSpace>();
 		primitiveSsTrace = new ArrayList<StateSpace>();
+		temp = new ArrayList<StateSpace>();
 		
 		int i;		
 		Edge e, newEdge;
@@ -46,9 +47,14 @@ public class RefineRoute
 		primitiveSsTrace.add(temp.get(0));
 		eTrace.get(i-1).tailNode.pushStateSpace(temp.get(0));
 		
-		CommonMethod.display(edgeTrace);
+		System.out.println(edgeTrace.size());
+//		CommonMethod.display(edgeTrace);
+		for (StateSpace ss : primitiveSsTrace)
+			{
+				ss.display();
+			}
 		CommonMethod.println();
-		CommonMethod.display(primitiveSsTrace);
+//		CommonMethod.display(primitiveSsTrace);
 
 	}
 	
@@ -85,11 +91,17 @@ public class RefineRoute
 			{
 				advConditionList.add(pv.getAdvConditionByState());
 			}
-
+		CommonMethod.comehere();
+		for (AdvCondition ac : advConditionList)
+		{
+			System.out.println(ac.toString());
+		}
+		CommonMethod.comehere();
 			//test if it is satifiable.
 			if ( ! p.isSatisfiable(advConditionList) )
-			{	
+			{	CommonMethod.comehere();
 				List<Predicate> pList = calInterpolation(i, pSs);
+				System.out.println(pList.size());
 				refineFromHead(pList);
 				//pseudo counter instance can't be judged after all predicates used, treat it as true counter instance
 				if (numBack > 0) break;	

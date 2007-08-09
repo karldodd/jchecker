@@ -43,6 +43,14 @@ public class StateSpace
 		stateSign = State.STATE_TRUE;
 	}
 
+	public  StateSpace(PredicateVector pv)
+	{
+		StateSpace ss = new StateSpace();
+
+		ss.predVectorArray.add(pv);
+		ss.stateSign = State.STATE_TRUE;
+	}
+
 	boolean isFalse()
 	{
 		return (stateSign==State.STATE_FALSE);
@@ -66,6 +74,96 @@ public class StateSpace
 		}
 		return ss3;
 	}
+	
+	public static StateSpace merge(StateSpace ss1, ArrayList<StateSpace> ssList)
+	{
+		StateSpace ss3 = new StateSpace();
+		ss3 = merge(ss3, ss1);
+		for (StateSpace newss : ssList)
+		{
+			ss3 = merge(ss3, newss);
+		}		
+		return ss3;
+	}
+	
+	public static StateSpace calStateSpace(StateSpace preSs, Edge edge)
+	{
+ 		StateSpace nextSs = new StateSpace();
+		EdgeLabel label = edge.label;
+		AdvCondition pre = null;
+		ArrayList<AdvCondition> preList = new ArrayList<AdvCondition>();
+
+		for ( PredicateVector pv : preSs.predVectorArray)
+		{
+			preList.add(pv.getAdvConditionByState());
+		}
+		pre = AdvCondition.intersectAll(preList);
+
+		for ( PredicateVector predVect : preSs.predVectorArray)
+		{
+			//calculate each predicate in state space
+			Predicate pred = predVect.getPredicate();		//(primitive predicate, predicate's state) and predicate
+			State predState = predVect.getState();			//i.e. (x>4, STATE_NEG) and x<=4			
+			State nextState;
+
+			if (label instanceof EvaluationSentence)
+			{
+				nextState = calAssignment(pre, pred.getAdvCondition(), label);				
+			}
+			else if (label instanceof AdvCondition)
+			{
+				nextState = calCondition(pred, predState, label);
+			}
+			else
+			{
+				System.err.println("Unexpected EdgeLabel (neither Evaluation nor AdvCondition");
+				nextState = null;
+			}	
+			if (nextState == State.STATE_FALSE)		//if next state space is false, return
+			{
+				nextSs.stateSign = State.STATE_FALSE;
+				return nextSs;
+			}
+			nextSs.add(new PredicateVector(pred, nextState));
+		}
+
+		return nextSs;
+	}
+
+	private static State calAssignment(AdvCondition pre, AdvCondition cPred, EdgeLabel label)
+	{		
+		Prover p = CommonMethod.getProverInstance();
+		
+		//method to calculate evaluation sentence
+		if (p.imply( pre, cPred.getWeakestPrecondition((EvaluationSentence)label) ))
+		{
+			return State.STATE_POS;
+		}
+		if (p.imply( pre, cPred.getNegativeCopy().getWeakestPrecondition((EvaluationSentence)label) ))
+		{
+			return State.STATE_NEG;
+		}
+		return State.STATE_TRUE;
+	}
+
+	private static State calCondition(Predicate pred, State predState, EdgeLabel label)
+	{
+		AdvCondition cPred = pred.getAdvCondition();
+		Prover p = CommonMethod.getProverInstance();
+
+		//method to calculate condition sentence
+		if ( p.imply((AdvCondition)label, cPred) )
+		{
+			if (predState == State.STATE_NEG) return State.STATE_FALSE;
+			else return predState;
+		}
+		if ( p.imply((AdvCondition)label, cPred.getNegativeCopy()) )
+		{
+			if (predState == State.STATE_POS) return State.STATE_FALSE;
+			else return predState;
+		}
+		return predState;	//inherit
+	}
 
 	boolean imply(StateSpace rightSs)
 	{
@@ -84,9 +182,10 @@ public class StateSpace
 		}
 		AdvCondition rightAdvCondition = AdvCondition.intersectAll(rightAdvList);
 
-		try {
-		Prover p = ProverFactory.getProverByName("focivampyre");
-		result = p.imply(leftAdvCondition, rightAdvCondition);
+		try 
+		{
+			Prover p = ProverFactory.getProverByName("focivampyre");
+			result = p.imply(leftAdvCondition, rightAdvCondition);
 		}
 		catch (Exception e)
 		{

@@ -311,7 +311,7 @@ int yylex()
 
   yytext=st.sval;//string value
   
-  pout("yytext:"+yytext+"  char"+(char)tok+" nval: "+st.nval);
+  //pout("yytext:"+yytext+"  char"+(char)tok+" nval: "+st.nval);
   
   if(tok==st.TT_EOL)
   {
@@ -376,7 +376,7 @@ public int parseFile(File file)
   {
 	fileIn = new FileInputStream(file);
 	inReader = new InputStreamReader(fileIn);
-    st = new StreamTokenizer(inReader); 
+    st = new StreamTokenizer(inReader);
 
     st.slashStarComments(true);
 	st.slashSlashComments(true);

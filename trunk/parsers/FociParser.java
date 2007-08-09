@@ -17,21 +17,17 @@ package parsers;
 
 
 
-//#line 1 "FociParser.y"
+//#line 1 "parsers/FociParser.y"
 
-/*package prover;
-*/
+/*package prover;*/
 
 import java.lang.*;
-/*import java.lang.Math;
-*/
+/*import java.lang.Math;*/
 import java.io.*;
 import java.util.*;
 
-/*load self-defined token-library
-*/
-/*import tokens.Sentence;
-*/
+/*load self-defined token-library*/
+/*import tokens.Sentence;*/
 import tokens.*;
 import abstraction.*;
 
@@ -317,7 +313,7 @@ final static String yyrule[] = {
 "termarray : termarray term",
 };
 
-//#line 192 "FociParser.y"
+//#line 193 "parsers/FociParser.y"
 
 boolean loaded=false;
 ArrayList<AdvCondition> conditionPool;
@@ -639,61 +635,58 @@ boolean doaction;
       {
 //########## USER-SUPPLIED ACTIONS ##########
 case 1:
-//#line 41 "FociParser.y"
+//#line 41 "parsers/FociParser.y"
 {
 	ArrayList<AdvCondition> al=(ArrayList<AdvCondition>)val_peek(0).obj;
-	System.out.println("Work completed.\nThe grammar of the foci output file is correct.\n In all, "+formulaNo+" predicates found.");
+	System.out.println("Work completed.\nIn all, "+formulaNo+" predicates found.");
 	for (AdvCondition s: al)
 	{
 		System.out.println(s.toString());
 	}
-	//predicatePool=al;
 	conditionPool=al;
+	/*predicatePool=al;*/
 }
 break;
 case 2:
-//#line 52 "FociParser.y"
+//#line 53 "parsers/FociParser.y"
 {ArrayList<AdvCondition> al=new ArrayList<AdvCondition>();yyval=new FociParserVal(al);}
 break;
 case 3:
-//#line 54 "FociParser.y"
+//#line 55 "parsers/FociParser.y"
 {
  	ArrayList<AdvCondition> al=(ArrayList<AdvCondition>)val_peek(1).obj;
  	if(val_peek(0)!=null)
  		al.add((AdvCondition)val_peek(0).obj);
  	yyval=new FociParserVal(al);
-	/*if(debugging)System.out.println("formula inserted: "+((AdvCondition)$2.obj).toString());
-*/
+	/*if(debugging)System.out.println("formula inserted: "+((AdvCondition)$2.obj).toString());*/
 	formulaNo++;
- 	/*warning $1 might have changed!
-*/
+ 	/*warning $1 might have changed!*/
  }
 break;
 case 4:
-//#line 66 "FociParser.y"
+//#line 67 "parsers/FociParser.y"
 {
 	 Condition c = new Condition(true);
 	 yyval=new FociParserVal(new AdvCondition(c));
  }
 break;
 case 5:
-//#line 71 "FociParser.y"
+//#line 72 "parsers/FociParser.y"
 {
 	 Condition c = new Condition(false);
 	 yyval=new FociParserVal(new AdvCondition(c));
  }
 break;
 case 6:
-//#line 77 "FociParser.y"
+//#line 78 "parsers/FociParser.y"
 {
 	 Condition c=new Condition((Expression)val_peek(1).obj,(Expression)val_peek(0).obj,ConType.equal);
 	 yyval=new FociParserVal(new AdvCondition(c));
-	 /*if(debugging)System.out.println("formula got: "+c.toString());
-*/
+	 /*if(debugging)System.out.println("formula got: "+c.toString());*/
  }
 break;
 case 7:
-//#line 83 "FociParser.y"
+//#line 84 "parsers/FociParser.y"
 {
 	 Condition c=new Condition((Expression)val_peek(1).obj,(Expression)val_peek(0).obj,ConType.equalsmaller);
 	 yyval=new FociParserVal(new AdvCondition(c));
@@ -701,7 +694,7 @@ case 7:
  }
 break;
 case 8:
-//#line 89 "FociParser.y"
+//#line 90 "parsers/FociParser.y"
 {
 	 ArrayList<AdvCondition> al=(ArrayList<AdvCondition>)val_peek(1).obj;
 	 boolean firstEle=true;
@@ -720,7 +713,7 @@ case 8:
  }
 break;
 case 9:
-//#line 106 "FociParser.y"
+//#line 107 "parsers/FociParser.y"
 {
 	 ArrayList<AdvCondition> al=(ArrayList<AdvCondition>)val_peek(1).obj;
 	 boolean firstEle=true;
@@ -739,15 +732,15 @@ case 9:
  }
 break;
 case 10:
-//#line 122 "FociParser.y"
+//#line 123 "parsers/FociParser.y"
 {AdvCondition c=(AdvCondition)val_peek(0).obj;c.negateSelf();yyval=new FociParserVal(c);}
 break;
 case 11:
-//#line 123 "FociParser.y"
+//#line 124 "parsers/FociParser.y"
 {yyval=val_peek(1);}
 break;
 case 12:
-//#line 127 "FociParser.y"
+//#line 128 "parsers/FociParser.y"
 {
 	 ArrayList<AdvCondition> al=new ArrayList<AdvCondition>();
 	 al.add((AdvCondition)val_peek(1).obj);
@@ -756,7 +749,7 @@ case 12:
  }
 break;
 case 13:
-//#line 134 "FociParser.y"
+//#line 135 "parsers/FociParser.y"
 {
 	 ArrayList<AdvCondition> al=(ArrayList<AdvCondition>)val_peek(1).obj;
 	 al.add((AdvCondition)val_peek(0).obj);	
@@ -764,11 +757,11 @@ case 13:
  }
 break;
 case 14:
-//#line 141 "FociParser.y"
+//#line 142 "parsers/FociParser.y"
 {Expression e=new Expression(val_peek(0).ival);yyval=new FociParserVal(e);}
 break;
 case 15:
-//#line 143 "FociParser.y"
+//#line 144 "parsers/FociParser.y"
 {
 	 String withSuffix=getStringValue(val_peek(0));
 	 String withoutSuffix;
@@ -781,7 +774,7 @@ case 15:
  }
 break;
 case 16:
-//#line 154 "FociParser.y"
+//#line 155 "parsers/FociParser.y"
 {
 	 ArrayList<Expression> al=(ArrayList<Expression>)val_peek(1).obj;
 	 boolean firstEle=true;
@@ -800,18 +793,18 @@ case 16:
  }
 break;
 case 17:
-//#line 171 "FociParser.y"
+//#line 172 "parsers/FociParser.y"
 {
 	 Expression e=new Expression(new Expression(val_peek(2).ival),(Expression)val_peek(0).obj,ExpType.multiply);
 	 yyval=new FociParserVal(e);
  }
 break;
 case 18:
-//#line 175 "FociParser.y"
+//#line 176 "parsers/FociParser.y"
 {yyval=val_peek(1);}
 break;
 case 19:
-//#line 179 "FociParser.y"
+//#line 180 "parsers/FociParser.y"
 {
 	 ArrayList<Expression> al=new ArrayList<Expression>();
 	 al.add((Expression)val_peek(1).obj);
@@ -820,14 +813,14 @@ case 19:
  }
 break;
 case 20:
-//#line 186 "FociParser.y"
+//#line 187 "parsers/FociParser.y"
 {
 	 ArrayList<Expression> al=(ArrayList<Expression>)val_peek(1).obj;
 	 al.add((Expression)val_peek(0).obj);	
 	 yyval=new FociParserVal(al);
  }
 break;
-//#line 754 "FociParser.java"
+//#line 755 "FociParser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

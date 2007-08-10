@@ -91,7 +91,11 @@ public class Expression implements Cloneable{
 	
 	public String toLFString(){
 		switch(type){
-			case num:return num+"";
+			case num:
+				if(num>=0)
+					return num+"";
+				else
+					return "(- 0 "+num*(-1)+")";
 			case var:return v.getName();
 			case plus:return "(+ "+l.toLFString()+" "+r.toLFString()+")";
 			case minus:return "(- "+l.toLFString()+" "+r.toLFString()+")";

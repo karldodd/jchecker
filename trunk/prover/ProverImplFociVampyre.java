@@ -76,7 +76,7 @@ public class ProverImplFociVampyre implements Prover{
 		ArrayList<Predicate> predicates=new ArrayList<Predicate>();
 		for(AdvCondition ac : interpolations)
 		{
-			if(debugging)System.out.println("Getting predicate: "+ac.toString());
+			//if(debugging)System.out.println("Getting predicate: "+ac.toString());
 			//filter the true conditions: we don't need true to be our predicate.
 			if(!ac.isTrue(this)){
 				Predicate p=new Predicate(ac);
@@ -101,7 +101,7 @@ public class ProverImplFociVampyre implements Prover{
 		boolean result=false;
 		boolean gotresult=false;
 		try{
-		System.out.println("Formula sent to foci:\n"+c.toString());
+		//System.out.println("Formula sent to foci:\n"+c.toString());
 		File fin=writeStringToTempFile(c.toFociString());
 		File fout=File.createTempFile("for","foci");
 		fout.deleteOnExit();

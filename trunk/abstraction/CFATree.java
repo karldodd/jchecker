@@ -165,6 +165,7 @@ public class CFATree
 		System.out.println("New predicate list:");
 		System.out.println("*********************************************");
 		for (Predicate p : pList)		p.display();
+		System.out.println("");
 		edgeTrace = new ArrayList<Edge>();
 		beginForwardSearch(pList);
 	}

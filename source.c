@@ -1,7 +1,7 @@
 //a=-(a-b)-c-d*e+7-10;
 b=0;
 while(b<4)b=b+1;
-if(b==5)
+if(b==4)
 {a=1;}
 else{ ERROR;}
 

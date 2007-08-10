@@ -39,8 +39,7 @@ public class Edge
 	
 	void display()
 	{
-//		System.out.println("come here");
 		System.out.print("Edge id: " + id + " headnode: " + headNode.id + " tailnode: " + tailNode.id);
-		System.out.println(" Label: " + label.toString());
+		System.out.println(" Label: " + label.toString());		
 	}
 }

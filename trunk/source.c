@@ -1,10 +1,10 @@
 //a=-(a-b)-c-d*e+7-10;
-/*b=0;
+b=0;
 while(b<4)b=b+1;
 if(b==4)
 {a=1;}
 else{ ERROR;}
-*/
+
 
 /*int c,b,a,d,e;
 while(c<1){b=c+1-5*6+7;c=c+1;}
@@ -25,6 +25,8 @@ if(w==0)
 
 
 a=7;*/
+/*
 b=1;
 b=b+1;
 if(b!=2){ERROR;}
+*/

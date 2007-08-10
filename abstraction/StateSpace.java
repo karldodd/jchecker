@@ -154,14 +154,14 @@ public class StateSpace
 		if ( p.imply((AdvCondition)label, cPred) )
 		{
 			if (predState == State.STATE_NEG) return State.STATE_FALSE;
-			//else return State.STATE_POS;
-			else return predState;
+			else return State.STATE_POS;
+			//else return predState;
 		}
 		else if ( p.imply((AdvCondition)label, cPred.getNegativeCopy()) )
 		{
 			if (predState == State.STATE_POS) return State.STATE_FALSE;
-			//else return State.STATE_NEG;
-			else return predState;
+			else return State.STATE_NEG;
+			//else return predState;
 		}
 		return predState;	//inherit
 	}

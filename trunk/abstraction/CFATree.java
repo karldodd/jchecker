@@ -46,7 +46,7 @@ public class CFATree
 		if (node.isError())
 		{
 			//encounter error node
-			
+/*			
 			int i;
 			System.out.println("*********************************************");
 			System.out.println("BEGIN before backTrace...... The route is:");
@@ -66,7 +66,7 @@ public class CFATree
 			System.out.println("*********************************************");
 			System.out.println("");
 			//System.exit(0);
-						
+*/						
 			numBack = backTrace();		
 			return numBack;
 		}

@@ -154,11 +154,13 @@ public class StateSpace
 		if ( p.imply((AdvCondition)label, cPred) )
 		{
 			if (predState == State.STATE_NEG) return State.STATE_FALSE;
+			//else return State.STATE_POS;
 			else return predState;
 		}
-		if ( p.imply((AdvCondition)label, cPred.getNegativeCopy()) )
+		else if ( p.imply((AdvCondition)label, cPred.getNegativeCopy()) )
 		{
 			if (predState == State.STATE_POS) return State.STATE_FALSE;
+			//else return State.STATE_NEG;
 			else return predState;
 		}
 		return predState;	//inherit
@@ -180,6 +182,9 @@ public class StateSpace
 			rightAdvList.add(pv.getAdvConditionByState());
 		}
 		AdvCondition rightAdvCondition = AdvCondition.intersectAll(rightAdvList);
+		
+		//System.out.println("left adv is " + leftAdvCondition.toString());
+		//System.out.println("right adv is " + rightAdvCondition.toString());
 
 		try 
 		{

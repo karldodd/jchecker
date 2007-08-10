@@ -31,6 +31,8 @@ public class CFATree
 
 	int forwardSearch(Node node)
 	{
+		System.out.println("Now is node " + node.id);
+		
 		Node nextNode;
 		StateSpace preSs = node.peekStateSpace();
 		StateSpace nextSs;
@@ -39,7 +41,20 @@ public class CFATree
 		
 		if (node.isError())
 		{
-			//encounter error node				
+			//encounter error node
+			int i;
+			System.out.println("Now just before backTrace......");
+			for (i=0; i<edgeTrace.size(); i++)
+			{
+				System.out.println("Node " + i + " of trace:");
+				edgeTrace.get(i).headNode.display();
+				System.out.println("Edge " + i + " of trace:");
+				edgeTrace.get(i).display();
+				System.out.println("");
+			}
+			System.out.println("Node " + i + " of trace:");
+			edgeTrace.get(i-1).tailNode.display();
+							
 			numBack = backTrace();		
 			return numBack;
 		}
@@ -67,18 +82,18 @@ public class CFATree
 				nextNode.pushStateSpace(nextSs);
 
 				numBack = forwardSearch(nextNode);
+				
+				nextNode.popStateSpace();
+				removeTrace();
 
 				if ( numBack > 0 )			//numBack > 0 means it's not the end of recall
-				{
-					nextNode.popStateSpace();
-					removeTrace();
+				{					
 					return numBack - 1;
 				}
 			}
 		}
-
+	
 		return numBack;
-
 	}		
 
 	int backTrace()
@@ -145,14 +160,14 @@ public class CFATree
 		{
 			edgeTrace.get(i).tailNode.pushStateSpace(reverseStack.pop());
 		}
-/*		
+		
 		for (Edge ee : edgeTrace)
 		{
 			ee.headNode.display();
 			System.out.println("");
 		}
 		edgeTrace.get(edgeTrace.size()-1).tailNode.display();
-*/	
+	
 	}
 	
 	void recordTrace(Edge e)
@@ -177,10 +192,12 @@ public class CFATree
 
 	void display(ArrayList<Edge> eTrace)
 	{
+		System.out.println("The counter instance is:");
 		System.out.print(eTrace.get(0).headNode.id);
 		for (Edge e : eTrace)
 		{
 			System.out.print(" " + e.tailNode.id);
 		}
+		System.out.println("");
 	}
 }

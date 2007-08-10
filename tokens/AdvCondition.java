@@ -160,4 +160,10 @@ public class AdvCondition implements EdgeLabel,Cloneable{
 	AdvCondition ctrue=new AdvCondition(new Condition(true));
 	return p.imply(ctrue,this);
     }
+
+    public boolean equals(AdvCondition c, Prover p)
+    {
+	if(p.imply(this,c)&&p.imply(c,this))return true;
+	return false;
+    }
 }

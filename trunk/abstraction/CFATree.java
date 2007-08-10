@@ -27,12 +27,16 @@ public class CFATree
 		firstNode.popStateSpace();
 		
 		System.out.println("Forward search has finished successfully.");
+		System.exit(0);
 	}
 
 	int forwardSearch(Node node)
 	{
+/*	
+		System.out.println("*********************************************");
 		System.out.println("Now is node " + node.id);
-		
+		System.out.println("*********************************************");
+*/		
 		Node nextNode;
 		StateSpace preSs = node.peekStateSpace();
 		StateSpace nextSs;
@@ -42,19 +46,27 @@ public class CFATree
 		if (node.isError())
 		{
 			//encounter error node
+			
 			int i;
-			System.out.println("Now just before backTrace......");
+			System.out.println("*********************************************");
+			System.out.println("BEGIN before backTrace...... The route is:");
+			System.out.println("*********************************************");
 			for (i=0; i<edgeTrace.size(); i++)
 			{
 				System.out.println("Node " + i + " of trace:");
 				edgeTrace.get(i).headNode.display();
 				System.out.println("Edge " + i + " of trace:");
-				edgeTrace.get(i).display();
-				System.out.println("");
+				//edgeTrace.get(i).display();
+				//System.out.println("");
 			}
 			System.out.println("Node " + i + " of trace:");
 			edgeTrace.get(i-1).tailNode.display();
-							
+			System.out.println("*********************************************");
+			System.out.println("End before backTrace......");
+			System.out.println("*********************************************");
+			System.out.println("");
+			//System.exit(0);
+						
 			numBack = backTrace();		
 			return numBack;
 		}
@@ -64,6 +76,19 @@ public class CFATree
 			for (Edge edge : node.outEdge)
 			{
 				nextNode = edge.tailNode;
+/*				
+				if (nextNode.id == 4)
+				{
+					System.out.println("*********************************************");
+					System.out.println("Now coming node 4");
+					System.out.println("*********************************************");
+					preSs.display();
+					edge.display();
+					nextSs = StateSpace.calStateSpace(preSs, edge);
+					nextSs.display();
+					System.exit(0);
+				}
+*/				
 				nextSs = StateSpace.calStateSpace(preSs, edge);
 
 				if ( nextSs.isFalse() )
@@ -73,14 +98,20 @@ public class CFATree
 				}
 				if ( nextNode.id < node.id )	//cycle back
 				{
-					if ( node.implyBy(nextSs) )	//next state space implies previous state space of this same node
+					if ( nextNode.implyBy(nextSs) )	//next state space implies previous state space of this same node
 					{
 						continue;
 					}
 				}
 				recordTrace(edge);
 				nextNode.pushStateSpace(nextSs);
-
+/*				
+				System.out.println("*********************************************");
+				System.out.println("next node is " + nextNode.id);
+				System.out.println("*********************************************");
+				nextNode.display();
+				System.out.println("");
+*/				
 				numBack = forwardSearch(nextNode);
 				
 				nextNode.popStateSpace();
@@ -98,7 +129,7 @@ public class CFATree
 
 	int backTrace()
 	{
-		RefineRoute rr = new RefineRoute(edgeTrace);
+		ErrorRoute rr = new ErrorRoute(edgeTrace);
 		rr.refine();	
 		int numBack = rr.numBack();
 		ArrayList<Predicate> predToAdd = rr.predToAdd();
@@ -110,8 +141,28 @@ public class CFATree
 			return edgeTrace.size();	//pop out whole route
 		}
 		
-		addNewPredicate(numBack, predToAdd);		
+		addNewPredicate(predToAdd);		
 		return numBack;
+	}
+	
+	void addNewPredicate(ArrayList<Predicate> pToAdd)
+	{
+		for (int i=edgeTrace.size()-1; i>=0; i--)
+		{
+			edgeTrace.get(i).tailNode.popStateSpace();
+		}
+		StateSpace ss = edgeTrace.get(0).headNode.popStateSpace();
+		ArrayList<Predicate> pList = new ArrayList<Predicate>();
+		for (PredicateVector pv : ss.predVectorArray)
+		{
+			pList.add(pv.getPredicate());
+		}
+		for (Predicate p : pToAdd)
+		{
+			pList.add(p);
+		}
+		edgeTrace = new ArrayList<Edge>();
+		beginForwardSearch(pList);
 	}
 	
 	void addNewPredicate(int numBack, ArrayList<Predicate> pToAdd)
@@ -192,6 +243,7 @@ public class CFATree
 
 	void display(ArrayList<Edge> eTrace)
 	{
+		System.out.println("");
 		System.out.println("The counter instance is:");
 		System.out.print(eTrace.get(0).headNode.id);
 		for (Edge e : eTrace)

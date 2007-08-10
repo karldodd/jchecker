@@ -83,8 +83,14 @@ public class Node
 	{
 		for (int i=stateSpaceStack.size()-1; i>=0; i--)
 		{
-			//System.out.println("right ss is:");
-			//stateSpaceStack.get(i).display();
+/*		
+			System.out.println("");
+			System.out.println("left ss is:");
+			judgeSs.display();
+			System.out.println("right ss is:");
+			stateSpaceStack.get(i).display();
+			System.out.println("");
+*/			
 			if ( judgeSs.imply(stateSpaceStack.get(i)) )
 				return true;
 		}

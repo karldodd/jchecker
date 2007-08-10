@@ -49,7 +49,8 @@ public class RefineRoute
 	}
 	
 	void refine()
-	{
+	{	      
+		boolean reachTop=true;
 		Prover p = CommonMethod.getProverInstance();
 		
 		//initial last node's state space by last node's state space in CFA tree
@@ -89,12 +90,22 @@ public class RefineRoute
 			//test if it is satifiable.
 			if ( ! p.isSatisfiable(advConditionList) )
 			{
+				reachTop=false;
 				List<Predicate> pList = calInterpolation(i, pSs);				
 				refineFromHead(pList);
 				//pseudo counter instance can't be judged after all predicates used, treat it as true counter instance
 				if (numBack > 0) break;	
 			}
-		}		
+		}
+		
+		if (reachTop)
+		{
+		System.out.println("*********************************************");
+		System.out.println("reach top in refine() from bottom in back trace, real counter instance discovered");	
+		System.out.println("*********************************************");
+		}
+		
+		//numBack = -1; //-1 means real counter instance
 	}
 	
 	List<Predicate> calInterpolation(int numStopNode, StateSpace pSs)

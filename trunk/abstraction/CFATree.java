@@ -17,12 +17,12 @@ public class CFATree
 		edgeTrace = new ArrayList<Edge>();
 		predicatesForSearch = new ArrayList<Predicate>();
 		cg = g;
-		endSearch = false;
+		endSearch = true;
 	}
 	
 	public void beginForwardSearch(ArrayList<Predicate> predArray)
 	{
-		endSearch = false;
+		endSearch = true;
 		Node firstNode = cg.firstNode();
 		for (Predicate p : predArray)
 		{
@@ -47,6 +47,9 @@ public class CFATree
 
 		if (curNode.isError())
 		{
+			//if find error node, there're two cases: find real counter instance, or add new predicates.
+			//so now endSearch should be set false to do another forward search
+			endSearch = false;
 			//find error node, back trace
 			backTrace();
 			//back to top, begin another forward search

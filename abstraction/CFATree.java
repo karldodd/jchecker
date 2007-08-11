@@ -22,14 +22,16 @@ public class CFATree
 	
 	public void beginForwardSearch(ArrayList<Predicate> predArray)
 	{
+		endSearch = false;
+		Node firstNode = cg.firstNode();
 		for (Predicate p : predArray)
 		{
 			predicatesForSearch.add(p.clone());
 		}
-		Node firstNode = cg.firstNode();
+
 		do
 		{
-			StateSpace ssInit = StateSpace(predicatesForSearch);
+			StateSpace ssInit = new StateSpace(predicatesForSearch);
 			firstNode.pushStateSpace(ssInit);
 			forwardSearch(firstNode);
 			firstNode.popStateSpace();
@@ -45,10 +47,9 @@ public class CFATree
 
 		if (curNode.isError())
 		{
-			//find error node
-			//back trace
+			//find error node, back trace
 			backTrace();
-			//bak to top, begin another forward search
+			//back to top, begin another forward search
 			return edgeTrace.size();
 		}
 		else
@@ -64,11 +65,11 @@ public class CFATree
 					//this edge can't walk, continue to choose next edge
 					continue;
 				}
-				if (cycleBack(curNode, nextNode))
+				if (isCycleBack(curNode, nextNode))
 				{
 					if (canEndCycle(nextNode, nextSs))
 					{
-						//if cycle can be ended, continue next edge
+						//if cycle can end, continue next edge
 						continue;
 					}
 				}
@@ -88,13 +89,14 @@ public class CFATree
 		return numBack;
 	}
 
-	private boolean cycleBack(Node curNode, Node nextNode)
+	private boolean isCycleBack(Node curNode, Node nextNode)
 	{
 		return (nextNode.getID() < curNode.getID());
 	}
 
 	private boolean canEndCycle(Node nextNode, StateSpace nextSs)
 	{
+		//if next state space can imply previous state spaces, the cycle should end
 		Prover p = CommonMethod.getProverInstance();
 
 		for (int i=0; i<nextNode.stackSize(); i++)
@@ -109,25 +111,26 @@ public class CFATree
 	{
 		int i = 0;
 		Prover p = CommonMethod.getProverInstance();
+
 		//initial state space trace of edgeTrace
 		//originSsTrace: original state space of edgeTrace, from top to bottom
 		ArrayList<StateSpace> originSsTrace = new ArrayList<StateSpace>();
 		//reverseSsTrace: original state space of edgeTrace, from bottom to top
 		ArrayList<StateSpace> reverseSsTrace = new ArrayList<StateSpace>();
 
-		//copy state space of edgeTrace
+		//copy state spaces of edgeTrace's nodes
 		for (i=edgeTrace.size()-1; i>=0; i--)
 		{
 			reverseSsTrace.add(edgeTrace.get(i).getTailNode().popStateSpace());
 		}
-		reverseSsTrace.add(edgeTrace.get(i).getHeadNode().popState());
+		reverseSsTrace.add(edgeTrace.get(i).getHeadNode().popStateSpace());
 
 		for (i=reverseSsTrace.size()-1; i>=0; i--)
 		{
 			originSsTrace.add(reverseSsTrace.get(i));
 		}
 
-		//return state space to edgeTrace
+		//return state spaces to edgeTrace's nodes
 		edgeTrace.get(0).getHeadNode().pushStateSpace(originSsTrace.get(0));
 		for (i=0; i<edgeTrace.size(); i++)
 		{
@@ -182,7 +185,7 @@ public class CFATree
 		//add start node's state space
 		for (int i=0; i<startSs.size(); i++)
 		{
-			labelList.add((EdgeLabel)startSs.getPrediateVector(i).getAdvConditionByState());
+			labelList.add((EdgeLabel)(startSs.getPrediateVector(i).getAdvConditionByState()));
 		}
 		//add edge labels
 		for (int i=startNode; i<edgeTrace.size(); i++)
@@ -224,6 +227,7 @@ public class CFATree
 		}
 		int newSize = predicatesForSearch.size();
 
+		//no new predicate, searh should end
 		if (oldSize == newSize) endWithNoNewPredicate();
 	}
 

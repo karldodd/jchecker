@@ -1,4 +1,4 @@
-package abstraction;
+package abstraction:
 
 import tokens.*;
 import prover.*;
@@ -8,253 +8,269 @@ import java.util.*;
 public class CFATree
 {
 	ArrayList<Edge> edgeTrace;
+	ArrayList<Prediate> predicatesForSearch;
 	CFAGraph cg;
-
+	boolean endSearch;
+	
 	public CFATree(CFAGraph g)
 	{
 		edgeTrace = new ArrayList<Edge>();
+		predicatesForSearch = new ArrayList<Prediate>();
 		cg = g;
+		endSearch = false;
 	}
-        
-   public void beginForwardSearch(ArrayList<Predicate> predArray)
+	
+	public void beginForwardSearch(ArrayList<Predicate> predArray)
 	{
-		//initial state space of first node and start searching
-		Node firstNode = cg.firstNode();
-		StateSpace ssInit = StateSpace.createInitialStateSpace(predArray);
-		firstNode.pushStateSpace(ssInit);
-		forwardSearch(firstNode);
-
-		firstNode.popStateSpace();
-		
-		System.out.println("Forward search has finished successfully.");
-		System.exit(0);
-	}
-
-	int forwardSearch(Node node)
-	{
-/*	
-		System.out.println("*********************************************");
-		System.out.println("Now is node " + node.id);
-		System.out.println("*********************************************");
-*/		
-		Node nextNode;
-		StateSpace preSs = node.peekStateSpace();
-		StateSpace nextSs;
-		//numBack means how many nodes should back, predToAdd returns predicate to be added
-		int numBack = 0;	//default value is 0, stands for leaf node		
-		
-		if (node.isError())
+		for (Predicate p : predArray)
 		{
-			//encounter error node
-/*			
-			int i;
-			System.out.println("*********************************************");
-			System.out.println("BEGIN before backTrace...... The route is:");
-			System.out.println("*********************************************");
-			for (i=0; i<edgeTrace.size(); i++)
-			{
-				System.out.println("Node " + i + " of trace:");
-				edgeTrace.get(i).headNode.display();
-				System.out.println("Edge " + i + " of trace:");
-				//edgeTrace.get(i).display();
-				//System.out.println("");
-			}
-			System.out.println("Node " + i + " of trace:");
-			edgeTrace.get(i-1).tailNode.display();
-			System.out.println("*********************************************");
-			System.out.println("End before backTrace......");
-			System.out.println("*********************************************");
-			System.out.println("");
-			//System.exit(0);
-*/						
-			numBack = backTrace();		
-			return numBack;
+			predicatesForSearch.add(p.clone());
+		}
+		Node firstNode = cg.firstNode();
+		do
+		{
+			StateSpace ssInit = StateSpace(predicatesForSearch);
+			firstNode.pushStateSpace(ssInit);
+			forwardSearch(firstNode);
+			firstNode.popStateSpace();
+		} while ( !endSearch );
+	}
+
+	int forwardSearch(Node curNode)
+	{
+		Node nextNode;
+		StateSpace preSs = curNode.peekStateSpace();
+		StateSpace nextSs = null;
+		int numBack = 0;	//numBack means how many nodes should back, default value is 0, stands for leaf node
+
+		if (curNode.isError())
+		{
+			//find error node
+			//back trace
+			backTrace();
+			//bak to top, begin another forward search
+			return edgeTrace.size();
 		}
 		else
 		{
 			//iterate whole tree
-			for (Edge edge : node.outEdge)
+			for (Edge outEdge : curNode.getOutEdge())
 			{
-				nextNode = edge.tailNode;
-/*				
-				if (nextNode.id == 4)
-				{
-					System.out.println("*********************************************");
-					System.out.println("Now coming node 4");
-					System.out.println("*********************************************");
-					preSs.display();
-					edge.display();
-					nextSs = StateSpace.calStateSpace(preSs, edge);
-					nextSs.display();
-					System.exit(0);
-				}
-*/				
-				nextSs = StateSpace.calStateSpace(preSs, edge);
+				nextNode = outEdge.getTailNode();
+				nextSs = StateSpace.getNextStateSpace(preSs, outEdge);
 
-				if ( nextSs.isFalse() )
+				if (nextSs.isFalse())
 				{
-					//can't walk, continue next route
+					//this edge can't walk, continue to choose next edge
 					continue;
 				}
-				if ( nextNode.id < node.id )	//cycle back
+				if (cycleBack(curNode, nextNode))
 				{
-					if ( nextNode.implyBy(nextSs) )	//next state space implies previous state space of this same node
+					if (canEndCycle(nextNode, nextSs))
 					{
+						//if cycle can be ended, continue next edge
 						continue;
 					}
 				}
-				recordTrace(edge);
+				recordTrace(outEdge);
 				nextNode.pushStateSpace(nextSs);
-/*				
-				System.out.println("*********************************************");
-				System.out.println("next node is " + nextNode.id);
-				System.out.println("*********************************************");
-				nextNode.display();
-				System.out.println("");
-*/				
-				numBack = forwardSearch(nextNode);
-				
+
+				numBack = forwardSearh(nextNode);
+
 				nextNode.popStateSpace();
 				removeTrace();
 
-				if ( numBack > 0 )			//numBack > 0 means it's not the end of recall
-				{					
-					return numBack - 1;
+				//numBack > 0 means it's not the end of recall
+				if (numBack > 0) return numBack-1;
+			}			
+		}
+
+		return numBack;
+	}
+
+	private boolean cycleBack(Node curNode, Node nextNode)
+	{
+		return (nextNode.getID() < curNode.getID());
+	}
+
+	private boolean canEndCycle(Node nextNode, StateSpace nextSs)
+	{
+		Prover p = CommonMethod.getProverInstance();
+
+		for (int i=0; i<nextNode.stackSize(); i++)
+		{
+			StateSpace preSs = nextNode.getStack(i);
+			if (p.imply(nextSs, preSs)) return true;
+		}
+		return false;
+	}
+
+	private void backTrace()	
+	{
+		int i = 0;
+		Prover p = CommonMethod.getProverInstance();
+		//initial state space trace of edgeTrace
+		//originSsTrace: original state space of edgeTrace, from top to bottom
+		ArrayList<StateSpace> originSsTrace = new ArrayList<StateSpace>();
+		//reverseSsTrace: original state space of edgeTrace, from bottom to top
+		ArrayList<StateSpace> reverseSsTrace = new ArrayList<StateSpace>();
+
+		//copy state space of edgeTrace
+		for (i=edgeTrace.size()-1; i>=0; i--)
+		{
+			reverseSsTrace.add(edgeTrace.get(i).getTailNode().popStateSpace());
+		}
+		reverseSsTrace.add(edgeTrace.get(i).getHeadNode().popState());
+
+		for (i=reverseSsTrace.size()-1; i>=0; i--)
+		{
+			originSsTrace.add(reverseSsTrace.get(i));
+		}
+
+		//return state space to edgeTrace
+		edgeTrace.get(0).getHeadNode().pushStateSpace(originSsTrace.get(0));
+		for (i=0; i<edgeTrace.size(); i++)
+		{
+			edgeTrace.get(i).getTailNode().pushStateSpace(originSsTrace.get(i+1));
+		}
+
+		//back trace
+		//lastAdvCondition is the AdvCondition just before current edge
+		//now initial error node's AdvCondition
+		AdvCondition lastAdvondition = new AdvCondition(new Condition(true));
+		//backTraceAdvConditionList records the AdvConditions to calculate interpolation
+		ArrayList<AdvCondition> backTraceAdvConditionList = new ArrayList<AdvCondition>();
+
+		for (i=edgeTrace.size()-1; i>=0; i--)
+		{
+			backTraceAdvConditionList.clear();
+
+			EdgeLabel label = edgeTrace.get(i).getLabel();
+			if (label instanceof AdvCondition)
+			{
+				lastAdvCondition = AdvCondition.intersect(lastAdvCondition, (AdvCondition)label);
+			}
+			else if (label instanceof EvaluationSentence)
+			{
+				lastAdvCondition = lastAdvCondition.getWeakestPrecondition((EvaluationSentence)label);
+			}
+			backTraceAdvConditionList.add(lastAdvCondition);
+
+			//add original state space of current node
+			for (PredicateVector pv : originSsTrace.get(i))
+			{
+				backTraceAdvConditionList.add(pv.getAdvConditionByState());
+			}
+
+			//test if it is satifiable
+			if ( !p.isSatisfiable(backTraceAdvConditionList) )
+			{
+				List<Predicate> newPrediateList = getInterpolation(p, i, originSsTrace.get(i));
+				addNewPredicates(newPredicateList);
+				return;
+			}
+		}
+
+		//coming here means reach the top, real counter instance is found
+		endWithRealCounterInstanceFound();
+	}
+
+	private List<Predicate> getInterpolation(Prover p, int startNode, StateSpace startSs)
+	{
+		ArrayList<EdgeLabel> labelList = new ArrayList<EdgeLabel>();
+
+		//add start node's state space
+		for (int i=0; i<startSs.size(); i++)
+		{
+			labelList.add((EdgeLabel)startSs.getPrediateVector(i).getAdvConditionByState());
+		}
+		//add edge labels
+		for (int i=startNode; i<edgeTrace.size(); i++)
+		{
+			labelList.add(edgeTrace.get(i).getLabel());
+		}
+
+		//calulate interpolation
+		List<Predicate> newPredicateList = null;
+		try
+		{
+			newPredicatesList = p.getInterpolation(labelList);
+		}
+		catch(Exception e)
+		{
+			System.err.println("Fatal error: fail to calculate interpolation.");
+		}
+
+		return newPredicateList;
+	}
+	
+	private void addNewPredicates(ArrayList<Predicate> newPredicateList)
+	{
+		//add new predicates
+		boolean equal = false;
+		int oldSize = predicatesForSearch.size();
+		for (Predicate newPredicate : newPredicateList)
+		{
+			equal = false;
+			for (Predicate oldPredicate : predicatesForSearch)
+			{
+				if (oldPredicate.equals(newPredicate))
+				{
+					equal = true;
+					break;
 				}
 			}
+			if (!equal) predicatesForSearch.add(newPredicate);
 		}
-	
-		return numBack;
-	}		
+		int newSize = predicatesForSearch.size();
 
-	int backTrace()
-	{
-		ErrorRoute rr = new ErrorRoute(edgeTrace);
-		rr.refine();	
-		int numBack = rr.numBack();
-		ArrayList<Predicate> predToAdd = rr.predToAdd();
-		
-		//this is true counter instance, end
-		if (numBack == 0)
-		{
-			display(edgeTrace);
-			return edgeTrace.size();	//pop out whole route
-		}
-		
-		addNewPredicate(predToAdd);		
-		return numBack;
+		if (oldSize == newSize) endWithNoNewPredicate();
 	}
-	
-	void addNewPredicate(ArrayList<Predicate> pToAdd)
-	{
-		for (int i=edgeTrace.size()-1; i>=0; i--)
-		{
-			edgeTrace.get(i).tailNode.popStateSpace();
-		}
-		StateSpace ss = edgeTrace.get(0).headNode.popStateSpace();
-		ArrayList<Predicate> pList = new ArrayList<Predicate>();
-		for (PredicateVector pv : ss.predVectorArray)
-		{
-			pList.add(pv.getPredicate());
-		}
-		for (Predicate p : pToAdd)
-		{
-			pList.add(p);
-		}
-		System.out.println("*********************************************");
-		System.out.println("New predicate list:");
-		System.out.println("*********************************************");
-		for (Predicate p : pList)		p.display();
-		System.out.println("");
-		edgeTrace = new ArrayList<Edge>();
-		beginForwardSearch(pList);
-	}
-	
-	void addNewPredicate(int numBack, ArrayList<Predicate> pToAdd)
-	{
-		//add new predicate and state space
-		//first "pour" previous state space to another stack and then "pour" back, facilitating the calculation
 
-		//pour out
-		Stack<StateSpace> reverseStack = new Stack<StateSpace>();
-		StateSpace ss = null;
-		for (int i=edgeTrace.size()-1; i>=0; i--)
-		{
-			ss = edgeTrace.get(i).tailNode.popStateSpace();
-			reverseStack.push(ss);
-		}
-		reverseStack.push( edgeTrace.get(0).headNode.popStateSpace()  );
-
-		//merge old and new state space and pour in		
-		ArrayList<StateSpace> addSs = new ArrayList<StateSpace>();
-		ArrayList<StateSpace> temp = null;
-		//head node
-		for (Predicate predToAdd : pToAdd)
-		{
-			//initial state space of new predicate
-			addSs.add(new StateSpace(new PredicateVector(predToAdd, State.STATE_TRUE)));
-		}	
-		ss = StateSpace.merge(reverseStack.pop(), addSs);		//merge
-		edgeTrace.get(0).headNode.pushStateSpace(ss);
-		
-		//calculate state space and merge
-		for (int i=0; i<edgeTrace.size()-numBack; i++)
-		{
-			Edge e = edgeTrace.get(i);
-			temp = new ArrayList<StateSpace>();	
-			for (StateSpace oldSs : addSs)
-			{							
-				temp.add(StateSpace.calStateSpace(oldSs, e));	//calculate only new predicate				
-			}
-			addSs = temp;
-			ss = StateSpace.merge(reverseStack.pop(), addSs);	//merge
-			e.tailNode.pushStateSpace(ss);		//pour back
-		}
-		
-		//remain state spaces pour back
-		for (int i=edgeTrace.size()-numBack; i<edgeTrace.size(); i++)
-		{
-			edgeTrace.get(i).tailNode.pushStateSpace(reverseStack.pop());
-		}
-		
-		for (Edge ee : edgeTrace)
-		{
-			ee.headNode.display();
-			System.out.println("");
-		}
-		edgeTrace.get(edgeTrace.size()-1).tailNode.display();
-	
-	}
-	
-	void recordTrace(Edge e)
+	private void recordTrace(Edge e)
 	{
 		edgeTrace.add(e);
 	}
 
-	void removeTrace()
+	private Edge removeTrace()
 	{
-		edgeTrace.remove( edgeTrace.size()-1 );	//remove last edge
+		//remove last edge
+		edgeTrace.remove( edgeTrace.size()-1 );
 	}
 
-	void display(ArrayList<Edge> eTrace, ArrayList<Node> nTrace)
+	private void endWithRealCounterInstanceFound()
 	{
-		for (int i=0; i<eTrace.size(); i++)
+		endSearch = true;
+
+		System.out.println("*****************************************************************");
+		System.out.println("The program ends with real couter instance found.");
+		System.out.println("The route is:");
+		for (Edge e : edgeTrace)
 		{
-			System.out.print(nTrace.get(i).id + "  " + eTrace.get(i).id);
-			System.out.println("");
+			System.out.print("( ID: " + e.getID() + ", Label: " + e.getLabel().toString() + " ) => ");
 		}
-		System.out.println(nTrace.get(nTrace.size()-1).id);
+		System.out.println("end");
+		System.out.println("*****************************************************************");
 	}
 
-	void display(ArrayList<Edge> eTrace)
+	private void endWithNoNewPredicate()
 	{
-		System.out.println("");
-		System.out.println("The counter instance is:");
-		System.out.print(eTrace.get(0).headNode.id);
-		for (Edge e : eTrace)
+		endSearch = true;
+
+		System.out.println("*****************************************************************");
+		System.out.println("The program ends with no new predicate found.");
+		System.out.println("The route is:");
+		for (Edge e : edgeTrace)
 		{
-			System.out.print(" " + e.tailNode.id);
+			System.out.print("( ID: " + e.getID() + ", Label: " + e.getLabel().toString() + " ) => ");
 		}
-		System.out.println("");
+		System.out.println("end");
+		System.out.println("The predicates are:");
+		for (Predicate p : predicatesForSearch)
+		{
+			System.out.println(p.toString());
+		}
+		System.out.println("*****************************************************************");
 	}
+	
 }

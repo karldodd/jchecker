@@ -4,103 +4,96 @@ import java.util.*;
 
 public class Node
 {
-	static int num = 0;
+	private static int num = 0;
 
-	int id;
-	boolean isErrorNode;
-	ArrayList<Edge> inEdge;
-	ArrayList<Edge> outEdge;
-	StateSpace ss;
-	Stack<StateSpace> stateSpaceStack;
+	private int id;
+	private boolean isErrorNode;
+	private ArrayList<Edge> inEdge;
+	private ArrayList<Edge> outEdge;
+	private Stack<StateSpace> stateSpaceStack;
 
-	Node(int id)
-	{
-		this.id = id;
-		this.isErrorNode = false;
-		inEdge = new ArrayList<Edge>();
-		outEdge = new ArrayList<Edge>();
-		ss = null;
-		stateSpaceStack = new Stack<StateSpace>();
-	}
-
-	Node(boolean isErrorNode)
+	public Node(boolean isErrorNode)
 	{
 		id = num++;
 		this.isErrorNode = isErrorNode;
 		inEdge = new ArrayList<Edge>();
-		outEdge = new ArrayList<Edge>();
-		ss = null;
+		outEdge = new ArrayList<Edge>();		
 		stateSpaceStack = new Stack<StateSpace>();
 	}
 
-	void addInEdge(Edge e)
+	public void addInEdge(Edge e)
 	{
 		inEdge.add(e);
 	}
 	
-	void addOutEdge(Edge e)
+	public void addOutEdge(Edge e)
 	{
 		outEdge.add(e);
 	}
 
-	boolean isError()
+	public boolean isError()
 	{
 		return isErrorNode;
 	}
 
-    	void setErrorNode(boolean boolval)
+   public void setErrorNode(boolean boolval)
 	{
 		this.isErrorNode = boolval;
 	}
 
-	void pushStateSpace(StateSpace ss)
+	public void pushStateSpace(StateSpace ss)
 	{
 		stateSpaceStack.push(ss);	
 	}
 
-	StateSpace popStateSpace()
+	public StateSpace popStateSpace()
 	{
+		if (stateSpaceStack.isEmpty())
+		{
+			System.out.println("Error: state space of node " + id + " is empty.");
+			return null;
+		}
 		return stateSpaceStack.pop();	
 	}
 
-	StateSpace peekStateSpace()
+	public StateSpace peekStateSpace()
 	{
+		if (stateSpaceStack.isEmpty())
+		{
+			System.out.println("Error: state space of node " + id + " is empty.");
+			return null;
+		}
 		return stateSpaceStack.peek();	
 	}
-
-	void initStateSpace(StateSpace preSs)
+	
+	public int getID()
 	{
-		ss = StateSpace.createInitialStateSpace(preSs);	
+		return id;
+	}	
+	
+	public ArrayList<Edge> getInEdge()
+	{
+		return inEdge;
 	}
-
-	void initStateSpace(Predicate p)
+	
+	public ArrayList<Edge> getOutEdge()
 	{
-		ss = new StateSpace();
-		ss.add(new PredicateVector(p, State.STATE_TRUE));
+		return outEdge;
 	}
-
-	boolean implyBy(StateSpace judgeSs)
+	
+	public int stackSize()
 	{
-		for (int i=stateSpaceStack.size()-1; i>=0; i--)
-		{
-/*		
-			System.out.println("");
-			System.out.println("left ss is:");
-			judgeSs.display();
-			System.out.println("right ss is:");
-			stateSpaceStack.get(i).display();
-			System.out.println("");
-*/			
-			if ( judgeSs.imply(stateSpaceStack.get(i)) )
-				return true;
-		}
-		return false;
+		return stateSpaceStack.size();
+	}
+	
+	public StateSpace getStack(int i)
+	{
+		return stateSpaceStack.get(i);
 	}
 
 	void display()
 	{
-//		Edge e = null;
-		System.out.println("node id: " + id + " isErrorNode: " + isErrorNode);
+		System.out.println("node id: " + id + "   isErrorNode: " + isErrorNode);
 		System.out.println("inEdge:");
 		for (Edge e : inEdge)
 		{
@@ -110,12 +103,7 @@ public class Node
 		for (Edge e : outEdge)
 		{
 			e.display();
-		}
-		if (ss != null)
-		{
-			System.out.println("single state space: ");
-			ss.display();
-		}
+		}		
 		if (stateSpaceStack.empty())
 		{
 			System.out.println("state space stack is empty");
@@ -125,7 +113,7 @@ public class Node
 			System.out.println("state space stack: ");
 			for (int i=0; i<stateSpaceStack.size(); i++)
 			{
-				System.out.println(i + " state space:");
+				System.out.println("##################   " + i + "   ##################");
 				stateSpaceStack.get(i).display();
 			}
 			System.out.println("end state space stack");

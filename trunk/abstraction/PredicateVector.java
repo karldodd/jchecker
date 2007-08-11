@@ -4,23 +4,38 @@ import tokens.*;
 
 public class PredicateVector
 {
-	Predicate p;
-	State s;
+	private Predicate p;
+	private State s;
 
-	PredicateVector(Predicate pred, State stat)
+	public PredicateVector(Predicate pred, State stat)
 	{
 		p = pred;
 		s = stat;
 	}
-
-	Predicate getPredicate()
+	
+	public PredicateVector clone()
 	{
-		return p;
+		return new PredicateVector(p.clone(), s);
 	}
 
-	State getState()
+	public Predicate getPredicate()
+	{
+		return p.clone();
+	}
+	
+	public void setPredicate(Predicate pred)
+	{
+		p = pred.clone();
+	}
+
+	public State getState()
 	{
 		return s;
+	}
+	
+	public void setState(State stat)
+	{
+		s = stat;
 	}
 
 	public AdvCondition getAdvConditionByState()

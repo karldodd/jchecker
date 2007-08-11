@@ -7,10 +7,10 @@ import java.util.*;
 
 public class CFATree
 {
-	ArrayList<Edge> edgeTrace;
-	ArrayList<Prediate> predicatesForSearch;
-	CFAGraph cg;
-	boolean endSearch;
+	private ArrayList<Edge> edgeTrace;
+	private ArrayList<Prediate> predicatesForSearch;
+	private CFAGraph cg;
+	private boolean endSearch;
 	
 	public CFATree(CFAGraph g)
 	{
@@ -38,7 +38,7 @@ public class CFATree
 		} while ( !endSearch );
 	}
 
-	int forwardSearch(Node curNode)
+	private int forwardSearch(Node curNode)
 	{
 		Node nextNode;
 		StateSpace preSs = curNode.peekStateSpace();

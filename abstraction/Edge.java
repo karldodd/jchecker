@@ -9,7 +9,7 @@ public class Edge
 	private int id;
 	private Node headNode;
 	private Node tailNode;
-   private EdgeLabel label;
+	private EdgeLabel label;
 
 	public Edge(int id, EdgeLabel l)
 	{

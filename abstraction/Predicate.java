@@ -12,7 +12,7 @@ public class Predicate
 
 	public Predicate(AdvCondition c)
 	{
-		this.c=c;
+		this.c = c;
 	}
 	
 	public Predicate clone()

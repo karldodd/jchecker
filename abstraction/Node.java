@@ -36,7 +36,7 @@ public class Node
 		return isErrorNode;
 	}
 
-   public void setErrorNode(boolean boolval)
+	public void setErrorNode(boolean boolval)
 	{
 		this.isErrorNode = boolval;
 	}

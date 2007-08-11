@@ -96,7 +96,7 @@ public class CFATree
 
 	private boolean canEndCycle(Node nextNode, StateSpace nextSs)
 	{
-		//if next state space can imply previous state spaces, the cycle should end
+		//if next state space implies previous state spaces, end cycle
 		for (int i=0; i<nextNode.stackSize(); i++)
 		{
 			StateSpace preSs = nextNode.getStack(i);
@@ -146,6 +146,7 @@ public class CFATree
 		{
 			backTraceAdvConditionList.clear();
 
+			//calculate AdvCondition from bottom to top 
 			EdgeLabel label = edgeTrace.get(i).getLabel();
 			if (label instanceof AdvCondition)
 			{

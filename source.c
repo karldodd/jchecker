@@ -1,14 +1,15 @@
 //a=-(a-b)-c-d*e+7-10;
-/*
-b=0;
-while(b<4)b=b+1;
-if(b==5)
-{a=1;}
-else{ ERROR;}
-*/
 
 b=0;
+while(b<4)b=b+1;
+if(b==4)
+{a=1;}
+else{ ERROR;}
+
+/*
+b=0;
 if(a==1){c=3;}
+*/
 /*
 b=0;
 if (a=1){c=3;}

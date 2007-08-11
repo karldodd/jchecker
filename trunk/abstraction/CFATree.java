@@ -249,15 +249,25 @@ public class CFATree
 		endSearch = true;
 
 		System.out.println("");
-		System.out.println("*****************************************************************");
-		System.out.println("The program ends with real counter instance found.");
-		System.out.println("The edge route is:");
+		System.out.println("/////////////////////////////////////////////////////////////////////////////////////////////////");
+		System.out.println("//  The program ends with real counter instance found.");
+		System.out.println("//  The edge route is:");
+		int count = 0;
 		for (Edge e : edgeTrace)
 		{
-			System.out.print("( ID: " + e.getID() + ", Label: " + e.getLabel().toString() + " ) => ");
+			if (count % 3 == 0)
+				System.out.print("//  ");
+			if (count == 0)
+				System.out.print("(ID: " + e.getID() + ", Label: " + e.getLabel().toString() + ") ");
+			else
+				System.out.print("=> (ID: " + e.getID() + ", Label: " + e.getLabel().toString() + ") ");
+			if (count % 3 == 2)
+				System.out.println("");
+			count++;
 		}
-		System.out.println("end");
-		System.out.println("*****************************************************************");
+		if (count % 3 == 0) System.out.println("//  => end");
+		else System.out.println("=> end");
+		System.out.println("/////////////////////////////////////////////////////////////////////////////////////////////////");
 	}
 
 	private void endWithNoNewPredicate()
@@ -265,20 +275,30 @@ public class CFATree
 		endSearch = true;
 
 		System.out.println("");
-		System.out.println("*****************************************************************");
-		System.out.println("The program ends with no new predicate found.");
-		System.out.println("The edge route is:");
+		System.out.println("/////////////////////////////////////////////////////////////////////////////////////////////////");
+		System.out.println("//  The program ends with no new predicate found.");
+		System.out.println("//  The edge route is:");
+		int count = 0;
 		for (Edge e : edgeTrace)
 		{
-			System.out.print("( ID: " + e.getID() + ", Label: " + e.getLabel().toString() + " ) => ");
+			if (count % 3 == 0)
+				System.out.print("//  ");
+			if (count == 0)
+				System.out.print("(ID: " + e.getID() + ", Label: " + e.getLabel().toString() + ") ");
+			else
+				System.out.print("=> (ID: " + e.getID() + ", Label: " + e.getLabel().toString() + ") ");
+			if (count % 3 == 2)
+				System.out.println("");
+			count++;
 		}
-		System.out.println("end");
-		System.out.println("The predicates are:");
+		if (count % 3 == 0) System.out.println("//  => end");
+		else System.out.println("=> end");
+		System.out.println("//  The predicates are:");
 		for (Predicate p : predicatesForSearch)
 		{
-			System.out.println(p.toString());
+			System.out.println("//  " + p.toString());
 		}
-		System.out.println("*****************************************************************");
+		System.out.println("/////////////////////////////////////////////////////////////////////////////////////////////////");
 	}
 	
 }

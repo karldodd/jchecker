@@ -8,35 +8,9 @@ import java.util.*;
 
 public class StateSpace
 {
-	ArrayList<PredicateVector> predVectorArray;
-	State stateSign;
-
-	public static StateSpace createInitialStateSpace(ArrayList<Predicate> predArray)
-	{
-		StateSpace ss = new StateSpace();
-
-		for (Predicate p : predArray)
-		{
-			ss.predVectorArray.add(new PredicateVector(p, State.STATE_TRUE));
-		}
-		ss.stateSign = State.STATE_TRUE;
-
-		return ss;
-	}
-
-	public static StateSpace createInitialStateSpace(StateSpace preSs)
-	{
-		StateSpace ss = new StateSpace();
-
-		for (PredicateVector pv : preSs.predVectorArray)
-		{
-			ss.predVectorArray.add(new PredicateVector(pv.getPredicate(), State.STATE_TRUE));
-		}
-		ss.stateSign = State.STATE_TRUE;
-
-		return ss;
-	}
-
+	private ArrayList<PredicateVector> predVectorArray;
+	private State stateSign;	
+	
 	public StateSpace()
 	{
 		predVectorArray = new ArrayList<PredicateVector>();
@@ -46,18 +20,93 @@ public class StateSpace
 	public StateSpace(PredicateVector pv)
 	{
 		predVectorArray = new ArrayList<PredicateVector>();
-		predVectorArray.add(pv);
+		predVectorArray.add(pv.clone());
 		stateSign = State.STATE_TRUE;
 	}
 
-	boolean isFalse()
+	public StateSpace(ArrayList<Predicate> predArray)
+	{
+		predVectorArray = new ArrayList<PredicateVector>();
+		for (Predicate p : predArray)
+		{
+			predVectorArray.add(new PredicateVector(p.clone(), State.STATE_TRUE));
+		}
+		stateSign = State.STATE_TRUE;
+	}
+
+	public StateSpace(StateSpace preSs)
+	{
+		predVectorArray = new ArrayList<PredicateVector>();
+		for (PredicateVector pv : preSs.predVectorArray)
+		{
+			PredicateVector newpv = pv.clone();
+			newpv.setState(State.STATE_TRUE);
+			predVectorArray.add(newpv);
+		}
+		stateSign = State.STATE_TRUE;
+	}	
+
+	public boolean isFalse()
 	{
 		return (stateSign==State.STATE_FALSE);
 	}
 	
-	void add(PredicateVector pv)
+	public void setFalse()
 	{
-		predVectorArray.add(pv);
+		stateSign = State.STATE_FALSE;
+	}
+	
+	public State getStateSign()
+	{
+		return stateSign;
+	}
+	
+	public void setStateSign(State sg)
+	{
+		stateSign = sg;
+	}
+	
+	public void addPredicateVector(PredicateVector pv)
+	{
+		predVectorArray.add(pv.clone());
+	}
+	
+	public PredicateVector removePredicateVector(int i)
+	{
+		return predVectorArray.remove(i);
+	}
+	
+	public PredicateVector getPredicateVector(int i)
+	{
+		return predVectorArray.get(i);
+	}
+	
+	public void clearPredicateVector()
+	{
+		predVectorArray.clear();
+	}
+	
+	public int size()
+	{
+		return predVectorArray.size();
+	}
+	
+	public StateSpace merge(StateSpace ss2)
+	{		
+		for (PredicateVector pv : ss2.predVectorArray)
+		{
+			this.predVectorArray.add(pv.clone());
+		}
+		return this;		
+	}
+	
+	public StateSpace merge(ArrayList<StateSpace> ssList)
+	{
+		for (StateSpace newss : ssList)
+		{
+			this.merge(newss);
+		}		
+		return this;
 	}
 
 	public static StateSpace merge(StateSpace ss1, StateSpace ss2)
@@ -65,13 +114,13 @@ public class StateSpace
 		StateSpace ss3 = new StateSpace();
 		for (PredicateVector pv : ss1.predVectorArray)
 		{
-			ss3.predVectorArray.add(pv);
+			ss3.predVectorArray.add(pv.clone());
 		}
 		for (PredicateVector pv : ss2.predVectorArray)
 		{
-			ss3.predVectorArray.add(pv);
+			ss3.predVectorArray.add(pv.clone());
 		}
-		return ss3;
+		return ss3;		
 	}
 	
 	public static StateSpace merge(StateSpace ss1, ArrayList<StateSpace> ssList)
@@ -85,10 +134,10 @@ public class StateSpace
 		return ss3;
 	}
 	
-	public static StateSpace calStateSpace(StateSpace preSs, Edge edge)
+	public static StateSpace getNextStateSpace(StateSpace preSs, Edge edge)
 	{
  		StateSpace nextSs = new StateSpace();
-		EdgeLabel label = edge.label;
+		EdgeLabel label = edge.getLabel();
 		AdvCondition pre = null;
 		ArrayList<AdvCondition> preList = new ArrayList<AdvCondition>();
 
@@ -107,11 +156,11 @@ public class StateSpace
 
 			if (label instanceof EvaluationSentence)
 			{
-				nextState = calAssignment(pre, pred.getAdvCondition(), label);				
+				nextState = getStateOfEvaluationSentence(pre, pred.getAdvCondition(), label);				
 			}
 			else if (label instanceof AdvCondition)
 			{
-				nextState = calCondition(pred, predState, label);
+				nextState = getStateOfAdvCondition(pred, predState, label);
 			}
 			else
 			{
@@ -120,16 +169,16 @@ public class StateSpace
 			}	
 			if (nextState == State.STATE_FALSE)		//if next state space is false, return
 			{
-				nextSs.stateSign = State.STATE_FALSE;
+				nextSs.setFalse();
 				return nextSs;
 			}
-			nextSs.add(new PredicateVector(pred, nextState));
+			nextSs.addPredicateVector(new PredicateVector(pred, nextState));
 		}
 
 		return nextSs;
 	}
 
-	private static State calAssignment(AdvCondition pre, AdvCondition cPred, EdgeLabel label)
+	private static State getStateOfEvaluationSentence(AdvCondition pre, AdvCondition cPred, EdgeLabel label)
 	{		
 		Prover p = CommonMethod.getProverInstance();
 		
@@ -145,7 +194,7 @@ public class StateSpace
 		return State.STATE_TRUE;
 	}
 
-	private static State calCondition(Predicate pred, State predState, EdgeLabel label)
+	private static State getStateOfAdvCondition(Predicate pred, State predState, EdgeLabel label)
 	{
 		AdvCondition cPred = pred.getAdvCondition();
 		Prover p = CommonMethod.getProverInstance();
@@ -154,19 +203,17 @@ public class StateSpace
 		if ( p.imply((AdvCondition)label, cPred) )
 		{
 			if (predState == State.STATE_NEG) return State.STATE_FALSE;
-			else return State.STATE_POS;
-			//else return predState;
+			else return State.STATE_POS;			
 		}
 		else if ( p.imply((AdvCondition)label, cPred.getNegativeCopy()) )
 		{
 			if (predState == State.STATE_POS) return State.STATE_FALSE;
-			else return State.STATE_NEG;
-			//else return predState;
+			else return State.STATE_NEG;			
 		}
 		return predState;	//inherit
 	}
 
-	boolean imply(StateSpace rightSs)
+	public boolean imply(StateSpace rightSs)
 	{
 		ArrayList<AdvCondition> leftAdvList = new ArrayList<AdvCondition>();
 		ArrayList<AdvCondition> rightAdvList = new ArrayList<AdvCondition>();
@@ -183,9 +230,6 @@ public class StateSpace
 		}
 		AdvCondition rightAdvCondition = AdvCondition.intersectAll(rightAdvList);
 		
-		//System.out.println("left adv is " + leftAdvCondition.toString());
-		//System.out.println("right adv is " + rightAdvCondition.toString());
-
 		try 
 		{
 			Prover p = ProverFactory.getProverByName("focivampyre");
@@ -200,6 +244,7 @@ public class StateSpace
 
 	void display()
 	{
+		System.out.println("Now display state space:");
 		System.out.println("state sign is: " + stateSign);
 		for (PredicateVector pv : predVectorArray)
 		{

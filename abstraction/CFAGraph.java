@@ -9,30 +9,27 @@ import java.util.*;
 
 public class CFAGraph
 {
-	public ArrayList<Node> nodeList;
+	private ArrayList<Node> nodeList;
 
-	CFAGraph()
+	private CFAGraph()
 	{
-		nodeList = new ArrayList<Node>();
-		//h0 is for special usage
+		nodeList = new ArrayList<Node>();		
+		//h0 is head node
 		Node h0 = new Node(false);
 		nodeList.add(h0);
-		//h1 is head node
-		Node h1 = new Node(false);
-		nodeList.add(h1);
 	}
 
-	void addNode(Node n)
+	public void addNode(Node n)
 	{
 		nodeList.add(n);
 	}
 
-	Node firstNode()
+	public Node firstNode()
 	{
-		return nodeList.get(1);
+		return nodeList.get(0);
 	}
 
-	Node getNode(int id)
+	public Node getNode(int id)
 	{
 		return nodeList.get(id);
 	}

@@ -4,14 +4,14 @@ import tokens.*;
 
 public class Edge
 {
-	static int num = 0;
+	private static int num = 0;
 
-	int id;
-	Node headNode;
-	Node tailNode;
-        EdgeLabel label;
+	private int id;
+	private Node headNode;
+	private Node tailNode;
+   private EdgeLabel label;
 
-	Edge(int id, EdgeLabel l)
+	public Edge(int id, EdgeLabel l)
 	{
 		this.id = id;
 		headNode = null;
@@ -19,27 +19,37 @@ public class Edge
 		label = l;
 	}
 
-	Edge(Node hn, Node tn, EdgeLabel l)
+	public Edge(Node hn, Node tn, EdgeLabel l)
 	{
 		id = num++;
 		headNode = hn;
 		tailNode = tn;
 		label = l;
 	}
-
-	void changeHeadNode(Node n)
+	
+	public int getID()
 	{
-		headNode = n;
+		return id;
+	}
+
+	public Node getHeadNode()
+	{
+		return headNode;
 	}
 	
-	void changeTailNode(Node n)
+	public Node getTailNode()
 	{
-		tailNode = n;
+		return tailNode;
+	}
+	
+	public EdgeLabel getLabel()
+	{
+		return label;
 	}
 	
 	void display()
 	{
-		System.out.print("Edge id: " + id + " headnode: " + headNode.id + " tailnode: " + tailNode.id);
+		System.out.print("Edge id: " + id + " headnode: " + headNode.getID() + " tailnode: " + tailNode.getID());
 		System.out.println(" Label: " + label.toString());		
 	}
 }

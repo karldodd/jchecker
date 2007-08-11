@@ -1,6 +1,7 @@
 package abstraction;
 
 import tokens.*;
+import prover.*;
 
 import java.lang.*;
 import java.util.*;
@@ -13,10 +14,15 @@ public class Predicate
 	{
 		this.c=c;
 	}
+	
+	public Predicate clone()
+	{
+		return new Predicate(c.clone());
+	}
 
 	public AdvCondition getAdvCondition()
 	{
-		return c;
+		return c.clone();
 	}
 	
 	public String toString()
@@ -32,5 +38,14 @@ public class Predicate
 	void display()
 	{
 		System.out.println("predicate is: " + c.toString());
+	}
+	
+//	public boolean equals(Predicate p, Prover prover){
+//		return this.getAdvCondition().equals(p.getAdvCondition(),prover);
+//	}
+	
+	public boolean equals(Predicate p)
+	{
+		return c.toString().equals(p.getAdvCondition().toString());
 	}
 }

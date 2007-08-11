@@ -1,4 +1,4 @@
-package abstraction:
+package abstraction;
 
 import tokens.*;
 import prover.*;
@@ -8,14 +8,14 @@ import java.util.*;
 public class CFATree
 {
 	private ArrayList<Edge> edgeTrace;
-	private ArrayList<Prediate> predicatesForSearch;
+	private ArrayList<Predicate> predicatesForSearch;
 	private CFAGraph cg;
 	private boolean endSearch;
 	
 	public CFATree(CFAGraph g)
 	{
 		edgeTrace = new ArrayList<Edge>();
-		predicatesForSearch = new ArrayList<Prediate>();
+		predicatesForSearch = new ArrayList<Predicate>();
 		cg = g;
 		endSearch = false;
 	}
@@ -40,7 +40,7 @@ public class CFATree
 
 	private int forwardSearch(Node curNode)
 	{
-		Node nextNode;
+		Node nextNode = null;
 		StateSpace preSs = curNode.peekStateSpace();
 		StateSpace nextSs = null;
 		int numBack = 0;	//numBack means how many nodes should back, default value is 0, stands for leaf node
@@ -76,7 +76,7 @@ public class CFATree
 				recordTrace(outEdge);
 				nextNode.pushStateSpace(nextSs);
 
-				numBack = forwardSearh(nextNode);
+				numBack = forwardSearch(nextNode);
 
 				nextNode.popStateSpace();
 				removeTrace();
@@ -97,12 +97,10 @@ public class CFATree
 	private boolean canEndCycle(Node nextNode, StateSpace nextSs)
 	{
 		//if next state space can imply previous state spaces, the cycle should end
-		Prover p = CommonMethod.getProverInstance();
-
 		for (int i=0; i<nextNode.stackSize(); i++)
 		{
 			StateSpace preSs = nextNode.getStack(i);
-			if (p.imply(nextSs, preSs)) return true;
+			if (nextSs.imply(preSs)) return true;
 		}
 		return false;
 	}
@@ -123,7 +121,7 @@ public class CFATree
 		{
 			reverseSsTrace.add(edgeTrace.get(i).getTailNode().popStateSpace());
 		}
-		reverseSsTrace.add(edgeTrace.get(i).getHeadNode().popStateSpace());
+		reverseSsTrace.add(edgeTrace.get(0).getHeadNode().popStateSpace());
 
 		for (i=reverseSsTrace.size()-1; i>=0; i--)
 		{
@@ -135,12 +133,12 @@ public class CFATree
 		for (i=0; i<edgeTrace.size(); i++)
 		{
 			edgeTrace.get(i).getTailNode().pushStateSpace(originSsTrace.get(i+1));
-		}
+		}		
 
 		//back trace
 		//lastAdvCondition is the AdvCondition just before current edge
 		//now initial error node's AdvCondition
-		AdvCondition lastAdvondition = new AdvCondition(new Condition(true));
+		AdvCondition lastAdvCondition = new AdvCondition(new Condition(true));
 		//backTraceAdvConditionList records the AdvConditions to calculate interpolation
 		ArrayList<AdvCondition> backTraceAdvConditionList = new ArrayList<AdvCondition>();
 
@@ -160,15 +158,15 @@ public class CFATree
 			backTraceAdvConditionList.add(lastAdvCondition);
 
 			//add original state space of current node
-			for (PredicateVector pv : originSsTrace.get(i))
+			for (int j=0; j<originSsTrace.get(i).size(); j++)
 			{
-				backTraceAdvConditionList.add(pv.getAdvConditionByState());
+				backTraceAdvConditionList.add(originSsTrace.get(i).getPredicateVector(j).getAdvConditionByState());
 			}
 
 			//test if it is satifiable
 			if ( !p.isSatisfiable(backTraceAdvConditionList) )
 			{
-				List<Predicate> newPrediateList = getInterpolation(p, i, originSsTrace.get(i));
+				List<Predicate> newPredicateList = getInterpolation(p, i, originSsTrace.get(i));
 				addNewPredicates(newPredicateList);
 				return;
 			}
@@ -185,7 +183,7 @@ public class CFATree
 		//add start node's state space
 		for (int i=0; i<startSs.size(); i++)
 		{
-			labelList.add((EdgeLabel)(startSs.getPrediateVector(i).getAdvConditionByState()));
+			labelList.add((EdgeLabel)(startSs.getPredicateVector(i).getAdvConditionByState()));
 		}
 		//add edge labels
 		for (int i=startNode; i<edgeTrace.size(); i++)
@@ -197,7 +195,7 @@ public class CFATree
 		List<Predicate> newPredicateList = null;
 		try
 		{
-			newPredicatesList = p.getInterpolation(labelList);
+			newPredicateList = p.getInterpolation(labelList);
 		}
 		catch(Exception e)
 		{
@@ -207,7 +205,7 @@ public class CFATree
 		return newPredicateList;
 	}
 	
-	private void addNewPredicates(ArrayList<Predicate> newPredicateList)
+	private void addNewPredicates(List<Predicate> newPredicateList)
 	{
 		//add new predicates
 		boolean equal = false;
@@ -239,16 +237,17 @@ public class CFATree
 	private Edge removeTrace()
 	{
 		//remove last edge
-		edgeTrace.remove( edgeTrace.size()-1 );
+		return edgeTrace.remove( edgeTrace.size()-1 );
 	}
 
 	private void endWithRealCounterInstanceFound()
 	{
 		endSearch = true;
 
+		System.out.println("");
 		System.out.println("*****************************************************************");
-		System.out.println("The program ends with real couter instance found.");
-		System.out.println("The route is:");
+		System.out.println("The program ends with real counter instance found.");
+		System.out.println("The edge route is:");
 		for (Edge e : edgeTrace)
 		{
 			System.out.print("( ID: " + e.getID() + ", Label: " + e.getLabel().toString() + " ) => ");
@@ -261,9 +260,10 @@ public class CFATree
 	{
 		endSearch = true;
 
+		System.out.println("");
 		System.out.println("*****************************************************************");
 		System.out.println("The program ends with no new predicate found.");
-		System.out.println("The route is:");
+		System.out.println("The edge route is:");
 		for (Edge e : edgeTrace)
 		{
 			System.out.print("( ID: " + e.getID() + ", Label: " + e.getLabel().toString() + " ) => ");

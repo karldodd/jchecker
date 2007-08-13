@@ -41,7 +41,8 @@ public class CFATree
 	private int forwardSearch(Node curNode)
 	{
 		Node nextNode = null;
-		StateSpace preSs = curNode.peekStateSpace();
+		Edge outEdge = null;
+		StateSpace preSs = null;
 		StateSpace nextSs = null;
 		int numBack = 0;	//numBack means how many nodes should back, default value is 0, stands for leaf node
 
@@ -58,14 +59,12 @@ public class CFATree
 		else
 		{
 			//iterate whole tree
-			for (Edge outEdge : curNode.getOutEdge())
+			for (int i=0; i<curNode.getOutEdge().size(); i++)
 			{
+				preSs = curNode.peekStateSpace();
+				outEdge = curNode.getOutEdge().get(i);
 				nextNode = outEdge.getTailNode();
-				//System.out.println("before calculate state space, node id is " + curNode.getID());
-				//outEdge.display();
 				nextSs = StateSpace.getNextStateSpace(preSs, outEdge);
-				//nextSs.display();
-				//System.out.println("after calculate state space, node id is " + curNode.getID());
 
 				if (nextSs.isFalse())
 				{
@@ -91,9 +90,15 @@ public class CFATree
 				//numBack > 0 means it's not the end of recall
 				if (numBack > 0) 
 				{	
-					//System.out.println("curNode is " + curNode.getID());
 					return numBack-1;
 				}
+				//endSearch == false means now is in backtrace process, numBack == 0 means now getting right place
+				if (numBack == 0 && endSearch == false)
+				{
+					endSearch = true;
+					i = -1;		//after i++, i=0, now search can start with the first edge
+				}
+				//if only numBack == 0, means it's only leaf node
 			}			
 		}
 
@@ -175,7 +180,7 @@ public class CFATree
 				int numOfNewPredicates = addNewPredicates(newPredicateList);
 				if (numOfNewPredicates == 0)
 				{
-					//if no new prdicate, back to the nearest node and continue search
+					//if no new prdicate, back to the nearest parent node and continue search
 					System.out.println("No new predicate found");
 					endSearch = true;
 					//return state spaces to edgeTrace's nodes
@@ -292,7 +297,6 @@ public class CFATree
 			edgeTrace.get(i).getTailNode().pushStateSpace(originSsTrace.get(i+1));
 		}
 
-		//System.out.println("numBack in refineFromHead is " + numBack);
 		return numBack;
 	}
 

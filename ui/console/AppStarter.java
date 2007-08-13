@@ -38,7 +38,7 @@ public class AppStarter{
 	    print("");
 	    CFATree tree = new CFATree(graph);
 	    ArrayList<Predicate> list = new ArrayList<Predicate>();
-	    list.add(new Predicate(new AdvCondition(new Condition(new Expression(new Variable("b")), new Expression(0), ConType.equal))));
+	    list.add(new Predicate(new AdvCondition(new Condition(new Expression(new Variable("b")), new Expression(4), ConType.smaller))));
 	    tree.beginForwardSearch(list);
 	}
 

@@ -22,7 +22,6 @@ public class CFATree
 	
 	public void beginForwardSearch(ArrayList<Predicate> predArray)
 	{
-		endSearch = true;
 		Node firstNode = cg.firstNode();
 		for (Predicate p : predArray)
 		{
@@ -31,6 +30,7 @@ public class CFATree
 
 		do
 		{
+			endSearch = true;
 			StateSpace ssInit = new StateSpace(predicatesForSearch);
 			firstNode.pushStateSpace(ssInit);
 			forwardSearch(firstNode);
@@ -51,9 +51,9 @@ public class CFATree
 			//so now endSearch should be set false to do another forward search
 			endSearch = false;
 			//find error node, back trace
-			backTrace();
+			numBack = backTrace();
 			//back to top, begin another forward search
-			return edgeTrace.size();
+			return numBack;
 		}
 		else
 		{
@@ -61,7 +61,11 @@ public class CFATree
 			for (Edge outEdge : curNode.getOutEdge())
 			{
 				nextNode = outEdge.getTailNode();
+				//System.out.println("before calculate state space, node id is " + curNode.getID());
+				//outEdge.display();
 				nextSs = StateSpace.getNextStateSpace(preSs, outEdge);
+				//nextSs.display();
+				//System.out.println("after calculate state space, node id is " + curNode.getID());
 
 				if (nextSs.isFalse())
 				{
@@ -85,7 +89,11 @@ public class CFATree
 				removeTrace();
 
 				//numBack > 0 means it's not the end of recall
-				if (numBack > 0) return numBack-1;
+				if (numBack > 0) 
+				{	
+					//System.out.println("curNode is " + curNode.getID());
+					return numBack-1;
+				}
 			}			
 		}
 
@@ -108,7 +116,7 @@ public class CFATree
 		return false;
 	}
 
-	private void backTrace()	
+	private int backTrace()	
 	{
 		int i = 0;
 		Prover p = CommonMethod.getProverInstance();
@@ -130,13 +138,6 @@ public class CFATree
 		{
 			originSsTrace.add(reverseSsTrace.get(i));
 		}
-
-		//return state spaces to edgeTrace's nodes
-		edgeTrace.get(0).getHeadNode().pushStateSpace(originSsTrace.get(0));
-		for (i=0; i<edgeTrace.size(); i++)
-		{
-			edgeTrace.get(i).getTailNode().pushStateSpace(originSsTrace.get(i+1));
-		}		
 
 		//back trace
 		//lastAdvCondition is the AdvCondition just before current edge
@@ -171,13 +172,39 @@ public class CFATree
 			if ( !p.isSatisfiable(backTraceAdvConditionList) )
 			{
 				List<Predicate> newPredicateList = getInterpolation(p, i, originSsTrace.get(i));
-				addNewPredicates(newPredicateList);
-				return;
+				int numOfNewPredicates = addNewPredicates(newPredicateList);
+				if (numOfNewPredicates == 0)
+				{
+					//if no new prdicate, back to the nearest node and continue search
+					System.out.println("No new predicate found");
+					endSearch = true;
+					//return state spaces to edgeTrace's nodes
+					edgeTrace.get(0).getHeadNode().pushStateSpace(originSsTrace.get(0));
+					for (i=0; i<edgeTrace.size(); i++)
+					{
+						edgeTrace.get(i).getTailNode().pushStateSpace(originSsTrace.get(i+1));
+					}		
+					return 0;
+				}
+				else
+				{
+					//if there're new predicates, refine from head using new predicates, and back to appropriate node
+					int numBack = refineFromHead(originSsTrace);
+					return numBack;
+				}
 			}
 		}
 
 		//coming here means reach the top, real counter instance is found
 		endWithRealCounterInstanceFound();
+
+		//return state spaces to edgeTrace's nodes
+		edgeTrace.get(0).getHeadNode().pushStateSpace(originSsTrace.get(0));
+		for (i=0; i<edgeTrace.size(); i++)
+		{
+			edgeTrace.get(i).getTailNode().pushStateSpace(originSsTrace.get(i+1));
+		}		
+		return edgeTrace.size();
 	}
 
 	private List<Predicate> getInterpolation(Prover p, int startNode, StateSpace startSs)
@@ -209,7 +236,7 @@ public class CFATree
 		return newPredicateList;
 	}
 	
-	private void addNewPredicates(List<Predicate> newPredicateList)
+	private int addNewPredicates(List<Predicate> newPredicateList)
 	{
 		//add new predicates
 		boolean equal = false;
@@ -229,8 +256,44 @@ public class CFATree
 		}
 		int newSize = predicatesForSearch.size();
 
+		return newSize - oldSize;
 		//no new predicate, searh should end
-		if (oldSize == newSize) endWithNoNewPredicate();
+		//if (oldSize == newSize) endWithNoNewPredicate();
+	}
+
+	private int refineFromHead(ArrayList<StateSpace> originSsTrace)
+	{
+		int validEdge = 0;
+		int numBack = 0;
+		StateSpace ss = new StateSpace(predicatesForSearch);
+		ArrayList<StateSpace> newSsTrace = new ArrayList<StateSpace>();
+
+		//refine from head, finding which node is the right search restarting place
+		newSsTrace.add(ss);
+		for (validEdge=0; validEdge<edgeTrace.size(); validEdge++)
+		{
+			ss = StateSpace.getNextStateSpace(ss, edgeTrace.get(validEdge));
+			if (ss.isFalse())
+			{
+				numBack = edgeTrace.size()-validEdge;
+				break;
+			}
+			else newSsTrace.add(ss);
+		}
+
+		//return state spaces to edgeTrace's nodes
+		edgeTrace.get(0).getHeadNode().pushStateSpace(newSsTrace.get(0));
+		for (int i=0; i<validEdge; i++)
+		{
+			edgeTrace.get(i).getTailNode().pushStateSpace(newSsTrace.get(i+1));
+		}
+		for (int i=validEdge; i<edgeTrace.size(); i++)
+		{
+			edgeTrace.get(i).getTailNode().pushStateSpace(originSsTrace.get(i+1));
+		}
+
+		//System.out.println("numBack in refineFromHead is " + numBack);
+		return numBack;
 	}
 
 	private void recordTrace(Edge e)

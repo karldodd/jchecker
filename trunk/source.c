@@ -2,7 +2,7 @@
 
 b=0;
 while(b<4)b=b+1;
-if(b==4)
+if(b==5)
 {a=1;}
 else{ ERROR;}
 

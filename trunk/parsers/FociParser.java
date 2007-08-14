@@ -638,11 +638,11 @@ case 1:
 //#line 41 "parsers/FociParser.y"
 {
 	ArrayList<AdvCondition> al=(ArrayList<AdvCondition>)val_peek(0).obj;
-	System.out.println("Work completed.\nIn all, "+formulaNo+" predicates found.");
+	/*System.out.println("Work completed.\nIn all, "+formulaNo+" predicates found.");
 	for (AdvCondition s: al)
 	{
 		System.out.println(s.toString());
-	}
+	}*/
 	conditionPool=al;
 	/*predicatePool=al;*/
 }

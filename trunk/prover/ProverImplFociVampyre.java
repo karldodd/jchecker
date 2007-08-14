@@ -8,7 +8,7 @@ import java.util.*;
 import java.io.*;
 
 public class ProverImplFociVampyre implements Prover{
-	private static boolean debugging=true;
+	private static boolean debugging=false;
 
 	private static ProverImplFociVampyre prover=null;
 	private ProverImplFociVampyre(){}
@@ -78,7 +78,7 @@ public class ProverImplFociVampyre implements Prover{
 		{
 			//if(debugging)System.out.println("Getting predicate: "+ac.toString());
 			//filter the true conditions: we don't need true to be our predicate.
-			if(!ac.isTrue(this)){
+			if(!ac.isTrue(this)&&!ac.isFalse()){
 				Predicate p=new Predicate(ac);
 				predicates.add(p);
 				//System.out.println("Now predicate number: "+ predicates.size());

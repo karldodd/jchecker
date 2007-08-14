@@ -17,6 +17,7 @@ public class CommonMethod
 	 	catch(Exception e)
 	    	{
 			System.err.println("Error: Prover not found...");
+			System.exit(1);
 			return null;
 	    	}
 	}
@@ -30,9 +31,9 @@ public class CommonMethod
 	{
 		for (int i=0; i<eTrace.size(); i++)
 		{
-			System.out.print(nTrace.get(i).id + "  " + eTrace.get(i).getID());
-			System.out.println("");
+			//System.out.print(nTrace.get(i).id + "  " + eTrace.get(i).getID());
+			//System.out.println("");
 		}
-		System.out.println(nTrace.get(nTrace.size()-1).id);
+		//System.out.println(nTrace.get(nTrace.size()-1).id);
 	}	
 }

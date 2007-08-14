@@ -43,9 +43,23 @@ public class Predicate
 //	public boolean equals(Predicate p, Prover prover){
 //		return this.getAdvCondition().equals(p.getAdvCondition(),prover);
 //	}
+	public boolean equals(Object o)
+	{
+		if(o instanceof Predicate)
+		{
+			Predicate p=(Predicate)o;
+			return c.toString().equals(p.getAdvCondition().toString());
+		}
+		else return false;
+		//return c.toString().equals(p.getAdvCondition().toString());
+	}
 	
 	public boolean equals(Predicate p)
 	{
 		return c.toString().equals(p.getAdvCondition().toString());
+	}
+
+	public int hashCode(){
+		return this.toString().hashCode();
 	}
 }

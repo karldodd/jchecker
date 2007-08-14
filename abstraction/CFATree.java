@@ -9,6 +9,7 @@ public class CFATree
 {
 	private ArrayList<Edge> edgeTrace;
 	private ArrayList<Predicate> predicatesForSearch;
+	private HashSet<Predicate> predicatesOnUse;
 	private CFAGraph cg;
 	private boolean endSearch;
 	
@@ -16,6 +17,7 @@ public class CFATree
 	{
 		edgeTrace = new ArrayList<Edge>();
 		predicatesForSearch = new ArrayList<Predicate>();
+		predicatesOnUse=new HashSet<Predicate>();
 		cg = g;
 		endSearch = true;
 	}
@@ -26,6 +28,7 @@ public class CFATree
 		for (Predicate p : predArray)
 		{
 			predicatesForSearch.add(p.clone());
+			predicatesOnUse.add(p.clone());
 		}
 
 		do
@@ -244,11 +247,13 @@ public class CFATree
 	private int addNewPredicates(List<Predicate> newPredicateList)
 	{
 		//add new predicates
-		boolean equal = false;
+		//boolean equal = false;
 		int oldSize = predicatesForSearch.size();
 		for (Predicate newPredicate : newPredicateList)
 		{
-			equal = false;
+			//equal = false;
+			
+			/*
 			for (Predicate oldPredicate : predicatesForSearch)
 			{
 				if (oldPredicate.equals(newPredicate))
@@ -257,7 +262,14 @@ public class CFATree
 					break;
 				}
 			}
-			if (!equal) predicatesForSearch.add(newPredicate);
+			if (!equal)*/
+
+			if(predicatesOnUse.add(newPredicate))
+			{
+				System.out.println("Adding Predicate: "+ newPredicate.toString());
+				predicatesForSearch.add(newPredicate);
+				//predicatesOnUse.add(newPredicate);
+			}
 		}
 		int newSize = predicatesForSearch.size();
 

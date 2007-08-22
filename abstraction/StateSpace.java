@@ -174,7 +174,7 @@ public class StateSpace
 			}
 			else
 			{
-				System.err.println("Unexpected EdgeLabel (neither Evaluation nor AdvCondition");
+				System.err.println("Unexpected EdgeLabel (neither Evaluation nor AdvCondition)");
 				nextState = null;
 			}	
 			if (nextState == State.STATE_FALSE)		//if next state space is false, return

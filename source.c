@@ -1,5 +1,5 @@
 //a=-(a-b)-c-d*e+7-10;
-
+/*
 b=0;
 
 b=b-1;
@@ -8,6 +8,18 @@ while(b<4)b=b+1;
 if(b==5)
 {a=1;}
 else{ ERROR;}
+*/
+
+x=0;
+y=0;
+while(x<2)
+{
+	x=x+1;
+	y=y+1;
+}
+if(x==2)
+{x=0;}
+else{ERROR;}
 
 /*
 b=0;

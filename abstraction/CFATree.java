@@ -8,16 +8,16 @@ import java.util.*;
 public class CFATree
 {
 	private ArrayList<Edge> edgeTrace;
-	private ArrayList<Predicate> predicatesForSearch;
-	private HashSet<Predicate> predicatesOnUse;
+	//private ArrayList<Predicate> predicatesForSearch;
+	//private HashSet<Predicate> predicatesOnUse;
 	private CFAGraph cg;
 	private boolean endSearch;
 	
 	public CFATree(CFAGraph g)
 	{
 		edgeTrace = new ArrayList<Edge>();
-		predicatesForSearch = new ArrayList<Predicate>();
-		predicatesOnUse=new HashSet<Predicate>();
+		//predicatesForSearch = new ArrayList<Predicate>();
+		//predicatesOnUse=new HashSet<Predicate>();
 		cg = g;
 		endSearch = true;
 	}
@@ -25,16 +25,17 @@ public class CFATree
 	public void beginForwardSearch(ArrayList<Predicate> predArray)
 	{
 		Node firstNode = cg.firstNode();
-		for (Predicate p : predArray)
+		/*for (Predicate p : predArray)
 		{
 			predicatesForSearch.add(p.clone());
 			predicatesOnUse.add(p.clone());
-		}
+		}*/
 
 		do
 		{
 			endSearch = true;
-			StateSpace ssInit = new StateSpace(predicatesForSearch);
+			StateSpace ssInit = new StateSpace(predArray);
+			//StateSpace ssInit = new StateSpace(predicatesForSearch);
 			firstNode.pushStateSpace(ssInit);
 			forwardSearch(firstNode);
 			firstNode.popStateSpace();
@@ -130,8 +131,10 @@ public class CFATree
 		Prover p = CommonMethod.getProverInstance();
 
 		//initial state space trace of edgeTrace
+
 		//originSsTrace: original state space of edgeTrace, from top to bottom
 		ArrayList<StateSpace> originSsTrace = new ArrayList<StateSpace>();
+
 		//reverseSsTrace: original state space of edgeTrace, from bottom to top
 		ArrayList<StateSpace> reverseSsTrace = new ArrayList<StateSpace>();
 
@@ -148,9 +151,11 @@ public class CFATree
 		}
 
 		//back trace
-		//lastAdvCondition is the AdvCondition just before current edge
+
+		//lastAdvCondition is the pivot AdvCondition
 		//now initial error node's AdvCondition
 		AdvCondition lastAdvCondition = new AdvCondition(new Condition(true));
+
 		//backTraceAdvConditionList records the AdvConditions to calculate interpolation
 		ArrayList<AdvCondition> backTraceAdvConditionList = new ArrayList<AdvCondition>();
 
@@ -180,11 +185,12 @@ public class CFATree
 			if ( !p.isSatisfiable(backTraceAdvConditionList) )
 			{
 				List<Predicate> newPredicateList = getInterpolation(p, i, originSsTrace.get(i));
-				int numOfNewPredicates = addNewPredicates(newPredicateList);
+				//remove identical predicates, the last node's state space has all predicates, so choose its state space
+				int numOfNewPredicates = filterNewPredicates(newPredicateList, originSsTrace.get(originSsTrace.size()-1));
 				if (numOfNewPredicates == 0)
 				{
 					//if no new prdicate, back to the nearest parent node and continue search
-					System.out.println("No new predicate found");
+					System.out.println("No new predicate found. This ERROR is ont real counter instance.");
 					endSearch = true;
 					//return state spaces to edgeTrace's nodes
 					edgeTrace.get(0).getHeadNode().pushStateSpace(originSsTrace.get(0));
@@ -192,12 +198,12 @@ public class CFATree
 					{
 						edgeTrace.get(i).getTailNode().pushStateSpace(originSsTrace.get(i+1));
 					}		
-					return 0;
+					return 0;	//return 0 means we can't judge, so back to ERROR node's parent node.
 				}
 				else
 				{
 					//if there're new predicates, refine from head using new predicates, and back to appropriate node
-					int numBack = refineFromHead(originSsTrace);
+					int numBack = refineFromHead(originSsTrace, newPredicateList);
 					return numBack;
 				}
 			}
@@ -244,45 +250,32 @@ public class CFATree
 		return newPredicateList;
 	}
 	
-	private int addNewPredicates(List<Predicate> newPredicateList)
+	private int filterNewPredicates(List<Predicate> newPredicateList, StateSpace preSs)
 	{
-		//add new predicates
-		//boolean equal = false;
-		int oldSize = predicatesForSearch.size();
-		for (Predicate newPredicate : newPredicateList)
-		{
-			//equal = false;
-			
-			/*
-			for (Predicate oldPredicate : predicatesForSearch)
-			{
-				if (oldPredicate.equals(newPredicate))
-				{
-					equal = true;
-					break;
-				}
-			}
-			if (!equal)*/
+		HashSet<Predicate> predicatesOnUse = new HashSet<Predicate>();
 
-			if(predicatesOnUse.add(newPredicate))
+		for (int i=0; i<preSs.size(); i++)
+		{
+			predicatesOnUse.add(preSs.getPredicateVector(i).getPredicate());
+		}
+
+		for (int i=newPredicateList.size()-1; i>=0; i--)
+		{
+			//remove identical predicate from tail to node, so list shrink will not affect the result
+			if (predicatesOnUse.contains(newPredicateList.get(i)))
 			{
-				System.out.println("Adding Predicate: "+ newPredicate.toString());
-				predicatesForSearch.add(newPredicate);
-				//predicatesOnUse.add(newPredicate);
+				newPredicateList.remove(i);	//remove identical predicate
 			}
 		}
-		int newSize = predicatesForSearch.size();
 
-		return newSize - oldSize;
-		//no new predicate, searh should end
-		//if (oldSize == newSize) endWithNoNewPredicate();
+		return newPredicateList.size();
 	}
 
-	private int refineFromHead(ArrayList<StateSpace> originSsTrace)
+	private int refineFromHead(ArrayList<StateSpace> originSsTrace, List<Predicate> newPredicateList)
 	{
 		int validEdge = 0;
 		int numBack = 0;
-		StateSpace ss = new StateSpace(predicatesForSearch);
+		StateSpace ss = new StateSpace(newPredicateList);
 		ArrayList<StateSpace> newSsTrace = new ArrayList<StateSpace>();
 
 		//refine from head, finding which node is the right search restarting place
@@ -299,11 +292,19 @@ public class CFATree
 		}
 
 		//return state spaces to edgeTrace's nodes
-		edgeTrace.get(0).getHeadNode().pushStateSpace(newSsTrace.get(0));
-		for (int i=0; i<validEdge; i++)
+		//validEdge can't smaller than 1, because the initial state space is universal
+		if (validEdge == 0)
 		{
-			edgeTrace.get(i).getTailNode().pushStateSpace(newSsTrace.get(i+1));
+			System.err.println("Error: Error occurred in refineFromHead. The second state space is false, impossible while the initial state space is universal.");
+			System.exit(1);
 		}
+		//lazy algorithm. use new predicates only on the last but false node.
+		edgeTrace.get(0).getHeadNode().pushStateSpace(originSsTrace.get(0));
+		for (int i=0; i<validEdge-1; i++)
+		{
+			edgeTrace.get(i).getTailNode().pushStateSpace(originSsTrace.get(i+1));
+		}
+		edgeTrace.get(validEdge-1).getTailNode().pushStateSpace(StateSpace.merge(originSsTrace.get(validEdge),newSsTrace.get(validEdge)));	//merge origin state space and new state space as local state space
 		for (int i=validEdge; i<edgeTrace.size(); i++)
 		{
 			edgeTrace.get(i).getTailNode().pushStateSpace(originSsTrace.get(i+1));
@@ -373,10 +374,10 @@ public class CFATree
 		if (count % 3 == 0) System.out.println("//  => end");
 		else System.out.println("=> end");
 		System.out.println("//  The predicates are:");
-		for (Predicate p : predicatesForSearch)
+		/*for (Predicate p : predicatesForSearch)
 		{
 			System.out.println("//  " + p.toString());
-		}
+		}*/
 		System.out.println("/////////////////////////////////////////////////////////////////////////////////////////////////");
 	}
 	

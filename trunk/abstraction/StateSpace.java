@@ -24,10 +24,20 @@ public class StateSpace
 		stateSign = State.STATE_TRUE;
 	}
 
-	public StateSpace(ArrayList<Predicate> predArray)
+	public StateSpace(List<Predicate> predArray)
 	{
 		predVectorArray = new ArrayList<PredicateVector>();
 		for (Predicate p : predArray)
+		{
+			predVectorArray.add(new PredicateVector(p.clone(), State.STATE_TRUE));
+		}
+		stateSign = State.STATE_TRUE;
+	}
+
+	public StateSpace(HashSet<Predicate> predSet)
+	{
+		predVectorArray = new ArrayList<PredicateVector>();
+		for (Predicate p : predSet)
 		{
 			predVectorArray.add(new PredicateVector(p.clone(), State.STATE_TRUE));
 		}

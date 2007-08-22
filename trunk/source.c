@@ -1,15 +1,12 @@
 //a=-(a-b)-c-d*e+7-10;
-/*
+
 b=0;
-
-b=b-1;
-
 while(b<4)b=b+1;
-if(b==5)
+if(b==3)
 {a=1;}
 else{ ERROR;}
-*/
 
+/*
 x=0;
 y=0;
 while(x<2)
@@ -20,7 +17,7 @@ while(x<2)
 if(x==2)
 {x=0;}
 else{ERROR;}
-
+*/
 /*
 b=0;
 if(a==1){c=3;}

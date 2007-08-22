@@ -12,6 +12,7 @@ public class CFATree
 	//private HashSet<Predicate> predicatesOnUse;
 	private CFAGraph cg;
 	private boolean endSearch;
+	//boolean sign;
 	
 	public CFATree(CFAGraph g)
 	{
@@ -20,6 +21,7 @@ public class CFATree
 		//predicatesOnUse=new HashSet<Predicate>();
 		cg = g;
 		endSearch = true;
+		//sign = false;
 	}
 	
 	public void beginForwardSearch(ArrayList<Predicate> predArray)
@@ -31,19 +33,20 @@ public class CFATree
 			predicatesOnUse.add(p.clone());
 		}*/
 
-		do
-		{
-			endSearch = true;
-			StateSpace ssInit = new StateSpace(predArray);
+		StateSpace ssInit = new StateSpace(predArray);
+		firstNode.pushStateSpace(ssInit);
+		//do
+		//{
+		//	endSearch = true;
 			//StateSpace ssInit = new StateSpace(predicatesForSearch);
-			firstNode.pushStateSpace(ssInit);
 			forwardSearch(firstNode);
-			firstNode.popStateSpace();
-		} while ( !endSearch );
+		//} while ( !endSearch );
+		firstNode.popStateSpace();
 	}
 
 	private int forwardSearch(Node curNode)
 	{
+		//System.out.println("(((((((((((((((((     "+curNode.getID()+"                 ))))))))))))");
 		Node nextNode = null;
 		Edge outEdge = null;
 		StateSpace preSs = null;
@@ -58,7 +61,7 @@ public class CFATree
 			//find error node, back trace
 			numBack = backTrace();
 			//back to top, begin another forward search
-			return numBack;
+			return numBack-1;
 		}
 		else
 		{
@@ -68,7 +71,19 @@ public class CFATree
 				preSs = curNode.peekStateSpace();
 				outEdge = curNode.getOutEdge().get(i);
 				nextNode = outEdge.getTailNode();
+			
+				/*
+				System.out.println("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+				System.out.println("current id: " + curNode.getID() + " current edge: " + i);
+				if (sign) {System.out.println(outEdge.getLabel().toString());preSs.display();}
+				System.out.println("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+				*/
 				nextSs = StateSpace.getNextStateSpace(preSs, outEdge);
+				/*
+				System.out.println("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+				if (sign) {System.out.println(outEdge.getLabel().toString());nextSs.display();}
+				System.out.println("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{");
+				*/
 
 				if (nextSs.isFalse())
 				{
@@ -99,7 +114,14 @@ public class CFATree
 				//endSearch == false means now is in backtrace process, numBack == 0 means now getting right place
 				if (numBack == 0 && endSearch == false)
 				{
+					/*
+					System.out.println("--------------------------------------------------------------");
+					System.out.println("display current node");
+					curNode.display();
+					System.out.println("--------------------------------------------------------------");
+					*/
 					endSearch = true;
+					//sign=true;
 					i = -1;		//after i++, i=0, now search can start with the first edge
 				}
 				//if only numBack == 0, means it's only leaf node
@@ -117,10 +139,11 @@ public class CFATree
 	private boolean canEndCycle(Node nextNode, StateSpace nextSs)
 	{
 		//if next state space implies previous state spaces, end cycle
-		for (int i=0; i<nextNode.stackSize(); i++)
+		for (int i=nextNode.stackSize()-1; i>=0; i--)
 		{
 			StateSpace preSs = nextNode.getStack(i);
-			if (nextSs.imply(preSs)) return true;
+			if (preSs.size() < nextSs.size()) return false;	//if nextSs's predicates are more than preSs's, can't end
+			else if (nextSs.imply(preSs)) return true;
 		}
 		return false;
 	}
@@ -187,10 +210,21 @@ public class CFATree
 				List<Predicate> newPredicateList = getInterpolation(p, i, originSsTrace.get(i));
 				//remove identical predicates, the last node's state space has all predicates, so choose its state space
 				int numOfNewPredicates = filterNewPredicates(newPredicateList, originSsTrace.get(originSsTrace.size()-1));
+
+				/*
+				System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+				for (int l=0; l<newPredicateList.size(); l++)
+				{
+					newPredicateList.get(l).display();
+				}
+				System.out.println("num of new predicates are " + numOfNewPredicates);
+				System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+				*/
+
 				if (numOfNewPredicates == 0)
 				{
 					//if no new prdicate, back to the nearest parent node and continue search
-					System.out.println("No new predicate found. This ERROR is ont real counter instance.");
+					System.out.println("No new predicate found. This ERROR is not real counter instance.");
 					endSearch = true;
 					//return state spaces to edgeTrace's nodes
 					edgeTrace.get(0).getHeadNode().pushStateSpace(originSsTrace.get(0));
@@ -236,6 +270,7 @@ public class CFATree
 			labelList.add(edgeTrace.get(i).getLabel());
 		}
 
+		for (EdgeLabel el : labelList) {System.out.println(el.toString());}
 		//calulate interpolation
 		List<Predicate> newPredicateList = null;
 		try
@@ -254,6 +289,20 @@ public class CFATree
 	{
 		HashSet<Predicate> predicatesOnUse = new HashSet<Predicate>();
 
+		/*
+		System.out.println("==================================================================================");
+		for (Predicate p : newPredicateList)
+		{
+			p.display();
+		}
+		System.out.println("==================================================================================");
+		for (int i=0; i<preSs.size(); i++)
+		{
+			preSs.getPredicateVector(i).getPredicate().display();
+		}
+		System.out.println("==================================================================================");
+		*/
+
 		for (int i=0; i<preSs.size(); i++)
 		{
 			predicatesOnUse.add(preSs.getPredicateVector(i).getPredicate());
@@ -262,7 +311,7 @@ public class CFATree
 		for (int i=newPredicateList.size()-1; i>=0; i--)
 		{
 			//remove identical predicate from tail to node, so list shrink will not affect the result
-			if (predicatesOnUse.contains(newPredicateList.get(i)))
+			if (!predicatesOnUse.add(newPredicateList.get(i)))
 			{
 				newPredicateList.remove(i);	//remove identical predicate
 			}
@@ -283,6 +332,7 @@ public class CFATree
 		for (validEdge=0; validEdge<edgeTrace.size(); validEdge++)
 		{
 			ss = StateSpace.getNextStateSpace(ss, edgeTrace.get(validEdge));
+			System.out.println("0000000000000000000000000000   Edge label: "); edgeTrace.get(validEdge).display(); ss.display();
 			if (ss.isFalse())
 			{
 				numBack = edgeTrace.size()-validEdge;
@@ -304,7 +354,15 @@ public class CFATree
 		{
 			edgeTrace.get(i).getTailNode().pushStateSpace(originSsTrace.get(i+1));
 		}
-		edgeTrace.get(validEdge-1).getTailNode().pushStateSpace(StateSpace.merge(originSsTrace.get(validEdge),newSsTrace.get(validEdge)));	//merge origin state space and new state space as local state space
+		edgeTrace.get(validEdge-1).getTailNode().pushStateSpace(StateSpace.merge(originSsTrace.get(validEdge), newSsTrace.get(validEdge)));	//merge origin state space and new state space as local state space
+
+		System.out.println("This is back node");
+		edgeTrace.get(validEdge-1).getTailNode().peekStateSpace().display();
+		System.out.println("This is back node........");
+		edgeTrace.get(validEdge-1).getTailNode().display();
+		System.out.println("NUMBACK......  " + numBack);
+		//for (StateSpace dss : newSsTrace) {System.out.println(""); dss.display();}
+
 		for (int i=validEdge; i<edgeTrace.size(); i++)
 		{
 			edgeTrace.get(i).getTailNode().pushStateSpace(originSsTrace.get(i+1));

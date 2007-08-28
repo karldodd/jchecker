@@ -47,3 +47,29 @@ parsers		对source.c以及foci、vampyre输入进行解析的包
 prover		对程序所需要的定理证明器接口的定义及其实现
 tokens		模型检测中基本数据结构的定义和实现，其他所有包的基础
 ui		用户界面包，整个应用程序的入口（目前只提供命令行方式）
+
+4.jchecker主要类及函数介绍：
+
+1）CFATree类：描述进行程序验证用到的CFA树
+主要函数：
+beginForwardSearch	开始前向搜索
+forwardSearch			对树进行递归搜索
+backTrace				对伪反例进行验证
+getInterpolation		计算插值
+refineFromHead			增加谓词，对反例进行精炼
+
+2）CFAGraph类：描述程序抽象后的流程图
+
+3）StateSpace类：描述状态空间
+主要函数：
+getNextStateSpace		计算下一状态空间
+
+4）Edge类：描述流程图中的边，代表程序中的语句
+
+5）Node类：描述程序执行时的状态
+
+6）Predicate类：描述程序进行验证的谓词
+
+7）State类：描述谓词的状态
+
+8）PredicateVector类：描述谓词和它的状态的组合

@@ -8,39 +8,23 @@ import java.util.*;
 public class CFATree
 {
 	private ArrayList<Edge> edgeTrace;
-	//private ArrayList<Predicate> predicatesForSearch;
-	//private HashSet<Predicate> predicatesOnUse;
 	private CFAGraph cg;
 	private boolean endSearch;
-	//boolean sign;
 	
 	public CFATree(CFAGraph g)
 	{
 		edgeTrace = new ArrayList<Edge>();
-		//predicatesForSearch = new ArrayList<Predicate>();
-		//predicatesOnUse=new HashSet<Predicate>();
 		cg = g;
 		endSearch = true;
-		//sign = false;
 	}
 	
 	public void beginForwardSearch(ArrayList<Predicate> predArray)
 	{
 		Node firstNode = cg.firstNode();
-		/*for (Predicate p : predArray)
-		{
-			predicatesForSearch.add(p.clone());
-			predicatesOnUse.add(p.clone());
-		}*/
 
 		StateSpace ssInit = new StateSpace(predArray);
 		firstNode.pushStateSpace(ssInit);
-		//do
-		//{
-		//	endSearch = true;
-			//StateSpace ssInit = new StateSpace(predicatesForSearch);
-			forwardSearch(firstNode);
-		//} while ( !endSearch );
+		forwardSearch(firstNode);
 		firstNode.popStateSpace();
 	}
 

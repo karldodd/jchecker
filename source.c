@@ -1,10 +1,17 @@
 //a=-(a-b)-c-d*e+7-10;
-
+/*
 b=0;
 while(b<4)b=b+1;
 if(b==3)
 {a=1;}
 else{ ERROR;}
+*/
+if (x > y) {
+  x = x - y;
+  if(x <= 0)
+   {    ERROR;}
+        
+}
 
 /*
 x=0;

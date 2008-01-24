@@ -1,0 +1,77 @@
+(This file is encoded in UTF8.)
+
+jchecker中文说明文档
+
+by karldodd@jchecker-dev-group
+
+1.简介
+
+jchecker是一个软件模型检测工具。它可以针对类C源程序进行模型可达性检测。当发现可达的错误时，它会提示错误并给出相应的错误路径。如果所有的错误路径都不可达，jchecker则会提示检测通过，在此情况下，程序的正确性得到了确保。
+
+jchecker的理论基础是模型检测理论中的predicate abstraction，即谓词抽象。模型检测之基本理念为穷举搜索所有可能的状态并进行分析从而得出模型正确与否的结论。抽象理论试图将大量状态合并，这样模型的运行规模就小了很多，是解决模型检测中状态爆炸问题的常用方法。而基于一阶逻辑的谓词抽象是抽象方法中的一种，比较适用于软件模型检测。
+
+2.下载、编译和运行
+您可以从google提供的svn服务器上下载jchecker的源码来进行编译和运行。您首先要安装好svn客户端软件。然后输入命令如下：
+
+svn checkout http://jchecker.googlecode.com/svn/trunk/ jchecker
+
+这样源码就下载成功了。
+
+jchecker是使用java语言开发的，因此编译运行之必须要有sun的java运行环境支持。jchecker开发所使用的jdk版本是1.5.0，因此首先请确保您的jdk或jre不低于此版本。
+
+jchecker使用了ant作为编译工具。因此，也请您事先安装好1.6以上版本的ant。
+
+jchecker目前使用了两个定理证明器vampyre和foci，它们分别被用来判断条件蕴含和计算craig插值。vampyre是开源软件，用户可以到http://www.cs.ucla.edu/˜rupak/Vampyre/下载并自行编译。foci是不是开源软件，但是您可以访问http://www.kenmcmil.com/foci.html来下载其二进制版本。最后，请确保两个可执行文件和jchecker的主目录下(foci为foci.byte，vampyre为prover.byte)，并赋予当前用户执行权限。
+
+注：由于目前使用的工具foci只有linux版本并且它是不开源的，这样jchecker目前就暂时被限制在Linux环境下运行了。jchecker开发小组正在致力于开发自己的java版定理证明器工具以便jchecker今后可以轻松地运行于其他平台之上。
+
+以上工作完成之后，就可以着手进行编译了。在命令行下输入：
+
+ant
+
+系统即会自动开始对源码进行编译和运行，jchecker将对主目录下的source.c文件进行分析和检测，并给出结果。如果您对源码做过了修改，希望重新编译，也只需要执行ant命令即可。
+
+jchecker在分析source.c文件和定理证明器调用结果时，都使用了BYacc/J来完成解析功能。生成解析器的源文件的后缀名为.y，处于trunk/parsers目录。此目录下的所有.java文件都是BYacc/J自动生成的，请不要对它们进行修改。如果解析器需要做改动，则编辑后缀为.y文件即可。保存修改后，在主目录执行：
+
+ant yacc
+
+即可自动生成所有新的parsers目录下的java文件并将旧版本的覆盖掉。再在主目录执行：
+
+ant
+
+jchecker程序就会重新编译，此时将使用新的parsers模块。
+
+3.jchecker程序目录简要介绍
+
+abstraction	有关谓词抽象的实现包，包括程序的核心运行流程
+bin		编译结果（即所有.class文件)存放处
+parsers		对source.c以及foci、vampyre输入进行解析的包
+prover		对程序所需要的定理证明器接口的定义及其实现
+tokens		模型检测中基本数据结构的定义和实现，其他所有包的基础
+ui		用户界面包，整个应用程序的入口（目前只提供命令行方式）
+
+4.jchecker主要类及函数介绍：
+
+1）CFATree类：描述进行程序验证用到的CFA树
+主要函数：
+beginForwardSearch	开始前向搜索
+forwardSearch			对树进行递归搜索
+backTrace				对伪反例进行验证
+getInterpolation		计算插值
+refineFromHead			增加谓词，对反例进行精炼
+
+2）CFAGraph类：描述程序抽象后的流程图
+
+3）StateSpace类：描述状态空间
+主要函数：
+getNextStateSpace		计算下一状态空间
+
+4）Edge类：描述流程图中的边，代表程序中的语句
+
+5）Node类：描述程序执行时的状态
+
+6）Predicate类：描述程序进行验证的谓词
+
+7）State类：描述谓词的状态
+
+8）PredicateVector类：描述谓词和它的状态的组合

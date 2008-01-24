@@ -1,30 +1,23 @@
 //a=-(a-b)-c-d*e+7-10;
 /*
 b=0;
+
+b=b-1;
+
 while(b<4)b=b+1;
-if(b==3)
+if(b==5)
 {a=1;}
 else{ ERROR;}
 */
-if (x > y) {
-  x = x - y;
-  if(x <= 0)
-   {    ERROR;}
-        
-}
+a=0;
 
-/*
-x=0;
-y=0;
-while(x<2)
-{
-	x=x+1;
-	y=y+1;
-}
-if(x==2)
-{x=0;}
-else{ERROR;}
-*/
+b=0;
+
+while(a == b){
+	a=a+1;
+   b=b+1;
+  }
+if(a!=b) { ERROR;}
 /*
 b=0;
 if(a==1){c=3;}

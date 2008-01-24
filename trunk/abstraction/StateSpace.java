@@ -24,20 +24,10 @@ public class StateSpace
 		stateSign = State.STATE_TRUE;
 	}
 
-	public StateSpace(List<Predicate> predArray)
+	public StateSpace(ArrayList<Predicate> predArray)
 	{
 		predVectorArray = new ArrayList<PredicateVector>();
 		for (Predicate p : predArray)
-		{
-			predVectorArray.add(new PredicateVector(p.clone(), State.STATE_TRUE));
-		}
-		stateSign = State.STATE_TRUE;
-	}
-
-	public StateSpace(HashSet<Predicate> predSet)
-	{
-		predVectorArray = new ArrayList<PredicateVector>();
-		for (Predicate p : predSet)
 		{
 			predVectorArray.add(new PredicateVector(p.clone(), State.STATE_TRUE));
 		}
@@ -174,7 +164,7 @@ public class StateSpace
 			}
 			else
 			{
-				System.err.println("Unexpected EdgeLabel (neither Evaluation nor AdvCondition)");
+				System.err.println("Unexpected EdgeLabel (neither Evaluation nor AdvCondition");
 				nextState = null;
 			}	
 			if (nextState == State.STATE_FALSE)		//if next state space is false, return

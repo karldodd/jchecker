@@ -1,11 +1,8 @@
 //a=-(a-b)-c-d*e+7-10;
 /*
 b=0;
-
-b=b-1;
-
-while(b<4)b=b+1;
-if(b==5)
+while(b<7)b=b+1;
+if(b<7)
 {a=1;}
 else{ ERROR;}
 */

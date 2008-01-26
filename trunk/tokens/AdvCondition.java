@@ -5,17 +5,25 @@ import prover.*;
 import java.lang.*;
 import java.util.*;
 
-//a more powerful class for condition expressions
+/**
+ *A more powerful class for condition expressions.
+ *It includes AND, OR and NOT operations besides atom
+ *logic expressions, i.e. x>3 || x<1 && x!=0.
+ */	
 public class AdvCondition implements EdgeLabel,Cloneable{
+		//c1 and c2 are AdvCondition before and after conjunctor.
     public AdvCondition c1;
     public AdvCondition c2;
     
+    //Two conjunctor types and atom condition.
     public static int Type_AND=0;
     public static int Type_OR=1;
     public static int Type_ATOM=2;
 
+		//Atom condition expression.
     public Condition atom;
 
+		//Joint-type.
     public int jointType;
 
     public AdvCondition(AdvCondition c1, AdvCondition c2, int type){

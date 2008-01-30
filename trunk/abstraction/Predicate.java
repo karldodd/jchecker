@@ -15,8 +15,6 @@ public class Predicate
 {
 	/**
 	*c表示的是构成谓词的高级条件式
-	*
-	*@param c 谓词主体
 	*/
 	private AdvCondition c;
 

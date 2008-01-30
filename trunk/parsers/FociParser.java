@@ -19,23 +19,24 @@ package parsers;
 
 //#line 1 "parsers/FociParser.y"
 
-/*package prover;*/
+/*package prover;*/
 
 import java.lang.*;
-/*import java.lang.Math;*/
+/*import java.lang.Math;*/
 import java.io.*;
 import java.util.*;
 
-/*load self-defined token-library*/
-/*import tokens.Sentence;*/
+/*load self-defined token-library*/
+/*import tokens.Sentence;*/
 import tokens.*;
 import abstraction.*;
 
 //#line 31 "FociParser.java"
 
 
-
-
+/**
+*对Foci产生的结果文件进行解析
+*/
 public class FociParser
 {
 

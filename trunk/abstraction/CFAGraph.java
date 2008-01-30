@@ -7,10 +7,21 @@ import java.io.File;
 import java.lang.*;
 import java.util.*;
 
+/**
+*CFAGraph类表示的是根据源代码生成的流程图
+*
+*@author Li Jiang
+*/
 public class CFAGraph
 {
+	/**
+	*结点列表，按照源代码顺序排列
+	*/
 	private ArrayList<Node> nodeList;
 
+	/**
+	*构造函数，生成结点列表的头结点
+	*/
 	private CFAGraph()
 	{
 		nodeList = new ArrayList<Node>();		
@@ -19,21 +30,37 @@ public class CFAGraph
 		nodeList.add(h0);
 	}
 
+	/**
+	*新添一个结点
+	*/
 	public void addNode(Node n)
 	{
 		nodeList.add(n);
 	}
 
+	/**
+	*返回结点列表的头结点
+	*
+	*@return 返回头结点
+	*/
 	public Node firstNode()
 	{
 		return nodeList.get(0);
 	}
 
+	/**
+	*获取序号为id的结点
+	*
+	*@param id 结点序号
+	*/
 	public Node getNode(int id)
 	{
 		return nodeList.get(id);
 	}
 
+	/**
+	*显示CFAGraph，测使用
+	*/
 	public void display()
 	{
 		//This function is only for test
@@ -44,6 +71,12 @@ public class CFAGraph
 		}
 	}
 
+	/**
+	*从文件中生成CFAGraph
+	*
+	*@param sourceFile 需要生成CFAGraph的源文件
+	*@return 生成的CFAGraph图
+	*/
 	public static CFAGraph createCFAGraphFromCode(File sourceFile)
 	{
 		SourceParser par=new SourceParser(false);
@@ -54,6 +87,14 @@ public class CFAGraph
 		return graph;
 	}
 
+	/**
+	*从语句数组生成CFAGraph
+	*
+	*@param sentences 需要生成CFAGraph的语句数组
+	*@param lastActiveNode 最近活动的结点
+	*@param intendedEndNode 待添加的结点
+	*@return 图生成后返回传入的最近活动的结点
+	*/
 	public Node createGraphFromSentenceArray(ArrayList<Sentence> sentences, Node lastActiveNode,Node intendedEndNode)
 	{
 		int size=sentences.size();
@@ -69,15 +110,23 @@ public class CFAGraph
 		//There is a situation that intendedEndNode is not satisfied: size==0 && lastActiveNode!=null
 	}
 
-	//create graph. the node returned is the new "last active node". 
-	//For those RETURN/ERROR sentences, return null as the last active node, for they are not active any more.
-	//if the intendedEndNode is null, create a new node.
+	/**
+	*根据语句生成CFAGraph图，如果是RETURN/ERROR语句，返回null作为最近活动的结点。
+	*如果待结束的结点是null，增加一个新结点。
+	*
+	*@param s 需要处理的语句
+	*@param lastActiveNode 最后活动的结点
+	*@param intendedEndNode 待添加的结点
+	*@return 如果是RETURN/ERROR语句，返回null；
+	*	 如果是其他语句，返回添加后的结点；
+	*	 如果待结束是null，返回新增结点。
+	*/
 	public Node createGraphFromSentence(Sentence s, Node lastActiveNode,Node intendedEndNode)
 	{
 		if(lastActiveNode==null) return null;
 		if(s instanceof ReturnSentence)
 		{
-			//donothing
+			//do nothing
 			//add a RETURN MARK may be considered
 			return null;
 		}

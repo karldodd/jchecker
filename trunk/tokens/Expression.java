@@ -1,13 +1,44 @@
 package tokens;
 import java.lang.*;
 import java.util.*;
+
+/**
+*运算表达式类
+*
+*@author He Kaiduo
+*/
 public class Expression implements Cloneable{
+
+	/**
+	*数字
+	*/
 	public int num;
+
+	/**
+	*变量
+	*/
 	public Variable v;
+
+	/**
+	*运算表达式类型
+	*/
 	public ExpType type;
-	public Expression l;//left
-	public Expression r;//right
+
+	/**
+	*运算表达式的左侧表达式
+	*/
+	public Expression l;
 	
+	/**
+	*运算表达式的右侧表达式
+	*/
+	public Expression r;
+	
+	/**
+	*数字类型的构造函数
+	*
+	*@param num 数字
+	*/
 	public Expression(int num){
 		this.num=num;
 		this.v=null;
@@ -15,6 +46,12 @@ public class Expression implements Cloneable{
 		this.l=null;
 		this.r=null;
 	}
+
+	/**
+	*变量类型的构造函数
+	*
+	*@param v 变量
+	*/
 	public Expression(Variable v){
 		this.v=v;
 		this.num=Integer.MIN_VALUE;
@@ -22,6 +59,14 @@ public class Expression implements Cloneable{
 		this.l=null;
 		this.r=null;
 	}
+
+	/**
+	*运算类型的构造函数
+	*
+	*@param l 运算的左侧表达式
+	*@param r 运算的右侧表达式
+	*@param type 运算类型
+	*/
 	public Expression(Expression l,Expression r, ExpType type)
 	{
 		this.num=Integer.MIN_VALUE;
@@ -31,8 +76,13 @@ public class Expression implements Cloneable{
 		this.r=r;
 	}
 
-	//to substitute every v in this exp with e,
-	//Attention: it returns a new instance. This instance will not be changed.
+	/**
+	*将表达式中的特定变量替换为特定表达式，返回一个新的表达式
+	*
+	*@param v 需要替换的变量
+	*@param e 替换的表达式
+	*@return 新的运算表达式
+	*/
 	public Expression substitute(Variable v, Expression e){
 		switch(type){
 			case num: return this.clone();
@@ -57,6 +107,11 @@ public class Expression implements Cloneable{
 		}	
 	}
 
+	/**
+	*深拷贝函数
+	*
+	*@return 运算表达式的拷贝
+	*/
 	protected Expression clone(){
 		switch(type){
 			case num: return new Expression(this.num);
@@ -75,6 +130,7 @@ public class Expression implements Cloneable{
 				return new Expression(Integer.MIN_VALUE);		
 		}	
 	}
+
 	public String toString(){
 		switch(type){
 			case num:return num+"";

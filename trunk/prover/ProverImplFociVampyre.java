@@ -7,12 +7,33 @@ import java.lang.*;
 import java.util.*;
 import java.io.*;
 
+/**
+*运用Foci和Vampyre进行定理证明和插值计算
+*
+*@author He Kaiduo
+*/
 public class ProverImplFociVampyre implements Prover{
+	
+	/**
+	*是否debug状态
+	*/
 	private static boolean debugging=false;
 
+	/**
+	*定理证明器
+	*/
 	private static ProverImplFociVampyre prover=null;
+
+	/**
+	*构造函数，为空
+	*/
 	private ProverImplFociVampyre(){}
 
+	/**
+	*获取证明器实例
+	*
+	*@return 证明器实例
+	*/
 	public static Prover getInstance(){
 		if(prover==null)prover=new ProverImplFociVampyre();
 		return (Prover)prover;
@@ -179,6 +200,13 @@ public class ProverImplFociVampyre implements Prover{
 		return result;
 	}
 
+	/**
+	*使用Vampyre进行蕴含判断
+	*
+	*@param c1lf 左侧蕴含式
+	*@param c2lf 右侧蕴含式
+	*@return 若蕴含，返回true；否则返回false
+	*/
 	private	boolean implyByVampyre(String c1lf,String c2lf){
 		boolean result=false;
 		boolean gotresult=false;
@@ -278,6 +306,13 @@ public class ProverImplFociVampyre implements Prover{
 		return result;
 	}
 
+	/**
+	*将结果写入临时文件，供证明器读取
+	*
+	*@param s 结果字符串
+	*@return 临时文件
+	*@exception Exception 异常
+	*/
 	private File writeStringToTempFile(String s) throws Exception{
 		//Calendar rightNow = Calendar.getInstance(); 
 		//String fileName=Long.toString(rightNow.getTimeInMillis());

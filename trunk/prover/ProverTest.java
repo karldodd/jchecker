@@ -7,6 +7,9 @@ import abstraction.*;
 import java.lang.*;
 import java.util.*;
 
+/**
+*没有用到的类，测试用
+*/
 public class ProverTest{
 	public static void main(String[] args)
 	{

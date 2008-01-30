@@ -1,16 +1,39 @@
 package tokens;
 import java.lang.*;
 import java.util.*;
+
+/**
+*赋值语句类
+*
+*@author He Kaiduo
+*/
 public class EvaluationSentence extends Sentence implements EdgeLabel{
+	
+	/**
+	*赋值语句中的变量
+	*/
 	Variable v;
+
+	/**
+	*赋值语句中的表达式
+	*/
 	Expression e;
+
+	/**
+	*根据变量和表达式构造赋值语句
+	*
+	*@param v 赋值语句中的变量
+	*@param e 赋值语句中的表达式
+	*/
 	public EvaluationSentence(Variable v, Expression e){
 		this.v=v;
 		this.e=e;
 	}
+
 	public String toString(){
 		return v.getName()+"="+e.toString()+";";
 	}
+
 	public String toLFString(){
 		return "(= "+v.getName()+" "+e.toLFString()+" )";
 	}
@@ -46,6 +69,11 @@ public class EvaluationSentence extends Sentence implements EdgeLabel{
 		return "= "+map.get(v.getName())+" "+exp;
 	}
 
+	/**
+	*将赋值语句转换为高级条件式表达形式
+	*
+	*@return 转换后的高级条件式
+	*/
 	public AdvCondition toAdvCondition(){
 		Expression l=new Expression(this.v);
 		Expression r=this.e;

@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+  @(#)abstraction.html
+
+-->
+</head>
+<body bgcolor="white">
+
+实现谓词抽象算法.
+
+<h2>Package Specification</h2>
+
+<pre>
+abstraction主要类及函数介绍：
+
+1）CFATree类：描述进行程序验证用到的CFA树
+主要函数：
+<table borderclor="white">
+<tr><td>beginForwardSearch</td><td>开始前向搜索</td></tr>
+<tr><td>forwardSearch</td><td>对树进行递归搜索</td></tr>
+<tr><td>backTrace</td><td>对伪反例进行验证</td></tr>
+<tr><td>getInterpolation</td><td>计算插值</td></tr>
+<tr><td>refineFromHead</td><td>增加谓词，对反例进行精炼</td></tr>
+</table>
+
+2）CFAGraph类：描述程序抽象后的流程图
+
+3）StateSpace类：描述状态空间
+主要函数：
+<table bordericlor="white">
+<tr><td>getNextStateSpace</td><td>计算下一状态空间</td></tr>
+</table>
+
+4）Edge类：描述流程图中的边，代表程序中的语句
+
+5）Node类：描述程序执行时的结点
+
+6）Predicate类：描述谓词
+
+7）State类：描述谓词的状态
+
+8）PredicateVector类：描述谓词向量
+</pre>
+
+<!--
+<ul>
+  <li><a href="">##### REFER TO ANY FRAMEMAKER SPECIFICATION HERE #####</a>
+</ul>
+-->
+
+<h2>Related Documentation</h2>
+
+有关abstraction设计的其他资料：
+<ul>
+  <li><a href="./doc-files/abstraction.jpg">abstraction类图</a>
+</ul>
+
+<!-- Put @see and @since tags down here. -->
+
+</body>
+</html>

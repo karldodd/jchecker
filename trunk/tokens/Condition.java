@@ -3,33 +3,74 @@ package tokens;
 import java.lang.*;
 import java.util.*;
 
-
+/**
+*原子条件式类
+*
+*@author He Kaiduo
+*/
 public class Condition extends Sentence implements Cloneable{
+	
+	/**
+	*原子条件式的左侧表达式
+	*/
 	public Expression l;
 
+	/**
+	*原子条件式的右侧表达式
+	*/
 	public Expression r;
 
+	/**
+	*原子条件式的类型
+	*/
 	public ConType type;
 
+	/**
+	*构造永真式或永假式
+	*
+	*@param c 永真式或永假式标识
+	*/
 	public Condition(boolean c){
 		if(c)this.type=ConType.T;
 		else this.type=ConType.F;
 	}
 	
+	/**
+	*构造原子条件式
+	*
+	*@param l 左侧表达式
+	*@param r 右侧表达式
+	*@param type 条件式类型
+	*/
 	public Condition(Expression l, Expression r, ConType type) {
 		this.l = l;
 		this.r = r;
 		this.type = type;
 	}
+
+	/**
+	*深拷贝函数
+	*
+	*@return 原子条件式拷贝
+	*/
 	public Condition clone(){
 		if(this.type==ConType.T||this.type==ConType.F)
 			return new Condition(null,null,type);
 		return new Condition(l.clone(),r.clone(),type);
 	}
+
+	/**
+	*对原子条件式中的变量作代换
+	*
+	*@param v 需要代换的变量
+	*@param e 代换的表达式
+	*@return 代换后的原子条件式
+	*/
 	public Condition substitute(Variable v, Expression e){
 		if(this.type==ConType.T||this.type==ConType.F)return this.clone();
 		return new Condition(l.substitute(v,e),r.substitute(v,e),type);
 	}
+
 	public String toString() {
 		switch (type) {
 		// public enum ConType

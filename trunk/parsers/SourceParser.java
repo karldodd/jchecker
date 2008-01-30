@@ -30,8 +30,9 @@ import tokens.*;
 //#line 27 "SourceParser.java"
 
 
-
-
+/**
+*对Java源程序进行解析
+*/
 public class SourceParser
 {
 

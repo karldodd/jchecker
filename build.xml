@@ -111,5 +111,21 @@
 		<echo>foci parser done</echo>
 		<echo>OK: yacc done</echo>
     	</target>
-
+	<target name="doc">
+		<javadoc
+			author="true"
+			private="true"
+			destdir="doc/"
+			version="true"
+			use="true"
+			overview="./overview.html">
+			<packageset dir=".">
+				<include name="abstraction"/>
+				<include name="tokens"/>
+				<include name="ui/"/>
+				<include name="prover"/>
+				<include name="parsers"/>
+			</packageset>
+		</javadoc>
+	</target>
 </project>

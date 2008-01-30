@@ -1,21 +1,31 @@
 package abstraction;
 
 /**
-*枚举变量State的四个值分别对应谓词的四个状态：
-*<ul>
-*<li><code>STATE_FALSE</code> 表示谓词的bottom状态</li>
-*<li><code>STATE_POS</code> 表示谓词的true状态</li>
-*<li><code>STATE_NEG</code> 表示谓词的false状态</li>
-*<li><code>STATE_TRUE</code> 表示谓词的top状态</li>
-*</ul>
+*枚举变量State的四个值分别对应谓词的四个状态
 *
 *@author Li Jiang
 */
 
-public enum State {
+public enum State {	
+	
+	/**
+	*表示谓词的bottom状态
+	*/
 	STATE_FALSE, 
+	
+	/**
+	*表示谓词的true状态
+	*/
 	STATE_POS, 
-	STATE_NEG, 
+	
+	/**
+	*表示谓词的false状态
+	*/
+	STATE_NEG,
+	
+	/**
+	*表示谓词的top状态
+	*/ 
 	STATE_TRUE
 }
 

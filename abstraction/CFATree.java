@@ -5,14 +5,43 @@ import prover.*;
 
 import java.util.*;
 
+/**
+*CFATree类表示根据CFAGraph搜索时的展开树，并包含前向搜索和回溯计算方法
+*
+*@author Li Jiang
+*/
 public class CFATree
 {
+	/**
+	*搜索经过的路径
+	*/
 	private ArrayList<Edge> edgeTrace;
+
+	/**
+	*需要验证的谓词
+	*/
 	private ArrayList<Predicate> predicatesForSearch;
+
+	/**
+	*使用到的谓词
+	*/
 	private HashSet<Predicate> predicatesOnUse;
+
+	/**
+	*搜索时用到的CFA图
+	*/
 	private CFAGraph cg;
+
+	/**
+	*是否结束搜索的标志
+	*/
 	private boolean endSearch;
 	
+	/**
+	*构造函数，根据CFA图初始化CFA树
+	*
+	*@param g 与CFA树关联的CFA图
+	*/
 	public CFATree(CFAGraph g)
 	{
 		edgeTrace = new ArrayList<Edge>();
@@ -22,6 +51,11 @@ public class CFATree
 		endSearch = true;
 	}
 	
+	/**
+	*开始前向搜索，所有验证过程的开始
+	*
+	*@param predArray 需要验证的谓词列表
+	*/
 	public void beginForwardSearch(ArrayList<Predicate> predArray)
 	{
 		Node firstNode = cg.firstNode();
@@ -41,6 +75,12 @@ public class CFATree
 		} while ( !endSearch );
 	}
 
+	/**
+	*用递归的方法对树进行深度优先搜索
+	*
+	*@param curNode 当前结点
+	*@return 需要回退的结点数
+	*/
 	private int forwardSearch(Node curNode)
 	{
 		Node nextNode = null;
@@ -108,11 +148,26 @@ public class CFATree
 		return numBack;
 	}
 
+	/**
+	*判断下一结点是否是循环进入结点
+	*
+	*@param curNode 当前结点
+	*@param nextNode 下一结点
+	*@return 若下一结点为循环进入结点，返回true；否则返回false
+	*/
 	private boolean isCycleBack(Node curNode, Node nextNode)
 	{
 		return (nextNode.getID() < curNode.getID());
 	}
 
+	/**
+	*判断循环是否应该结束
+	*
+	*@param nextNode 下一结点
+	*@param nextSs 下一状态空间
+	*@return 如果下一状态空间蕴含之前的状态空间，循环结束，返回true；
+	*	 否则返回false
+	*/
 	private boolean canEndCycle(Node nextNode, StateSpace nextSs)
 	{
 		//if next state space implies previous state spaces, end cycle
@@ -124,7 +179,15 @@ public class CFATree
 		return false;
 	}
 
-	private int backTrace()	
+	/**
+	*对反例路径进行回溯
+	*
+	*@return 如果反例路径是真反例，返回整条路径长度，表示回退出搜索入口；
+	*	 如果反例路径无法添加新谓词，返回整条路径长度，表示回退出搜索入口；
+	*	 如果反例路径可以添加新谓词，返回回溯终止至反例路径尾部的路径长度，
+	*	 表示回退至回溯终止处结点
+	*/
+	private int backTrace()
 	{
 		int i = 0;
 		Prover p = CommonMethod.getProverInstance();
@@ -215,6 +278,14 @@ public class CFATree
 		return edgeTrace.size();
 	}
 
+	/**
+	*计算插值
+	*
+	*@param p 定理证明器
+	*@param startNode 路径上的计算插值的起始结点
+	*@param startSs 起始结点的状态空间
+	*@return 计算出的插值列表
+	*/
 	private List<Predicate> getInterpolation(Prover p, int startNode, StateSpace startSs)
 	{
 		ArrayList<EdgeLabel> labelList = new ArrayList<EdgeLabel>();
@@ -244,6 +315,12 @@ public class CFATree
 		return newPredicateList;
 	}
 	
+	/**
+	*添加新插值
+	*
+	*@param newPredicateList 计算出的新插值
+	*@return 添加的新插值的数量
+	*/
 	private int addNewPredicates(List<Predicate> newPredicateList)
 	{
 		//add new predicates
@@ -278,6 +355,12 @@ public class CFATree
 		//if (oldSize == newSize) endWithNoNewPredicate();
 	}
 
+	/**
+	*添加新谓词后重新对CFA数进行精化
+	*
+	*@param originSsTrace 精化前的反例路径上的状态空间
+	*@return 需要回退的结点数，从回退到位的结点开始继续搜索
+	*/
 	private int refineFromHead(ArrayList<StateSpace> originSsTrace)
 	{
 		int validEdge = 0;
@@ -312,17 +395,30 @@ public class CFATree
 		return numBack;
 	}
 
+	/**
+	*记录搜索路径
+	*
+	*@param e 经过的边
+	*/
 	private void recordTrace(Edge e)
 	{
 		edgeTrace.add(e);
 	}
 
+	/**
+	*移除搜索路径
+	*
+	*@return 移除的边
+	*/
 	private Edge removeTrace()
 	{
 		//remove last edge
 		return edgeTrace.remove( edgeTrace.size()-1 );
 	}
 
+	/**
+	*如果找到真反例，显示路径并标识程序可结束
+	*/
 	private void endWithRealCounterInstanceFound()
 	{
 		endSearch = true;
@@ -349,6 +445,9 @@ public class CFATree
 		System.out.println("/////////////////////////////////////////////////////////////////////////////////////////////////");
 	}
 
+	/**
+	*如果无法添加新谓词，显示路径并标识程序可结束
+	*/
 	private void endWithNoNewPredicate()
 	{
 		endSearch = true;

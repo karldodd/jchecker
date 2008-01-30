@@ -8,11 +8,28 @@ import parsers.*;
 import prover.*;
 import abstraction.*;
 
+/**
+*Jchecker程序入口
+*
+*@author He Kaiduo
+*/
 public class AppStarter{
+	
+
+    /**
+    *显示字符串
+    *
+    *@param s 字符串
+    */
     public static void print(String s){
 	System.out.println(s);
     }
 
+    /**
+    *程序入口，并手工给出验证谓词
+    *
+    *@param args 程序传入参数
+    */
     public static void main(String[] args){
 	print("Welcome to Jchecker! This project is sponsored by School of Software, Tsinghua University. ");
 	if(args.length==0){

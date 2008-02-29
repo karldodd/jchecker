@@ -127,6 +127,9 @@
 	</target>
 	<target name="doc">
 		<javadoc author="true" private="true" destdir="doc/" version="true" use="true" encoding="utf8" overview="./overview.html">
+			<classpath>
+				<pathelement location="${junitpath}" />
+			</classpath>
 			<packageset dir=".">
 				<include name="abstraction" />
 				<include name="tokens" />

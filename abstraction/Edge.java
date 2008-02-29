@@ -103,7 +103,7 @@ public class Edge
 	}
 	
 	/**
-	*显示边，测使用
+	*显示边，测试用
 	*/
 	void display()
 	{

@@ -1,36 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project name="Jchecker" default="run" basedir="." >
-	<property name="src" value="."/>
-	<property name="dest" value="bin"/>
+<project name="Jchecker" default="run" basedir=".">
+	<property name="src" value="." />
+	<property name="dest" value="bin" />
 	<property name="jchecker_jar" value="jchecker.jar" />
 	<property name="inputfile" value="source.c" />
-	
+	<property name="junitpath" value="junit.jar" />
+
 	<property name="parserdir" value="parsers" />
 	<property name="parserpackage" value="${parserdir}" />
-	
+
 	<property name="yaccfile" location="${parserdir}/yacc.linux" />
 	<property name="movecommand" value="mv" />
 
-	
+
 	<property name="sourceparser_source" value="${parserdir}/jchecker2.y" />
 	<property name="sourceparser_class" value="SourceParser" />
 	<property name="sourceparser_value" value="SourceParserVal" />
-		
+
 	<property name="fociparser_source" value="${parserdir}/FociParser.y" />
 	<property name="fociparser_class" value="FociParser" />
 	<property name="fociparser_value" value="FociParserVal" />
-	
+
 	<target name="init">
-		<mkdir dir="${dest}"/>
+		<mkdir dir="${dest}" />
 	</target>
 	<target name="compile" depends="init">
-		<javac srcdir="${src}" destdir="${dest}" encoding="utf8"/>
+		<javac srcdir="${src}" destdir="${dest}" encoding="utf8">
+			<classpath>
+				<pathelement location="${junitpath}" />
+			</classpath>
+		</javac>
 	</target>
 	<target name="build" depends="compile">
 		<jar jarfile="${jchecker_jar}" basedir="${dest}">
 			<manifest>
-				<attribute name="Main-Class" value="ui.console.AppStarter"/>
-            		</manifest>
+				<attribute name="Main-Class" value="ui.console.AppStarter" />
+			</manifest>
 		</jar>
 	</target>
 	<target name="run" depends="build">
@@ -38,8 +43,17 @@
 			<arg value="${inputfile}" />
 		</java>
 	</target>
-	
-	
+
+	<target name="unittest">
+		<junit printsummary="withOutAndErr" fork="yes" haltonfailure="no">
+			<classpath>
+				<pathelement location="${junitpath}" />
+			</classpath>
+			<formatter type="plain" />
+			<test name="prover.AllTests" />
+		</junit>
+	</target>
+
 	<target name="yacc" description="Use yacc to reproduce the source files of the parsers">
 		<!--<taskdef name="doyacc" classname="parsers.HelloWorld" classpath="${jchecker_jar}"/>
 		<doyacc/>  -->
@@ -53,26 +67,26 @@
 			</fileset>
 			<mapper type="glob" from="*.y" to="*.java"/>
 		</apply> -->
-		<exec executable="${yaccfile}" >
-			<arg value="-Jclass=${sourceparser_class}"/>
-			<arg value="-Jvalue=${sourceparser_value}"/>
-			<arg value="-Jpackage=${parserpackage}"/>
-			<arg value="-J"/>
-			<arg value="${sourceparser_source}"/>
+		<exec executable="${yaccfile}">
+			<arg value="-Jclass=${sourceparser_class}" />
+			<arg value="-Jvalue=${sourceparser_value}" />
+			<arg value="-Jpackage=${parserpackage}" />
+			<arg value="-J" />
+			<arg value="${sourceparser_source}" />
 		</exec>
-		
-		<exec executable="${movecommand}" >
-			<arg value="${sourceparser_class}.java"/>
-			<arg value="${parserpackage}"/>
-			<arg value="-f"/>
+
+		<exec executable="${movecommand}">
+			<arg value="${sourceparser_class}.java" />
+			<arg value="${parserpackage}" />
+			<arg value="-f" />
 		</exec>
-		
-		<exec executable="${movecommand}" >
-			<arg value="${sourceparser_value}.java"/>
-			<arg value="${parserpackage}"/>
-			<arg value="-f"/>
+
+		<exec executable="${movecommand}">
+			<arg value="${sourceparser_value}.java" />
+			<arg value="${parserpackage}" />
+			<arg value="-f" />
 		</exec>
-		
+
 		<echo>source parser done</echo>
 		<!--
 		    <apply executable="${yaccfile}" dir="${src}" dest="${parserdir}">
@@ -88,44 +102,37 @@
 			    
 		    </apply>
 		    <echo>foci parser done</echo> -->
-		    
-		<exec executable="${yaccfile}" >
-			    <arg value="-Jclass=${fociparser_class}"/>
-			    <arg value="-Jvalue=${fociparser_value}"/>
-			    <arg value="-Jpackage=${parserpackage}"/>
-			    <arg value="-J"/>
-			    <arg value="${fociparser_source}"/>
-		    </exec>
-		    
-		    <exec executable="${movecommand}" >
-			    <arg value="${fociparser_class}.java"/>
-			    <arg value="${parserpackage}"/>
-			    <arg value="-f"/>
-		    </exec>
-		    
-		    <exec executable="${movecommand}" >
-			    <arg value="${fociparser_value}.java"/>
-			    <arg value="${parserpackage}"/>
-			    <arg value="-f"/>
+
+		<exec executable="${yaccfile}">
+			<arg value="-Jclass=${fociparser_class}" />
+			<arg value="-Jvalue=${fociparser_value}" />
+			<arg value="-Jpackage=${parserpackage}" />
+			<arg value="-J" />
+			<arg value="${fociparser_source}" />
+		</exec>
+
+		<exec executable="${movecommand}">
+			<arg value="${fociparser_class}.java" />
+			<arg value="${parserpackage}" />
+			<arg value="-f" />
+		</exec>
+
+		<exec executable="${movecommand}">
+			<arg value="${fociparser_value}.java" />
+			<arg value="${parserpackage}" />
+			<arg value="-f" />
 		</exec>
 		<echo>foci parser done</echo>
 		<echo>OK: yacc done</echo>
-    	</target>
+	</target>
 	<target name="doc">
-		<javadoc
-			author="true"
-			private="true"
-			destdir="doc/"
-			version="true"
-			use="true"
-			encoding="utf8"
-			overview="./overview.html">
+		<javadoc author="true" private="true" destdir="doc/" version="true" use="true" encoding="utf8" overview="./overview.html">
 			<packageset dir=".">
-				<include name="abstraction"/>
-				<include name="tokens"/>
-				<include name="ui/"/>
-				<include name="prover"/>
-				<include name="parsers"/>
+				<include name="abstraction" />
+				<include name="tokens" />
+				<include name="ui/" />
+				<include name="prover" />
+				<include name="parsers" />
 			</packageset>
 		</javadoc>
 	</target>

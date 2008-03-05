@@ -36,6 +36,8 @@ import abstraction.*;
 
 /**
 *对Foci产生的结果文件进行解析
+*
+*@author He Kaiduo
 */
 public class FociParser
 {

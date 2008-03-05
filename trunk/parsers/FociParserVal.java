@@ -8,6 +8,8 @@ package parsers;
  * BYACC/J Semantic Value for parser: FociParser
  * This class provides some of the functionality
  * of the yacc/C 'union' directive
+ * 
+ * @author He Kaiduo
  */
 public class FociParserVal
 {

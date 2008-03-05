@@ -32,6 +32,7 @@ import tokens.*;
 
 /**
 *对Java源程序进行解析
+*@author He Kaiduo
 */
 public class SourceParser
 {

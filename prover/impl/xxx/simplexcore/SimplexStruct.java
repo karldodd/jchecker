@@ -26,7 +26,7 @@ public class SimplexStruct{
     /**
      * 目标函数值
      */
-    private double funcValue;
+    double funcValue;
 
     /**
      * 单纯形表的主要部分，请参见说明文件
@@ -36,12 +36,12 @@ public class SimplexStruct{
     /**
      * 单纯形表中变量及其相应的值，请参见说明文件
      */
-    List< Variable> tokens ;
+    ValueVariable[] tokens ;
 
     /**
      * 单纯形表中的基及其相应的值，请参见说明文件
      */
-    List< Variable> basis ;
+    ValueVariable[] basis ;
 
     /**
      * 取得目标函数

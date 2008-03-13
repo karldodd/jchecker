@@ -1,6 +1,7 @@
-package tokens;
+package tokens.prover.xxx;
 import java.lang.*;
 import java.util.*;
+import tokens.*;
 
 /**
  * 挖掘出来的等式，包含有其来源

@@ -1,6 +1,7 @@
-package tokens;
+package tokens.prover.xxx;
 import java.lang.*;
 import java.util.*;
+import tokens.*;
 
 /**
  * 可传递的变量类，包含有其所属域的信息

@@ -1,19 +1,29 @@
 package cache;
 
 public abstract class Cacher<K extends ICachable, V> {
+	private final String name;
+	
+	public Cacher() {
+		this.name = "cacher" + hashCode();
+	}
+	
+	public Cacher(String name) {
+		this.name = name;
+	}
+
 	/**
-	 *  recover object from cache
+	 * Recover object from cache
 	 * @param key
 	 * @return
 	 */
-	public abstract Object recover(K key);
+	public abstract V recover(K key);
 	
 	/**
-	 * push cache to cacher
+	 * Push to cacher
 	 * @param key
 	 * @param value
 	 * @return
 	 */
-	public abstract Object cache(K key, Object value);
+	public abstract boolean cache(K key, V value);
 	
 }

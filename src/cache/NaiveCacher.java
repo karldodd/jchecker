@@ -1,18 +1,39 @@
 package cache;
 
-public class NaiveCacher<K extends ICachable, V> extends Cacher<K, V> {
-	private NaiveCacher() {}
+import java.util.HashMap;
+import java.util.Map;
+
+public class NaiveCacher<K extends INormalCachable, V> extends AbstractNormalCacher<K, V> {
 	
-	@Override
-	public Object cache(K key, Object value) {
-		// TODO Auto-generated method stub
-		return null;
+	private Map<K, V> map = new HashMap<K, V>();
+	
+	private CacherPolicy<K, V> policy = new CacherPolicy<K, V>() {
+		@Override
+		public V dealDupKey(K key, V oldValue, V newValue) {
+			return newValue;
+		}
+	};
+	
+	public NaiveCacher() {
 	}
 
 	@Override
-	public Object recover(K key) {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean cache(K key, V value) {
+		try {
+			V oldValue = map.get(key);
+			if (oldValue == null) {
+				map.put(key, value);
+			} else {
+				map.put(key, policy.dealDupKey(key, oldValue, value));
+			}
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
+	@Override
+	public V recover(K key) {
+		return map.get(key);
+	}
 }

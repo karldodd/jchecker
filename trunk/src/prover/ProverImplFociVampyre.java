@@ -13,6 +13,11 @@ import java.io.*;
  * @author He Kaiduo
  */
 public class ProverImplFociVampyre implements Prover {
+	/**
+	 * Path of external prover foci and vampyre
+	 */
+	private static final String FOCI_BYTE_PATH = "./external/foci.byte"; 
+	private static final String VAMPYRE_BYTE_PATH = "./external/prover.byte"; 
 
 	/**
 	 * 是否debug状态
@@ -71,7 +76,7 @@ public class ProverImplFociVampyre implements Prover {
 		fout.deleteOnExit();
 
 		Process fociProcess = Runtime.getRuntime().exec(
-				new String[] { "./foci.byte", fin.getAbsolutePath(),
+				new String[] { FOCI_BYTE_PATH, fin.getAbsolutePath(),
 						fout.getAbsolutePath() });
 
 		BufferedReader inputReader = new BufferedReader(new InputStreamReader(
@@ -137,7 +142,7 @@ public class ProverImplFociVampyre implements Prover {
 			fout.deleteOnExit();
 
 			Process fociProcess = Runtime.getRuntime().exec(
-					new String[] { "./foci.byte", fin.getAbsolutePath(),
+					new String[] { FOCI_BYTE_PATH, fin.getAbsolutePath(),
 							fout.getAbsolutePath() });
 
 			BufferedReader inputReader = new BufferedReader(
@@ -239,7 +244,7 @@ public class ProverImplFociVampyre implements Prover {
 		Process vampyreProcess = null;
 		try {
 			vampyreProcess = Runtime.getRuntime().exec(
-					new String[] { "./prover.byte", f.getAbsolutePath() });
+					new String[] { VAMPYRE_BYTE_PATH, f.getAbsolutePath() });
 		} catch (Exception e) {
 			System.err.println("Error when invoking vampyre:\n" + e);
 			System.exit(1);

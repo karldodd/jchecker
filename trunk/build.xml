@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="Jchecker" default="run" basedir=".">
-	<property name="src" value="." />
-	<property name="dest" value="bin" />
+	<property name="src" value="./src" />
+	<property name="dest" value="./bin" />
+	<property name="build" value="./build" />
 	<property name="jchecker_jar" value="jchecker.jar" />
-	<property name="inputfile" value="source.c" />
-	<property name="junitpath" value="junit.jar" />
+	<property name="inputfile" value="cases/source.c" />
+	<property name="junitpath" value="lib/junit.jar" />
 
-	<property name="parserdir" value="parsers" />
+	<property name="parserdir" value="src/parsers" />
 	<property name="parserpackage" value="${parserdir}" />
 
 	<property name="yaccfile" location="${parserdir}/yacc.linux" />
@@ -32,14 +33,15 @@
 		</javac>
 	</target>
 	<target name="build" depends="compile">
-		<jar jarfile="${jchecker_jar}" basedir="${dest}">
+		<mkdir dir="${build}" />
+		<jar jarfile="${build}/${jchecker_jar}" basedir="${dest}">
 			<manifest>
 				<attribute name="Main-Class" value="ui.console.AppStarter" />
 			</manifest>
 		</jar>
 	</target>
 	<target name="run" depends="build">
-		<java classname="ui.console.AppStarter" classpath="${jchecker_jar}">
+		<java classname="ui.console.AppStarter" classpath="${build}/${jchecker_jar}">
 			<arg value="${inputfile}" />
 		</java>
 	</target>

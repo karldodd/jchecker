@@ -11,7 +11,8 @@ package cache;
  *
  */
 public interface ICachable {
-	public abstract boolean equals();
-	public abstract int hashCode();
-	public HashCode longHashCode();
+	// In fact, these methods are implemented by Object.
+	// here, just for reminding user, that these 2 methods are critical to cacher.
+	public boolean equals();
+	public int hashCode();
 }

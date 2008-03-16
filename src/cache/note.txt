@@ -1,0 +1,17 @@
+how to implements equals and hashCode();
+
+# Easy part: equals(null) must return false.
+# Difficult part: If firstObject.equals(secondObject) returns true, 
+	then secondObject.equals(firstObject) must also return true.
+# Hard part: If equals() returns true for two objects, both objects 
+	must return the same integer from the hashCode() method.
+
+default equals() hashCode() 
+	In Java, an object's identity is based on the class of the object 
+	and the memory address in JVM at which it's state is stored.
+	
+The default implementation of equals() method checks to see if 
+the two objects have the same identity. Similarly, the default 
+implementation of the hashCode() method returns an integer based 
+on the object's identity. This is the strictest implementation 
+of the equals() and hashCode() methods.

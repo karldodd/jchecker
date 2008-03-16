@@ -17,7 +17,7 @@ public class ProverImplFociVampyre implements Prover {
 	 * Path of external prover foci and vampyre
 	 */
 	private static final String FOCI_BYTE_PATH = "./external/foci.byte"; 
-	private static final String VAMPYRE_BYTE_PATH = "./external/prover.byte"; 
+	private static final String VAMPYRE_BYTE_PATH = "./external/vampyre.byte"; 
 
 	/**
 	 * 是否debug状态

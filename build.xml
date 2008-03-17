@@ -132,7 +132,7 @@
 			<classpath>
 				<pathelement location="${junitpath}" />
 			</classpath>
-			<packageset dir=".">
+			<packageset dir="./src">
 				<include name="abstraction" />
 				<include name="tokens" />
 				<include name="ui/" />

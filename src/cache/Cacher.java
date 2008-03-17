@@ -1,5 +1,12 @@
 package cache;
 
+/**
+ * Cacher的接口定义
+ * @author aleck
+ *
+ * @param <K>
+ * @param <V>
+ */
 public abstract class Cacher<K extends ICachable, V> {
 	private final String name;
 	
@@ -25,5 +32,9 @@ public abstract class Cacher<K extends ICachable, V> {
 	 * @return
 	 */
 	public abstract boolean cache(K key, V value);
+	
+	public String toString() {
+		return name;
+	}
 	
 }

@@ -5,7 +5,8 @@ import java.util.Map;
 
 public class CacherManager {
 	
-	private Map<String, Cacher> cachers = new HashMap<String, Cacher>();
+	@SuppressWarnings("unchecked")
+	private static final Map<String, Cacher> cachersMap = new HashMap<String, Cacher>();
 	
 	/**
 	 * Make it invisible, to prevent from creating any instance of this class.
@@ -20,8 +21,13 @@ public class CacherManager {
 	 * @param cacher
 	 * @return
 	 */
-	public static boolean registerCacher(String name, Cacher cacher) {
-		return true;
+	public static void registerCacher(String name, Cacher cacher) {
+		if (cachersMap.get(name) == null) {
+			cachersMap.put(name, cacher);
+		} else {
+			throw new RuntimeException("name: " + name + 
+					" is already be defined as: " + cachersMap.get(name));
+		}
 	}
 	
 	/**
@@ -30,7 +36,8 @@ public class CacherManager {
 	 * @param name
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public static Cacher findCacherByName(String name) {
-		return null;
+		return cachersMap.get(name);
 	}
 }

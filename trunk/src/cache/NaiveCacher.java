@@ -3,7 +3,16 @@ package cache;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NaiveCacher<K extends INormalCachable, V> extends AbstractNormalCacher<K, V> {
+/**
+ * 这个类可以用来测试Cacher的接口。
+ * 在没有其他Cacher的实现的时候，不妨使用这个最笨且最Lazy的Cacher。
+ * 
+ * @author aleck
+ *
+ * @param <K>
+ * @param <V>
+ */
+public class NaiveCacher<K extends INormalCachable, V> extends Cacher<K, V> {
 	
 	private Map<K, V> map = new HashMap<K, V>();
 	

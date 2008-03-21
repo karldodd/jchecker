@@ -134,6 +134,7 @@
 			</classpath>
 			<packageset dir="./src">
 				<include name="abstraction" />
+				<include name="cache" />
 				<include name="tokens" />
 				<include name="ui/" />
 				<include name="prover" />

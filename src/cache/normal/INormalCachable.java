@@ -1,4 +1,6 @@
-package cache;
+package cache.normal;
+
+import cache.core.ICachable;
 
 /**
  * 一般的可以Cache的类型

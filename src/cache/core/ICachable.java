@@ -1,9 +1,9 @@
-package cache;
+package cache.core;
 
 /**
  * Interface of Cachable Object.
  * 
- * Warning: the object should be immutable, 
+ * Warning: the object should be <b>immutable<b>, 
  * since we just calculate the hashCode / eqvHashCode at creating time.
  * Once and only once.
  *  

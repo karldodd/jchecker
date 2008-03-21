@@ -13,7 +13,6 @@
 	<property name="yaccfile" location="${parserdir}/yacc.linux" />
 	<property name="movecommand" value="mv" />
 
-
 	<property name="sourceparser_source" value="${parserdir}/jchecker2.y" />
 	<property name="sourceparser_class" value="SourceParser" />
 	<property name="sourceparser_value" value="SourceParserVal" />
@@ -46,10 +45,12 @@
 		</java>
 	</target>
 
-	<target name="unittest">
+	<target name="unittest" depends="compile" >
 		<junit printsummary="withOutAndErr" fork="yes" haltonfailure="no">
 			<classpath>
 				<pathelement location="${junitpath}" />
+				<pathelement location="${dest}" />
+				<!-- <pathelement location="./test" /> -->
 			</classpath>
 			<formatter type="plain" />
 			<test name="prover.AllTests" />

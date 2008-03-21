@@ -10,7 +10,7 @@ package cache;
  * @author aleck
  *
  */
-public interface ICachable {
+public abstract interface ICachable {
 	// In fact, it's implemented by Object.
 	// here, just for reminding user, that it is critical to cacher.
 	public boolean equals(Object that);

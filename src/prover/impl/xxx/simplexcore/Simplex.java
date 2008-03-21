@@ -89,6 +89,9 @@ public class Simplex{
             simplexStruct.funcValue -= simplexStruct.basis[outBasis].Value * rate;
         }
 
+        // 执行出基入基操作
+        simplexStruct.basis[outBasis].Name = simplexStruct.tokens[inBasis].Name;
+
         return false;
     }
 

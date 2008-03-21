@@ -1,9 +1,11 @@
-package cache;
+package cache.core;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class CacherManager {
+	private static Random rand = new Random();
 	
 	@SuppressWarnings("unchecked")
 	private static final Map<String, Cacher> cachersMap = new HashMap<String, Cacher>();
@@ -39,5 +41,13 @@ public class CacherManager {
 	@SuppressWarnings("unchecked")
 	public static Cacher findCacherByName(String name) {
 		return cachersMap.get(name);
+	}
+
+	/**
+	 * 返回一个随即的Cacher的名字
+	 * @return
+	 */
+	public static String randName() {
+		return String.format("%06d", rand.nextInt(1000000));
 	}
 }

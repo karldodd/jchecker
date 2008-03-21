@@ -1,4 +1,6 @@
-package cache;
+package cache.prefix;
+
+import cache.core.ICachable;
 
 /**
  * 同时实现了prefixHashCode的ICachable类

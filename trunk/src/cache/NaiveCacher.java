@@ -3,6 +3,12 @@ package cache;
 import java.util.HashMap;
 import java.util.Map;
 
+import cache.core.Cacher;
+import cache.core.CacherPolicy;
+import cache.core.Scheduler;
+import cache.normal.INormalCachable;
+import cache.normal.NormalRecoverResult;
+
 /**
  * 这个类可以用来测试Cacher的接口。
  * 在没有其他Cacher的实现的时候，不妨使用这个最笨且最Lazy的Cacher。
@@ -20,6 +26,12 @@ public class NaiveCacher<K extends INormalCachable, V> extends Cacher<K, V> {
 		@Override
 		public V dealDupKey(K key, V oldValue, V newValue) {
 			return newValue;
+		}
+
+		@Override
+		public Scheduler getScheduler() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 	};
 	
@@ -43,6 +55,6 @@ public class NaiveCacher<K extends INormalCachable, V> extends Cacher<K, V> {
 
 	@Override
 	public NormalRecoverResult<V> recover(K key) {
-		return new NormalRecoverResult(map.get(key));
+		return new NormalRecoverResult<V>(map.get(key));
 	}
 }

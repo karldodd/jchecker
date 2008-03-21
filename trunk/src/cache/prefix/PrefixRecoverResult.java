@@ -1,4 +1,6 @@
-package cache;
+package cache.prefix;
+
+import cache.core.AbstractRecoverResult;
 
 public class PrefixRecoverResult extends AbstractRecoverResult {
 

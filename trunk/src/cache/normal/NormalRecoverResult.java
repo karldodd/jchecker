@@ -1,12 +1,14 @@
-package cache;
+package cache.normal;
+
+import cache.core.AbstractRecoverResult;
 
 public class NormalRecoverResult<V> extends AbstractRecoverResult<V> {
 	private V value;
 	
-	NormalRecoverResult() {
+	public NormalRecoverResult() {
 	}
 	
-	NormalRecoverResult(V value) {
+	public NormalRecoverResult(V value) {
 		this.value = value;
 	}
 	

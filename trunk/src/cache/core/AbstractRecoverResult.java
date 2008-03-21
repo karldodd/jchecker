@@ -1,4 +1,4 @@
-package cache;
+package cache.core;
 
 /**
  * 返回结果的类型

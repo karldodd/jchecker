@@ -2,6 +2,7 @@ package prover;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -47,7 +48,8 @@ public class ProverImplFociVampyreTester {
 	public void testImply() {
 		// fail("Not yet implemented"); // TODO
 	}
-
+	
+	@Ignore ("not implemented.")
 	@Test
 	public void testIsSatisfiable() {
 

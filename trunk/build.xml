@@ -52,7 +52,7 @@
 				<pathelement location="${dest}" />
 				<!-- <pathelement location="./test" /> -->
 			</classpath>
-			<formatter type="plain" />
+			<formatter type="plain" usefile="false" />
 			<test name="prover.AllTests" />
 		</junit>
 	</target>

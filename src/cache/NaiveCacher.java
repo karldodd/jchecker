@@ -42,7 +42,7 @@ public class NaiveCacher<K extends INormalCachable, V> extends Cacher<K, V> {
 	}
 
 	@Override
-	public V recover(K key) {
-		return map.get(key);
+	public NormalRecoverResult<V> recover(K key) {
+		return new NormalRecoverResult(map.get(key));
 	}
 }

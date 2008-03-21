@@ -23,7 +23,7 @@ public abstract class Cacher<K extends ICachable, V> {
 	 * @param key
 	 * @return
 	 */
-	public abstract V recover(K key);
+	public abstract RecoverResult<V> recover(K key);
 	
 	/**
 	 * Push to cacher

@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
  * @author Administrator
  *
  */
-public class DisjointSetIterator<Node<K>> implements Iterator<Node<K>> {
+public class DisjointSetIterator<K> implements Iterator<Node<K>> {
 
 	Node<K> nextNode;
 
@@ -23,12 +23,13 @@ public class DisjointSetIterator<Node<K>> implements Iterator<Node<K>> {
 	 */
 	public boolean hasNext() {
 		// TODO Auto-generated method stub
-		return nextNode==null;
+		return nextNode!=null;
 	}
 
 	/* (non-Javadoc)
 	 * @see java.util.Iterator#next()
 	 */
+	
 	public Node<K> next() {
 		// TODO Auto-generated method stub
 		if(nextNode!=null){

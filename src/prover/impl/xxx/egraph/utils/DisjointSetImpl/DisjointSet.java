@@ -1,6 +1,5 @@
 package prover.impl.xxx.egraph.utils.DisjointSetImpl;
 
-import java.lang.annotation.Inherited;
 import java.util.Iterator;
 
 
@@ -12,34 +11,66 @@ import java.util.Iterator;
  */
 
 public class DisjointSet<K> implements Iterable<Node<K>>{
-	private Node<K> headNode;
+	private HeadNode<K> headNode;
 	private int size;
 	protected DisjointSet(K atom){
 		this.size=1;
 		headNode=new HeadNode<K>(this,atom);
 	}
 	
-	public Node<K> getHeadNode(){
+	public HeadNode<K> getHeadNode(){
 		return headNode;
 	}
 	
+	public Node<K> getLastNode(){
+		Node<K> n=getHeadNode();
+		while(n.nextNode!=null){
+			n=n.nextNode;
+		}
+		return n;
+	}
+	
 	@Override public int hashCode(){
-		return headNode.hashCode();
+		int hashValue=0;
+		for (Node<K> n: this){
+			hashValue+=n.hashCode();
+		}
+		return hashValue;
 	}	
 	
-//	@Override public boolean equals(Object o){
-//		if(o instanceof DisjointSet){
-//			
-//			(DisjointSet<K>(o))
-//		}
-//		return false;
-//	}
+	@Override public boolean equals(Object o){
+		if(o instanceof DisjointSet){
+			if(this.hashCode()!=((DisjointSet<K>)(o)).hashCode())return false;
+			for(Node<K> n : this){
+				//throw new Exception;
+				//to be impl
+			}
+			return true;
+		}
+		return false;
+	}
 	
 	public int getSize(){
 		return size;
 	}
 	
+	public void setSize(int size){
+		this.size=size;
+	}
+	
 	public Iterator<Node<K>> iterator(){
-		return new DisjointSetIterator<Node<K>>(this.headNode);
+		return new DisjointSetIterator<K>(this);
+	}
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		StringBuffer s=new StringBuffer();
+		s.append("{");
+		for (Node<K> n : this){
+			s.append(n.toString()+", ");
+		}
+		s.append("}");
+		return s.toString();
 	}
 }

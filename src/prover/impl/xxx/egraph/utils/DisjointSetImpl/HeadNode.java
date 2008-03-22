@@ -11,4 +11,8 @@ public class HeadNode<K> extends Node<K> {
 	public DisjointSet<K> getMyDisjointSet() {
 		return this.ds;
 	}
+	
+	protected void setAsNormalNode(){
+		this.ds=null;
+	}
 }

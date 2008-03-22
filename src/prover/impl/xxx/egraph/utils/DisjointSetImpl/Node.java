@@ -5,12 +5,18 @@ package prover.impl.xxx.egraph.utils.DisjointSetImpl;
  * @author Kaiduo He
  *
  */
-public class Node {
-	private Object stuff;
-	protected Node nextNode;
-	protected Node parent;
+public class Node<K> {
+	private K stuff;
+	protected Node<K> nextNode;
+	protected Node<K> parent;
 	
-	protected Node(Object o){
+	protected Node(K o){
 		stuff=o;
+		nextNode=null;
+		parent=null;
+	}
+	
+	public K getK(){
+		return stuff;
 	}
 }

@@ -15,6 +15,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	ProverFactoryTester.class,
 	ProverImplFociVampyreTester.class
+//	impl.xxx.egraph.utils.DisjointSetImpl.DisjointSetEnvironmentTester.class
 })
 
 

@@ -90,7 +90,7 @@ public class Simplex{
         }
 
         // 执行出基入基操作
-        simplexStruct.basis[outBasis].Name = simplexStruct.tokens[inBasis].Name;
+        simplexStruct.basis[outBasis].name = simplexStruct.tokens[inBasis].name;
 
         return false;
     }

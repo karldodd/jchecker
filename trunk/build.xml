@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="Jchecker" default="run" basedir=".">
 	<property name="src" value="./src" />
+	<property name="testdir" value="./test" />
 	<property name="dest" value="./bin" />
 	<property name="build" value="./build" />
 	<property name="jchecker_jar" value="jchecker.jar" />
@@ -24,13 +25,20 @@
 	<target name="init">
 		<mkdir dir="${dest}" />
 	</target>
+
 	<target name="compile" depends="init">
 		<javac srcdir="${src}" destdir="${dest}" encoding="utf8">
 			<classpath>
 				<pathelement location="${junitpath}" />
 			</classpath>
 		</javac>
+		<javac srcdir="${testdir}" destdir="${dest}" encoding="utf8">
+			<classpath>
+				<pathelement location="${junitpath}" />
+			</classpath>
+		</javac>
 	</target>
+
 	<target name="build" depends="compile">
 		<mkdir dir="${build}" />
 		<jar jarfile="${build}/${jchecker_jar}" basedir="${dest}">
@@ -39,13 +47,14 @@
 			</manifest>
 		</jar>
 	</target>
+
 	<target name="run" depends="build">
 		<java classname="ui.console.AppStarter" classpath="${build}/${jchecker_jar}">
 			<arg value="${inputfile}" />
 		</java>
 	</target>
 
-	<target name="unittest" depends="compile" >
+	<target name="unittest" depends="compile">
 		<junit printsummary="withOutAndErr" fork="yes" haltonfailure="no">
 			<classpath>
 				<pathelement location="${junitpath}" />

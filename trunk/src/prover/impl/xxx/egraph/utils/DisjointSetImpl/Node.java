@@ -19,4 +19,23 @@ public class Node<K> {
 	public K getK(){
 		return stuff;
 	}
+	
+	public boolean isHeadNode()
+	{
+		return (parent==null)&&(this instanceof HeadNode);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if(obj instanceof Node)
+			return getK().equals(((Node)obj).getK());
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return stuff.hashCode();
+	}
 }

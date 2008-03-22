@@ -13,7 +13,7 @@ public class ValueVariable implements Cloneable{
 	/**
 	*变量名
 	*/
-	private String name;
+	public String name;
 
 	/**
 	*变量值

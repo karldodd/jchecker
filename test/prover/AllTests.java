@@ -3,6 +3,8 @@ package prover;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import prover.impl.xxx.simplexcore.SimplexStructTester;
+
 /**
  * 单元测试的集合，将各TestCase组合成为TestSuite
  * 
@@ -14,8 +16,11 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	ProverFactoryTester.class,
-	ProverImplFociVampyreTester.class
+	ProverImplFociVampyreTester.class,
 //	impl.xxx.egraph.utils.DisjointSetImpl.DisjointSetEnvironmentTester.class
+
+    // Add tests for SimplexCore
+    SimplexStructTester.class
 })
 
 

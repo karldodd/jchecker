@@ -1,4 +1,4 @@
-package tokens.prover.xxx;
+package tokens.prover.xxx.simplexcore;
 
 import java.lang.*;
 import java.util.*;

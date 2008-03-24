@@ -1,7 +1,7 @@
 package prover.impl.xxx.simplexcore;
 
 import tokens.*;
-import tokens.prover.xxx.*;
+import tokens.prover.xxx.simplexcore.*;
 import abstraction.*;
 
 import java.lang.*;

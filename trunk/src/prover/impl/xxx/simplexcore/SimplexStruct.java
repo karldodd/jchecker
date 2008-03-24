@@ -43,6 +43,9 @@ public class SimplexStruct{
      */
     ValueVariable[] basis ;
 
+    public SimplexStruct() {
+    }
+
     /**
      * 取得目标函数
      * @return 目标函数

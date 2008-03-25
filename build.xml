@@ -27,12 +27,12 @@
 	</target>
 
 	<target name="compile" depends="init">
-		<javac srcdir="${src}" destdir="${dest}" encoding="utf8">
+		<javac srcdir="${src}" destdir="${dest}" debug="true" encoding="utf8">
 			<classpath>
 				<pathelement location="${junitpath}" />
 			</classpath>
 		</javac>
-		<javac srcdir="${testdir}" destdir="${dest}" encoding="utf8">
+		<javac srcdir="${testdir}" destdir="${dest}" debug="true" encoding="utf8">
 			<classpath>
 				<pathelement location="${junitpath}" />
 			</classpath>

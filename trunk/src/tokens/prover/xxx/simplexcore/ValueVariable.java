@@ -42,40 +42,6 @@ public class ValueVariable implements Cloneable{
 	}
 
 	/**
-	*获取变量名
-	*
-	*@return 变量名
-	*/
-	public String getName(){return name;}
-	
-	/**
-	*设置变量的值
-	*
-	*@param value 需要设置的值
-	*/
-	public void setValue(double value){
-		this.Value=value;
-	}	
-
-	/**
-	*获取变量的值
-	*
-	*@return 变量的值
-	*/
-	public double getValue(){
-		return this.Value;
-	}
-
-	/**
-	*获取随机的变量后缀
-	*
-	*@return 变量的随机后缀
-	*/
-	public static int getRandomIntSuffix(){
-		return (int)(100000.00*Math.random());
-	}
-
-	/**
 	*深拷贝函数
 	*
 	*@return 变量的拷贝

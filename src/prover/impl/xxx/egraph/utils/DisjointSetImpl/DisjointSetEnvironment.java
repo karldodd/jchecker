@@ -6,6 +6,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import prover.impl.xxx.egraph.utils.DisjointSetImpl.Exceptions.DuplicateElementException;
+import prover.impl.xxx.egraph.utils.DisjointSetImpl.Exceptions.NoSuchElementException;
+import prover.impl.xxx.egraph.utils.DisjointSetImpl.Exceptions.NullElementException;
+
 /**
  * 不相交集合的环境类，管理此数据结构
  * 
@@ -35,14 +39,13 @@ public class DisjointSetEnvironment<K> {
 	 * @param atom
 	 * @return
 	 */
-	public DisjointSet<K> makeSet(K atom) {
+	public DisjointSet<K> makeSet(K atom) throws Exception{
 		if (atom == null)
-			return null;
+			throw new NullElementException();
 		if (atomToNodeMap.containsKey(atom)) {
-			return null;
-			//throw new Exception();
-			//to be impl
+			throw new DuplicateElementException();
 		}
+		
 		DisjointSet<K> ds = new DisjointSet<K>(atom);
 		currentAtoms.add(atom);
 		currentSets.add(ds);
@@ -61,12 +64,13 @@ public class DisjointSetEnvironment<K> {
 	 * @param atom
 	 * @return
 	 */
-	public DisjointSet<K> findSet(K atom) {
+	public DisjointSet<K> findSet(K atom) throws Exception {
 		if (atom == null)
-			return null;
+			throw new NullElementException();
+		if(!atomToNodeMap.containsKey(atom)){
+			throw new NoSuchElementException();
+		}		
 		Node<K> n = atomToNodeMap.get(atom);
-		if (n == null)
-			return null;
 
 		ArrayList<Node<K>> tempList = new ArrayList<Node<K>>();
 		while (n.parent != null) {
@@ -92,8 +96,7 @@ public class DisjointSetEnvironment<K> {
 	 * @return
 	 */
 	public DisjointSet<K> union(DisjointSet<K> ds1, DisjointSet<K> ds2) {
-		//throw new Exception();
-		//to be impl 若为同一个集合，若集合相交
+		if(ds1==ds2)return ds1;
 		if (ds1.getSize() >= ds2.getSize()) {
 			// ds2并入ds1
 			currentSets.remove(ds2);
@@ -119,4 +122,7 @@ public class DisjointSetEnvironment<K> {
 		return this.currentSets;
 	}
 
+	public boolean containsKey(K key){
+		return atomToNodeMap.containsKey(key);
+	}
 }

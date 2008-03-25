@@ -54,9 +54,9 @@ public class SimplexStructTester {
      * And the simplexStruct should be:
      *   
      *       a  __s1    __s2    __w1  __w2
-     *   w1  1  -1      0       1       0   5
+     *   w1  1  -1      0      1       0   5
      *   w2  1  0       1      0       1   4
-     *       2  1       1      1       1   9
+     *       2  -1      1      1       1   9
      *
      * Thus, after the constructor,
      * the tokens should be: a  __s1    __s2    __w1  __w2

@@ -54,7 +54,7 @@ public class DisjointSet<K> implements Iterable<Node<K>>{
 		return size;
 	}
 	
-	public void setSize(int size){
+	protected void setSize(int size){
 		this.size=size;
 	}
 	

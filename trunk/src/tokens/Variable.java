@@ -88,4 +88,19 @@ public class Variable implements Cloneable{
 	public void addSuffix(String suf){
 		
 	}*/
+	
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if(obj instanceof Variable){
+			return this.getName().equals(((Variable)obj).getName());
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return this.getName().hashCode();
+	}
 }

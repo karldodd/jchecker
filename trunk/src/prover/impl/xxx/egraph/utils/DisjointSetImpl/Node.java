@@ -36,6 +36,6 @@ public class Node<K> {
 	@Override
 	public int hashCode() {
 		// TODO Auto-generated method stub
-		return stuff.hashCode();
+		return getK().hashCode();
 	}
 }

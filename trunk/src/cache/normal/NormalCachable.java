@@ -1,6 +1,6 @@
 package cache.normal;
 
-import cache.core.ICachable;
+import cache.core.Cachable;
 
 /**
  * 一般的可以Cache的类型
@@ -9,6 +9,6 @@ import cache.core.ICachable;
  * @author aleck
  *
  */
-public interface INormalCachable extends ICachable {
+public abstract class NormalCachable extends Cachable {
 
 }

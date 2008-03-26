@@ -6,7 +6,7 @@ package cache.core;
  * @author aleck
  *
  */
-public abstract class CacherPolicy<K extends ICachable, V> {
+public abstract class CacherPolicy<K extends Cachable, V> {
 	/**
 	 * 返回一个scheduler
 	 * @return

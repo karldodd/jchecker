@@ -1,6 +1,6 @@
 package cache.prefix;
 
-import cache.core.ICachable;
+import cache.core.Cachable;
 
 /**
  * 同时实现了prefixHashCode的ICachable类
@@ -8,17 +8,17 @@ import cache.core.ICachable;
  * @author aleck
  *
  */
-public interface IPrefixCachable extends ICachable {
+public abstract class IPrefixCachable extends Cachable {
 	/**
 	 * 满足前缀关系的HashCode
 	 * @return
 	 */
-	public PrefixHashCode prefixHashCode();
+	public abstract PrefixHashCode prefixHashCode();
 	
 	/**
 	 * 判断是否是某一个对象的prefix
 	 * @param that
 	 * @return
 	 */
-	public boolean isPrefixOf(IPrefixCachable that);
+	public abstract boolean isPrefixOf(IPrefixCachable that);
 }

@@ -8,7 +8,7 @@ package cache.core;
  * @param <K>
  * @param <V>
  */
-public abstract class Cacher<K extends ICachable, V> {
+public abstract class Cacher<K extends Cachable, V> {
 	private final Scheduler scheduler;
 	private final CacherPolicy policy;
 	

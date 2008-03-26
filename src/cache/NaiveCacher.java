@@ -6,7 +6,7 @@ import java.util.Map;
 import cache.core.Cacher;
 import cache.core.CacherPolicy;
 import cache.core.Scheduler;
-import cache.normal.INormalCachable;
+import cache.normal.NormalCachable;
 import cache.normal.NormalRecoverResult;
 
 /**
@@ -18,7 +18,7 @@ import cache.normal.NormalRecoverResult;
  * @param <K>
  * @param <V>
  */
-public class NaiveCacher<K extends INormalCachable, V> extends Cacher<K, V> {
+public class NaiveCacher<K extends NormalCachable, V> extends Cacher<K, V> {
 	
 	private Map<K, V> map = new HashMap<K, V>();
 	

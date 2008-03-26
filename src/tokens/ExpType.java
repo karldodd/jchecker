@@ -37,5 +37,10 @@ public enum ExpType {
 	/**
 	*非
 	*/
-	negative
+	negative,
+	
+	/**
+	 * 函数
+	 */
+	function
 }

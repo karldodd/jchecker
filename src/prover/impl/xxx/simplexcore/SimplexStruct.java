@@ -26,7 +26,9 @@ public class SimplexStruct{
     /**
      * 目标函数值
      */
-    double funcValue;
+    public double getFuncValue() {
+        return tokenValues[height-1][width-1];
+    }
 
     /**
      * 单纯形表中的所有变量
@@ -152,13 +154,17 @@ public class SimplexStruct{
         // 填写单纯形表格检验数与目标函数值
         tokenValues[height - 1] = new double[tokens.size() + 1];
 
-        // 每一个检验数为相应列所有数的和
-        // 目标函数也为当前所有基的和
-        for(int i = 0; i < width; ++i) {
+        // 每一个非基变量的检验数为相应列所有数的和
+        for(int i = 0; i < manualVarStartPoint; ++i) {
             tokenValues[height - 1][i] = 0;
             for(int j = 0; j < height - 1; ++ j) {
                 tokenValues[height - 1][i] += tokenValues[j][i];
             }
+        }
+        // 目标函数为当前所有基的和
+        tokenValues[height - 1][width - 1] = 0;
+        for(int j = 0; j < height - 1; ++ j) {
+            tokenValues[height - 1][width - 1] += tokenValues[j][width - 1];
         }
     }
 

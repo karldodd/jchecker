@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 import prover.impl.xxx.simplexcore.SimplexStructTester;
+import prover.impl.xxx.simplexcore.SimplexTester;
 
 import prover.impl.xxx.simplexcore.SimplexStruct;
 import prover.impl.xxx.egraph.utils.DisjointSetImpl.*;
@@ -22,8 +23,10 @@ import prover.impl.xxx.egraph.utils.DisjointSetImpl.*;
 //	impl.xxx.egraph.utils.DisjointSetImpl.DisjointSetEnvironmentTester.class
 	DisjointSetEnvironmentTester.class,
 	DisjointSetTester.class,
+
     // Add tests for SimplexCore
-    SimplexStructTester.class
+    SimplexStructTester.class,
+    SimplexTester.class
 })
 
 

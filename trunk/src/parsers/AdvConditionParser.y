@@ -1,4 +1,5 @@
 %{
+
 import java.lang.*;
 //import java.lang.Math;
 import java.io.*;
@@ -7,7 +8,6 @@ import java.util.*;
 //load self-defined token-library
 //import tokens.Sentence;
 import tokens.*;
-
 %}
 
 /* YACC Declarations */
@@ -39,28 +39,28 @@ input: advcondition
 }
 ;
 
-expression: NUM {Expression e=new Expression($1.ival);$$=new SourceParserVal(e);}
- | WORD {Expression e=new Expression(new Variable(getStringValue($1)));$$=new SourceParserVal(e);}
+expression: NUM {Expression e=new Expression($1.ival);$$=new AdvConditionParserVal(e);}
+ | WORD {Expression e=new Expression(new Variable(getStringValue($1)));$$=new AdvConditionParserVal(e);}
  | expression '+' expression
  {
  	Expression e=new Expression((Expression)$1.obj,(Expression)$3.obj,ExpType.plus);
- 	$$=new SourceParserVal(e);
+ 	$$=new AdvConditionParserVal(e);
  }
  | expression '-' expression
  {
  	Expression e=new Expression((Expression)$1.obj,(Expression)$3.obj,ExpType.minus);
- 	$$=new SourceParserVal(e);
+ 	$$=new AdvConditionParserVal(e);
  }
  | expression '*' expression
  {
  	Expression e=new Expression((Expression)$1.obj,(Expression)$3.obj,ExpType.multiply);
- 	$$=new SourceParserVal(e);
+ 	$$=new AdvConditionParserVal(e);
  }
  //| expression '/' expression
  | '-' expression %prec NEG
  {
  	Expression e=new Expression((Expression)$2.obj,null,ExpType.negative);
- 	$$=new SourceParserVal(e);
+ 	$$=new AdvConditionParserVal(e);
  }
  //| expression '^' expression
  | '(' expression ')'
@@ -69,15 +69,15 @@ expression: NUM {Expression e=new Expression($1.ival);$$=new SourceParserVal(e);
  }
  ;
 
-advcondition: condition {$$=new SourceParserVal(new AdvCondition((Condition)$1.obj));}
+advcondition: condition {$$=new AdvConditionParserVal(new AdvCondition((Condition)$1.obj));}
 | advcondition '&' '&' advcondition
 {
- $$=new SourceParserVal(new AdvCondition((AdvCondition)$1.obj,(AdvCondition)$4.obj,AdvCondition.Type_AND)); 
+ $$=new AdvConditionParserVal(new AdvCondition((AdvCondition)$1.obj,(AdvCondition)$4.obj,AdvCondition.Type_AND)); 
 }
 
 | advcondition '|' '|' advcondition
 {
- $$=new SourceParserVal(new AdvCondition((AdvCondition)$1.obj,(AdvCondition)$4.obj,AdvCondition.Type_OR));
+ $$=new AdvConditionParserVal(new AdvCondition((AdvCondition)$1.obj,(AdvCondition)$4.obj,AdvCondition.Type_OR));
 }
 
 | '(' advcondition ')'
@@ -90,32 +90,32 @@ advcondition: condition {$$=new SourceParserVal(new AdvCondition((Condition)$1.o
 condition: expression '=' '=' expression
  {
  	Condition c=new Condition((Expression)$1.obj,(Expression)$4.obj,ConType.equal);
- 	$$=new SourceParserVal(c);
+ 	$$=new AdvConditionParserVal(c);
  }
  | expression '!' '=' expression
  {
  	Condition c=new Condition((Expression)$1.obj,(Expression)$4.obj,ConType.notequal);
- 	$$=new SourceParserVal(c);
+ 	$$=new AdvConditionParserVal(c);
  }
  | expression '<' '=' expression
  {
  	Condition c=new Condition((Expression)$1.obj,(Expression)$4.obj,ConType.equalsmaller);
- 	$$=new SourceParserVal(c);
+ 	$$=new AdvConditionParserVal(c);
  }
  | expression '>' '=' expression
  {
  	Condition c=new Condition((Expression)$1.obj,(Expression)$4.obj,ConType.equallarger);
- 	$$=new SourceParserVal(c);
+ 	$$=new AdvConditionParserVal(c);
  }
  | expression '<' expression
  {
  	Condition c=new Condition((Expression)$1.obj,(Expression)$3.obj,ConType.smaller);
- 	$$=new SourceParserVal(c);
+ 	$$=new AdvConditionParserVal(c);
  }
  | expression '>' expression
  {
  	Condition c=new Condition((Expression)$1.obj,(Expression)$3.obj,ConType.larger);
- 	$$=new SourceParserVal(c);
+ 	$$=new AdvConditionParserVal(c);
  }
  ;
 %%
@@ -163,12 +163,12 @@ int yylex()
   }
   else if(tok==st.TT_NUMBER)
   {
-    yylval = new SourceParserVal((int)st.nval);
+    yylval = new AdvConditionParserVal((int)st.nval);
     return NUM;
   }
   else if(tok==st.TT_WORD)
   {
-	yylval= new SourceParserVal((Object)yytext);
+	yylval= new AdvConditionParserVal((Object)yytext);
 	//pout("WORD from yylex: yytext:"+yytext);
 	return WORD;
         //System.out.println("unknown word: "+yytext+" ,return first char.");
@@ -178,7 +178,7 @@ int yylex()
   return tok;
 }
 
-String getStringValue(SourceParserVal pv)
+String getStringValue(AdvConditionParserVal pv)
 {
 	return (String)pv.obj;
 }
@@ -214,14 +214,13 @@ public int parseString(String str)
   }
   catch (Exception e)
   {
-    yyerror("could not open "+file.getName());
+    yyerror("could not open stringreader");
     return 0;
   }
   ret=yyparse();
   try
   {
-    inReader.close();
-    fileIn.close();
+    sr.close();
   }
   catch (Exception e)
   {

@@ -195,4 +195,26 @@ public class Condition extends Sentence implements Cloneable{
 			System.exit(1);
 		}
 	}
+	
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return this.toString().hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if(obj instanceof Condition)
+		{
+			Condition c=(Condition)obj;
+			if(this.type!=c.type)return false;
+			if(type==ConType.F||type==ConType.T){
+				return true;
+			}
+			else
+				return this.l.equals(c.l)&&this.r.equals(c.r);
+		}
+		return false;
+	}
 }

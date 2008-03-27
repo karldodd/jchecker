@@ -21,11 +21,16 @@
 	<property name="fociparser_source" value="${parserdir}/FociParser.y" />
 	<property name="fociparser_class" value="FociParser" />
 	<property name="fociparser_value" value="FociParserVal" />
-	
+
 	<property name="advconditionparser_source" value="${parserdir}/AdvConditionParser.y" />
 	<property name="advconditionparser_class" value="AdvConditionParser" />
 	<property name="advconditionparser_value" value="AdvConditionParserVal" />
 
+	<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask">
+		<classpath>
+			<pathelement location="${junitpath}" />
+		</classpath>
+	</taskdef>
 
 	<target name="init">
 		<mkdir dir="${dest}" />
@@ -140,7 +145,7 @@
 			<arg value="-f" />
 		</exec>
 		<echo>foci parser done</echo>
-		
+
 		<exec executable="${yaccfile}">
 			<arg value="-Jclass=${advconditionparser_class}" />
 			<arg value="-Jvalue=${advconditionparser_value}" />

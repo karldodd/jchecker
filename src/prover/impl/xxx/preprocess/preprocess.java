@@ -28,22 +28,22 @@ public class preprocess {
 	/**
 	 * 给传入的公式打标
 	 * 
-	 * @param cList 输入的公式列表
+	 * @param fList 输入的公式列表
 	 */
 	static public void mark(List<Formula> fList) {}
 	
 	/**
 	 * 理论域分离
 	 * 
-	 * @param cList
+	 * @param fList
 	 */
 	static public void theoryDevision(List<Formula> fList) {}
 	
 	/**
 	 * 产生全局变量表
 	 * 
-	 * @param cList
-	 * @param vList
+	 * @param fList
+	 * @param vTable
 	 */
 	static public void generateVariableTable(List<Formula> fList, VariableTable vTable) {} 
 }

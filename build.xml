@@ -9,7 +9,7 @@
 	<property name="junitpath" value="lib/junit.jar" />
 
 	<property name="parserdir" value="src/parsers" />
-	<property name="parserpackage" value="${parserdir}" />
+	<property name="parserpackage" value="parsers" />
 
 	<property name="yaccfile" location="${parserdir}/yacc.linux" />
 	<property name="movecommand" value="mv" />
@@ -21,6 +21,11 @@
 	<property name="fociparser_source" value="${parserdir}/FociParser.y" />
 	<property name="fociparser_class" value="FociParser" />
 	<property name="fociparser_value" value="FociParserVal" />
+	
+	<property name="advconditionparser_source" value="${parserdir}/AdvConditionParser.y" />
+	<property name="advconditionparser_class" value="AdvConditionParser" />
+	<property name="advconditionparser_value" value="AdvConditionParserVal" />
+
 
 	<target name="init">
 		<mkdir dir="${dest}" />
@@ -89,13 +94,13 @@
 
 		<exec executable="${movecommand}">
 			<arg value="${sourceparser_class}.java" />
-			<arg value="${parserpackage}" />
+			<arg value="${parserdir}" />
 			<arg value="-f" />
 		</exec>
 
 		<exec executable="${movecommand}">
 			<arg value="${sourceparser_value}.java" />
-			<arg value="${parserpackage}" />
+			<arg value="${parserdir}" />
 			<arg value="-f" />
 		</exec>
 
@@ -125,16 +130,39 @@
 
 		<exec executable="${movecommand}">
 			<arg value="${fociparser_class}.java" />
-			<arg value="${parserpackage}" />
+			<arg value="${parserdir}" />
 			<arg value="-f" />
 		</exec>
 
 		<exec executable="${movecommand}">
 			<arg value="${fociparser_value}.java" />
-			<arg value="${parserpackage}" />
+			<arg value="${parserdir}" />
 			<arg value="-f" />
 		</exec>
 		<echo>foci parser done</echo>
+		
+		<exec executable="${yaccfile}">
+			<arg value="-Jclass=${advconditionparser_class}" />
+			<arg value="-Jvalue=${advconditionparser_value}" />
+			<arg value="-Jpackage=${parserpackage}" />
+			<arg value="-J" />
+			<arg value="${advconditionparser_source}" />
+		</exec>
+
+		<exec executable="${movecommand}">
+			<arg value="${advconditionparser_class}.java" />
+			<arg value="${parserdir}" />
+			<arg value="-f" />
+		</exec>
+
+		<exec executable="${movecommand}">
+			<arg value="${advconditionparser_value}.java" />
+			<arg value="${parserdir}" />
+			<arg value="-f" />
+		</exec>
+
+		<echo>advcondition parser done</echo>
+
 		<echo>OK: yacc done</echo>
 	</target>
 	<target name="doc">

@@ -26,12 +26,6 @@
 	<property name="advconditionparser_class" value="AdvConditionParser" />
 	<property name="advconditionparser_value" value="AdvConditionParserVal" />
 
-	<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask">
-		<classpath>
-			<pathelement location="${junitpath}" />
-		</classpath>
-	</taskdef>
-
 	<target name="init">
 		<mkdir dir="${dest}" />
 	</target>

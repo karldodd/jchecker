@@ -759,37 +759,37 @@ case 18:
 break;
 case 19:
 //#line 94 "src/parsers/jchecker2.y"
-{Expression e=new Expression(val_peek(0).ival);yyval=new SourceParserVal(e);}
+{Expression e=new tokens.Number(val_peek(0).ival);yyval=new SourceParserVal(e);}
 break;
 case 20:
 //#line 95 "src/parsers/jchecker2.y"
-{Expression e=new Expression(new Variable(getStringValue(val_peek(0))));yyval=new SourceParserVal(e);}
+{Expression e=new Variable(getStringValue(val_peek(0)));yyval=new SourceParserVal(e);}
 break;
 case 21:
 //#line 97 "src/parsers/jchecker2.y"
 {
- 	Expression e=new Expression((Expression)val_peek(2).obj,(Expression)val_peek(0).obj,ExpType.plus);
+ 	Expression e=new CompositeExpression((Expression)val_peek(2).obj,(Expression)val_peek(0).obj,CompositeExpression.TYPE_PLUS);
  	yyval=new SourceParserVal(e);
  }
 break;
 case 22:
 //#line 102 "src/parsers/jchecker2.y"
 {
- 	Expression e=new Expression((Expression)val_peek(2).obj,(Expression)val_peek(0).obj,ExpType.minus);
+ 	Expression e=new CompositeExpression((Expression)val_peek(2).obj,(Expression)val_peek(0).obj,CompositeExpression.TYPE_MINUS);
  	yyval=new SourceParserVal(e);
  }
 break;
 case 23:
 //#line 107 "src/parsers/jchecker2.y"
 {
- 	Expression e=new Expression((Expression)val_peek(2).obj,(Expression)val_peek(0).obj,ExpType.multiply);
+ 	Expression e=new CompositeExpression((Expression)val_peek(2).obj,(Expression)val_peek(0).obj,CompositeExpression.TYPE_MULTIPLY);
  	yyval=new SourceParserVal(e);
  }
 break;
 case 24:
 //#line 113 "src/parsers/jchecker2.y"
 {
- 	Expression e=new Expression((Expression)val_peek(0).obj,null,ExpType.negative);
+ 	Expression e=new NegativeExpression((Expression)val_peek(0).obj);
  	yyval=new SourceParserVal(e);
  }
 break;

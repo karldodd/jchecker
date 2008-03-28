@@ -758,7 +758,7 @@ case 13:
 break;
 case 14:
 //#line 142 "src/parsers/FociParser.y"
-{Expression e=new Expression(val_peek(0).ival);yyval=new FociParserVal(e);}
+{Expression e=new tokens.Number(val_peek(0).ival);yyval=new FociParserVal(e);}
 break;
 case 15:
 //#line 144 "src/parsers/FociParser.y"
@@ -769,7 +769,7 @@ case 15:
 		 withoutSuffix=revertMap.get(withSuffix);
 	 else
 		 withoutSuffix=withSuffix;
-	Expression e=new Expression(new Variable(withoutSuffix));yyval=new FociParserVal(e);
+	Expression e=new Variable(withoutSuffix);yyval=new FociParserVal(e);
 	if(debugging)System.out.println("term is word: "+e.toString());
  }
 break;
@@ -787,7 +787,7 @@ case 16:
 			 firstEle=false;
 		 }
 		 else
-			 latestExp=new Expression(latestExp,e,ExpType.plus);
+			 latestExp=new CompositeExpression(latestExp,e,CompositeExpression.TYPE_PLUS);
 	 }
 	 yyval=new FociParserVal(latestExp);
  }
@@ -795,7 +795,7 @@ break;
 case 17:
 //#line 172 "src/parsers/FociParser.y"
 {
-	 Expression e=new Expression(new Expression(val_peek(2).ival),(Expression)val_peek(0).obj,ExpType.multiply);
+	 Expression e=new CompositeExpression(new tokens.Number(val_peek(2).ival),(Expression)val_peek(0).obj,CompositeExpression.TYPE_MULTIPLY);
 	 yyval=new FociParserVal(e);
  }
 break;

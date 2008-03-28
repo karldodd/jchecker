@@ -1,4 +1,4 @@
-package prover.impl.xxx.simplexcore;
+package prover.impl.xxx.determination.Theory_LI;
 
 import static org.junit.Assert.*;
 

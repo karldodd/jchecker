@@ -1,4 +1,4 @@
-package prover.impl.xxx.egraph.utils.DisjointSetImpl;
+package prover.impl.fopic.determination.theory.uif.egraph.utils.DisjointSetImpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,9 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import prover.impl.xxx.egraph.utils.DisjointSetImpl.Exceptions.DuplicateElementException;
-import prover.impl.xxx.egraph.utils.DisjointSetImpl.Exceptions.NoSuchElementException;
-import prover.impl.xxx.egraph.utils.DisjointSetImpl.Exceptions.NullElementException;
+import prover.impl.fopic.determination.theory.uif.egraph.utils.DisjointSetImpl.Exceptions.*;
 
 /**
  * 不相交集合的环境类，管理此数据结构

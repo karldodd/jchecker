@@ -1,7 +1,7 @@
 /**
  * 
  */
-package prover.impl.xxx.egraph.utils.DisjointSetImpl.Exceptions;
+package prover.impl.fopic.determination.theory.uif.egraph.utils.DisjointSetImpl.Exceptions;
 
 /**
  * 试图从Disjoint Set Environment中查找不存在的元素时抛出的异常

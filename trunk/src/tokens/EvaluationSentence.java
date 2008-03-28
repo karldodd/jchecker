@@ -75,7 +75,7 @@ public class EvaluationSentence extends Sentence implements EdgeLabel{
 	*@return 转换后的高级条件式
 	*/
 	public AdvCondition toAdvCondition(){
-		Expression l=new Expression(this.v);
+		Expression l=this.v;
 		Expression r=this.e;
 		Condition c=new Condition(l,r,ConType.equal);
 		return (new AdvCondition(c)).clone();

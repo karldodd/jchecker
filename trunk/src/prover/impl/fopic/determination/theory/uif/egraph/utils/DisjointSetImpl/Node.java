@@ -1,4 +1,4 @@
-package prover.impl.xxx.egraph.utils.DisjointSetImpl;
+package prover.impl.fopic.determination.theory.uif.egraph.utils.DisjointSetImpl;
 
 /**
  * 不相交森林中的结点

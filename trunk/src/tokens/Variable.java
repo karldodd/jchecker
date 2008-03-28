@@ -2,22 +2,19 @@ package tokens;
 import java.lang.*;
 import java.util.*;
 
+import prover.impl.fopic.determination.theory.uif.egraph.core.AtomicElement;
+
 /**
 *变量类
 *
 *@author He Kaiduo
 */
-public class Variable implements Cloneable{
+public class Variable extends Expression implements AtomicElement{
 
 	/**
 	*变量名
 	*/
 	private String name;
-
-	/**
-	*变量值
-	*/
-	private Object value;
 
 	/**
 	*根据名字构造值为空的变量
@@ -26,18 +23,6 @@ public class Variable implements Cloneable{
 	*/
 	public Variable(String name){
 		this.name=name;
-		value=null;
-	}
-
-	/**
-	*根据变量名和值构造变量
-	*
-	*@param name 变量名
-	*@param value 变量值
-	*/
-	public Variable(String name, Object value){
-		this.name=name;
-		this.value=value;
 	}
 
 	/**
@@ -47,24 +32,6 @@ public class Variable implements Cloneable{
 	*/
 	public String getName(){return name;}
 	
-	/**
-	*设置变量的值
-	*
-	*@param value 需要设置的值
-	*/
-	public void setValue(Object value){
-		this.value=value;
-	}	
-
-	/**
-	*获取变量的值
-	*
-	*@return 变量的值
-	*/
-	public Object getValue(){
-		return this.value;
-	}
-
 	/**
 	*获取随机的变量后缀
 	*
@@ -79,15 +46,10 @@ public class Variable implements Cloneable{
 	*
 	*@return 变量的拷贝
 	*/
+	@Override
 	public Variable clone(){
-		return new Variable(this.name,this.value);
+		return new Variable(this.name);
 	}
-	
-	/*
-	//'a' to 'a_suf'
-	public void addSuffix(String suf){
-		
-	}*/
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -102,5 +64,21 @@ public class Variable implements Cloneable{
 	public int hashCode() {
 		// TODO Auto-generated method stub
 		return this.getName().hashCode();
+	}
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return this.getName();
+	}
+	
+	@Override
+	public Expression substitute(Variable v, Expression e) {
+		// TODO Auto-generated method stub
+		if(this.getName().equals(v.getName())){
+			return e.clone();
+		}
+		else
+			return this.clone();
 	}
 }

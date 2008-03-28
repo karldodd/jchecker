@@ -1,14 +1,12 @@
 /**
  * 
  */
-package prover.impl.xxx.egraph.core;
+package prover.impl.fopic.determination.theory.uif.egraph.core;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import prover.impl.xxx.egraph.utils.DisjointSetImpl.DisjointSet;
-import prover.impl.xxx.egraph.utils.DisjointSetImpl.DisjointSetEnvironment;
-import prover.impl.xxx.egraph.utils.DisjointSetImpl.Node;
+import prover.impl.fopic.determination.theory.uif.egraph.utils.DisjointSetImpl.*;
 
 /**
  * @author KarlHe
@@ -133,8 +131,8 @@ public class EgraphManager {
 						for (int j = i + 1; j < tempList.size(); j++) {
 							if (dse.findSet(tempList.get(i)) != dse
 									.findSet(tempList.get(j))
-									&& tempList.get(i).connectedWith(
-											tempList.get(j), dse)) {
+									&& connectedWith(tempList.get(i), tempList
+											.get(j), dse)) {
 								dse.union(dse.findSet(tempList.get(i)), dse
 										.findSet(tempList.get(j)));
 								stop = false;
@@ -171,5 +169,36 @@ public class EgraphManager {
 	public List<IEgraphEquation> addNewEquationWithEquationMining(
 			IEgraphEquation ee) {
 		return null;
+	}
+
+	/**
+	 * 检查两个FunctionalElement是否能够进行等价类合并
+	 * 
+	 * @param fe1
+	 *            第一个FunctionalElement
+	 * @param fe2
+	 *            第二个FunctionalElement
+	 * @param dse
+	 * @return
+	 */
+	public static boolean connectedWith(FunctionalElement fe1,
+			FunctionalElement fe2, DisjointSetEnvironment<IEgraphElement> dse) {
+		if (!fe1.getFunctionName().equals(fe2.getFunctionName()))
+			return false;
+		if (fe1.getParamSize() != fe2.getParamSize())
+			return false;
+
+		AtomicElement[] array1 = fe1.getParams();
+		AtomicElement[] array2 = fe2.getParams();
+
+		try {
+			for (int i = 0; i < fe1.getParamSize(); i++) {
+				if (dse.findSet(array1[i]) != dse.findSet(array2[i]))
+					return false;
+			}
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
 	}
 }

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package prover.impl.xxx.egraph.utils.DisjointSetImpl;
+package prover.impl.fopic.determination.theory.uif.egraph.utils.DisjointSetImpl;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

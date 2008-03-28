@@ -1,7 +1,7 @@
 /**
  * 
  */
-package prover.impl.xxx.egraph.core;
+package prover.impl.fopic.determination.theory.uif.egraph.core;
 
 
 /**

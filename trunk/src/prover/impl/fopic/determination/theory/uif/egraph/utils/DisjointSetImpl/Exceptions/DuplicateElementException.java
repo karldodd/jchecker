@@ -1,7 +1,7 @@
 /**
  * 
  */
-package prover.impl.xxx.egraph.utils.DisjointSetImpl.Exceptions;
+package prover.impl.fopic.determination.theory.uif.egraph.utils.DisjointSetImpl.Exceptions;
 
 /**
  * 当Disjoint Set Environment中试图插入重复元素时抛出的异常

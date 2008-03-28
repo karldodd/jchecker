@@ -39,7 +39,7 @@ input: advcondition
 }
 ;
 
-expression: NUM {Expression e=new Number($1.ival);$$=new AdvConditionParserVal(e);}
+expression: NUM {Expression e=new tokens.Number($1.ival);$$=new AdvConditionParserVal(e);}
  | WORD {Expression e=new Variable(getStringValue($1));$$=new AdvConditionParserVal(e);}
  | expression '+' expression
  {

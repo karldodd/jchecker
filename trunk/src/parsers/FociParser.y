@@ -139,7 +139,7 @@ formulaarray: formula formula
  }
  ;
 
-term: NUM {Expression e=new Number($1.ival);$$=new FociParserVal(e);}
+term: NUM {Expression e=new tokens.Number($1.ival);$$=new FociParserVal(e);}
  | WORD
  {
 	 String withSuffix=getStringValue($1);
@@ -170,7 +170,7 @@ term: NUM {Expression e=new Number($1.ival);$$=new FociParserVal(e);}
  }
  | NUM '*' term 
  {
-	 Expression e=new CompositeExpression(new Number($1.ival),(Expression)$3.obj,CompositeExpression.TYPE_MULTIPLY);
+	 Expression e=new CompositeExpression(new tokens.Number($1.ival),(Expression)$3.obj,CompositeExpression.TYPE_MULTIPLY);
 	 $$=new FociParserVal(e);
  }
  | '(' term ')' {$$=$2;}

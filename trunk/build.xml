@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="Jchecker" default="run" basedir=".">
+	<condition property="yaccfilename" value="yacc.exe">
+		<os family="windows" />
+	</condition>
+
+	<condition property="yaccfilename" value="yacc.linux">
+		<or>
+			<os family="unix" />
+			<os family="mac" />
+		</or>
+	</condition>
+
 	<property name="src" value="./src" />
 	<property name="testdir" value="./test" />
 	<property name="dest" value="./bin" />
@@ -11,7 +22,7 @@
 	<property name="parserdir" value="src/parsers" />
 	<property name="parserpackage" value="parsers" />
 
-	<property name="yaccfile" location="${parserdir}/yacc.linux" />
+	<property name="yaccfile" location="${parserdir}/${yaccfilename}" />
 	<property name="movecommand" value="mv" />
 
 	<property name="sourceparser_source" value="${parserdir}/jchecker2.y" />
@@ -92,17 +103,8 @@
 			<arg value="${sourceparser_source}" />
 		</exec>
 
-		<exec executable="${movecommand}">
-			<arg value="${sourceparser_class}.java" />
-			<arg value="${parserdir}" />
-			<arg value="-f" />
-		</exec>
-
-		<exec executable="${movecommand}">
-			<arg value="${sourceparser_value}.java" />
-			<arg value="${parserdir}" />
-			<arg value="-f" />
-		</exec>
+		<move file="${sourceparser_class}.java" todir="${parserdir}" />
+		<move file="${sourceparser_value}.java" todir="${parserdir}" />
 
 		<echo>source parser done</echo>
 		<!--
@@ -128,17 +130,9 @@
 			<arg value="${fociparser_source}" />
 		</exec>
 
-		<exec executable="${movecommand}">
-			<arg value="${fociparser_class}.java" />
-			<arg value="${parserdir}" />
-			<arg value="-f" />
-		</exec>
+		<move file="${fociparser_class}.java" todir="${parserdir}" />
+		<move file="${fociparser_value}.java" todir="${parserdir}" />
 
-		<exec executable="${movecommand}">
-			<arg value="${fociparser_value}.java" />
-			<arg value="${parserdir}" />
-			<arg value="-f" />
-		</exec>
 		<echo>foci parser done</echo>
 
 		<exec executable="${yaccfile}">
@@ -149,17 +143,8 @@
 			<arg value="${advconditionparser_source}" />
 		</exec>
 
-		<exec executable="${movecommand}">
-			<arg value="${advconditionparser_class}.java" />
-			<arg value="${parserdir}" />
-			<arg value="-f" />
-		</exec>
-
-		<exec executable="${movecommand}">
-			<arg value="${advconditionparser_value}.java" />
-			<arg value="${parserdir}" />
-			<arg value="-f" />
-		</exec>
+		<move file="${advconditionparser_class}.java" todir="${parserdir}" />
+		<move file="${advconditionparser_value}.java" todir="${parserdir}" />
 
 		<echo>advcondition parser done</echo>
 

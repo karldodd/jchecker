@@ -39,27 +39,27 @@ input: advcondition
 }
 ;
 
-expression: NUM {Expression e=new Expression($1.ival);$$=new AdvConditionParserVal(e);}
- | WORD {Expression e=new Expression(new Variable(getStringValue($1)));$$=new AdvConditionParserVal(e);}
+expression: NUM {Expression e=new Number($1.ival);$$=new AdvConditionParserVal(e);}
+ | WORD {Expression e=new Variable(getStringValue($1));$$=new AdvConditionParserVal(e);}
  | expression '+' expression
  {
- 	Expression e=new Expression((Expression)$1.obj,(Expression)$3.obj,ExpType.plus);
+ 	Expression e=new CompositeExpression((Expression)$1.obj,(Expression)$3.obj,CompositeExpression.TYPE_PLUS);
  	$$=new AdvConditionParserVal(e);
  }
  | expression '-' expression
  {
- 	Expression e=new Expression((Expression)$1.obj,(Expression)$3.obj,ExpType.minus);
+ 	Expression e=new CompositeExpression((Expression)$1.obj,(Expression)$3.obj,CompositeExpression.TYPE_MINUS);
  	$$=new AdvConditionParserVal(e);
  }
  | expression '*' expression
  {
- 	Expression e=new Expression((Expression)$1.obj,(Expression)$3.obj,ExpType.multiply);
+ 	Expression e=new CompositeExpression((Expression)$1.obj,(Expression)$3.obj,CompositeExpression.TYPE_MULTIPLY);
  	$$=new AdvConditionParserVal(e);
  }
  //| expression '/' expression
  | '-' expression %prec NEG
  {
- 	Expression e=new Expression((Expression)$2.obj,null,ExpType.negative);
+ 	Expression e=new NegativeExpression((Expression)$2.obj);
  	$$=new AdvConditionParserVal(e);
  }
  //| expression '^' expression

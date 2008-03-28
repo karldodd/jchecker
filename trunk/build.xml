@@ -67,6 +67,7 @@
 			</classpath>
 			<formatter type="plain" usefile="false" />
 			<test name="prover.AllTests" />
+			<test name="parsers.AdvConditionParserTester" />
 		</junit>
 	</target>
 

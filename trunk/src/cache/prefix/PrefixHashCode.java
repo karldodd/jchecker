@@ -13,7 +13,7 @@ public class PrefixHashCode extends HashCode implements Iterable<Integer> {
 	 */
 	protected int[] codes;
 
-	@Override
+	//@Override
 	public Iterator<Integer> iterator() {
 		// TODO Auto-generated method stub
 		return null;

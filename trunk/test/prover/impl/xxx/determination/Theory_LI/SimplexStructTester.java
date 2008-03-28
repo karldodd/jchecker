@@ -139,14 +139,13 @@ public class SimplexStructTester {
      *   w1  2  1   0   -1      0       1       0     0      3
      *   w2  1  0  -3   0       1       0       1     0      2
      *   w3  0  1   1   0       0       0       0     1      6
-     *       3  2  -2   -1      1       1       1     1      11
+     *       3  2  -2   -1      1       0       0     0      11
      *
      * Thus, after the constructor,
      * the tokens should be: a  b   c   __s1    __s2    __w1  __w2  __w3
      * and the basis should be: __w1  __w2  __w3
      * and the rest of the table should be stored in tokenValues.
      */
-    @Ignore
 	@Test
 	public void testConstructor2() throws Exception{
         // 2a + b >= 3
@@ -174,7 +173,7 @@ public class SimplexStructTester {
         Expression e5 = new Expression(new Variable("b"));
         Expression e6 = new Expression(new Variable("c"));
 
-        Expression e_left_3 = new Expression(e3, e4, ExpType.plus);
+        Expression e_left_3 = new Expression(e5, e6, ExpType.plus);
         Expression e_right_3 = new Expression(6);
         Condition condition3 = new Condition(e_left_3, e_right_3, ConType.equal);
 
@@ -199,45 +198,70 @@ public class SimplexStructTester {
         assertEquals(simplexStruct.tokens.get(6), "__w2");
         assertEquals(simplexStruct.tokens.get(7), "__w3");
 
-        /*
         // Assure the basises are constructed correctly.
+        // The basis should be: __w1  __w2  __w3
 		assertNotNull(simplexStruct.basis);
-        assertEquals(simplexStruct.basis.size(), 2);
+        assertEquals(simplexStruct.basis.size(), 3);
         assertEquals(simplexStruct.basis.get(0), "__w1");
         assertEquals(simplexStruct.basis.get(1), "__w2");
+        assertEquals(simplexStruct.basis.get(2), "__w3");
 
         // Assure the values within the table are constructed correctly.
 		assertNotNull(simplexStruct.tokenValues);
-        assertEquals(simplexStruct.tokenValues.length, 3);
+        assertEquals(simplexStruct.tokenValues.length, 4);
 		assertNotNull(simplexStruct.tokenValues[0]);
-        assertEquals(simplexStruct.tokenValues[0].length, 6);
+        assertEquals(simplexStruct.tokenValues[0].length, 9);
 		assertNotNull(simplexStruct.tokenValues[1]);
-        assertEquals(simplexStruct.tokenValues[1].length, 6);
+        assertEquals(simplexStruct.tokenValues[1].length, 9);
+		assertNotNull(simplexStruct.tokenValues[2]);
+        assertEquals(simplexStruct.tokenValues[2].length, 9);
+		assertNotNull(simplexStruct.tokenValues[2]);
+        assertEquals(simplexStruct.tokenValues[2].length, 9);
 
         // The table:
-        //   1  -1      0       1       0   5
-        //   1  0       1      0       1   4
-        //   2  -1       1      1       1   9
-        assertEquals(simplexStruct.tokenValues[0][0], 1);
-        assertEquals(simplexStruct.tokenValues[0][1], -1);
+        //  2  1   0   -1      0       1       0     0      3
+        //  1  0  -3   0       1       0       1     0      2
+        //  0  1   1   0       0       0       0     1      6
+        //  3  2  -2   -1      1       0       0     0      11
+        assertEquals(simplexStruct.tokenValues[0][0], 2);
+        assertEquals(simplexStruct.tokenValues[0][1], 1);
         assertEquals(simplexStruct.tokenValues[0][2], 0);
-        assertEquals(simplexStruct.tokenValues[0][3], 1);
+        assertEquals(simplexStruct.tokenValues[0][3], -1);
         assertEquals(simplexStruct.tokenValues[0][4], 0);
-        assertEquals(simplexStruct.tokenValues[0][5], 5);
+        assertEquals(simplexStruct.tokenValues[0][5], 1);
+        assertEquals(simplexStruct.tokenValues[0][6], 0);
+        assertEquals(simplexStruct.tokenValues[0][7], 0);
+        assertEquals(simplexStruct.tokenValues[0][8], 3);
 
         assertEquals(simplexStruct.tokenValues[1][0], 1);
         assertEquals(simplexStruct.tokenValues[1][1], 0);
-        assertEquals(simplexStruct.tokenValues[1][2], 1);
+        assertEquals(simplexStruct.tokenValues[1][2], -3);
         assertEquals(simplexStruct.tokenValues[1][3], 0);
         assertEquals(simplexStruct.tokenValues[1][4], 1);
-        assertEquals(simplexStruct.tokenValues[1][5], 4);
+        assertEquals(simplexStruct.tokenValues[1][5], 0);
+        assertEquals(simplexStruct.tokenValues[1][6], 1);
+        assertEquals(simplexStruct.tokenValues[1][7], 0);
+        assertEquals(simplexStruct.tokenValues[1][8], 2);
 
-        assertEquals(simplexStruct.tokenValues[2][0], 2);
-        assertEquals(simplexStruct.tokenValues[2][1], -1);
+        assertEquals(simplexStruct.tokenValues[2][0], 0);
+        assertEquals(simplexStruct.tokenValues[2][1], 1);
         assertEquals(simplexStruct.tokenValues[2][2], 1);
-        assertEquals(simplexStruct.tokenValues[2][3], 1);
-        assertEquals(simplexStruct.tokenValues[2][4], 1);
-        assertEquals(simplexStruct.tokenValues[2][5], 9);
-        */
+        assertEquals(simplexStruct.tokenValues[2][3], 0);
+        assertEquals(simplexStruct.tokenValues[2][4], 0);
+        assertEquals(simplexStruct.tokenValues[2][5], 0);
+        assertEquals(simplexStruct.tokenValues[2][6], 0);
+        assertEquals(simplexStruct.tokenValues[2][7], 1);
+        assertEquals(simplexStruct.tokenValues[2][8], 6);
+
+        assertEquals(simplexStruct.tokenValues[3][0], 3);
+        assertEquals(simplexStruct.tokenValues[3][1], 2);
+        assertEquals(simplexStruct.tokenValues[3][2], -2);
+        assertEquals(simplexStruct.tokenValues[3][3], -1);
+        assertEquals(simplexStruct.tokenValues[3][4], 1);
+        assertEquals(simplexStruct.tokenValues[3][5], 0);
+        assertEquals(simplexStruct.tokenValues[3][6], 0);
+        assertEquals(simplexStruct.tokenValues[3][7], 0);
+        assertEquals(simplexStruct.tokenValues[3][8], 11);
+
 	}
 }

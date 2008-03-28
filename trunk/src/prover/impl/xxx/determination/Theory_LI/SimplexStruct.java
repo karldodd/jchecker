@@ -86,28 +86,23 @@ public class SimplexStruct{
         // 包含表达式中出现过的变量名字, 用于保证tokens中变量名字的唯一性
         Set<String> varNameSet = new HashSet<String>();
 
+        List<Dictionary<String, Double> > listOfTokenValueDict = new Vector<Dictionary<String, Double>>();
+
         // 添加表达式中所含变量及冗余变量
         for(Condition condition : conditionList) {
+            Dictionary<String, Double> tokenValueDict = new Hashtable<String, Double>();
             if (condition.type == ConType.equal) {
-                if(!varNameSet.contains(condition.l.v.getName())) {
-                    varNameSet.add(condition.l.v.getName());
-                    tokens.add(originalVarCount++, condition.l.v.getName());
-                }
+                originalVarCount = getExpressionTokens(condition.l, varNameSet, tokens, originalVarCount, tokenValueDict, true);
             } else if (condition.type == ConType.equalsmaller) {
-                if(!varNameSet.contains(condition.l.v.getName())) {
-                    varNameSet.add(condition.l.v.getName());
-                    tokens.add(originalVarCount++, condition.l.v.getName());
-                }
+                originalVarCount = getExpressionTokens(condition.l, varNameSet, tokens, originalVarCount, tokenValueDict, true);
                 tokens.add("__s" + (++spaceVarCount));
             } else if (condition.type == ConType.equallarger) {
-                if(!varNameSet.contains(condition.l.v.getName())) {
-                    varNameSet.add(condition.l.v.getName());
-                    tokens.add(originalVarCount++, condition.l.v.getName());
-                }
+                originalVarCount = getExpressionTokens(condition.l, varNameSet, tokens, originalVarCount, tokenValueDict, true);
                 tokens.add("__s" + (++spaceVarCount));
             } else {
                 throw new Exception("The argument is illegal");
             }
+            listOfTokenValueDict.add(tokenValueDict);
         }
 
         manualVarStartPoint = tokens.size();
@@ -127,11 +122,16 @@ public class SimplexStruct{
         for(int i = 0; i < conditionList.size(); ++i) {
             Condition condition = conditionList.get(i);
             tokenValues[i] = new double[width];
-            int index = tokens.indexOf(condition.l.v.getName());
 
-            // fake
-            // 设置相应位置的变量值
-            tokenValues[i][index] = 1;
+            Enumeration<String> e = listOfTokenValueDict.get(i).keys();
+            while(e.hasMoreElements()) {
+                String tokenName = e.nextElement();
+                // 得到变量的位置
+                int index = tokens.indexOf(tokenName);
+                // 设置相应位置的变量值
+                tokenValues[i][index] = listOfTokenValueDict.get(i).get(tokenName);
+                //System.out.println("line:" + i +" tokenName: " + tokenName + ", index: " + index + ", value:" + tokenValues[i][index]);
+            }
 
             // 设置冗余变量的值
             // 若是大于等于号，则为-1
@@ -166,6 +166,32 @@ public class SimplexStruct{
         for(int j = 0; j < height - 1; ++ j) {
             tokenValues[height - 1][width - 1] += tokenValues[j][width - 1];
         }
+
+        //System.out.println("complete");
+    }
+
+    private int getExpressionTokens(Expression expression, Set<String> varNameSet, 
+            List<String> tokens, int originalVarCount, Dictionary<String, Double> tokenValueDict, boolean isPositive) {
+        if(expression.type == ExpType.var) {
+            if(!varNameSet.contains(expression.v.getName())) {
+                varNameSet.add(expression.v.getName());
+                tokens.add(originalVarCount++, expression.v.getName());
+            }
+            tokenValueDict.put(expression.v.getName(), isPositive ? 1.0 : -1.0);
+        } else if(expression.type == ExpType.plus) {
+            originalVarCount = getExpressionTokens(expression.l, varNameSet, tokens, originalVarCount, tokenValueDict, isPositive);
+            originalVarCount = getExpressionTokens(expression.r, varNameSet, tokens, originalVarCount, tokenValueDict, isPositive);
+        } else if(expression.type == ExpType.minus) {
+            originalVarCount = getExpressionTokens(expression.l, varNameSet, tokens, originalVarCount, tokenValueDict, isPositive);
+            originalVarCount = getExpressionTokens(expression.r, varNameSet, tokens, originalVarCount, tokenValueDict, !isPositive);
+        } else if(expression.type == ExpType.multiply) {
+            if(!varNameSet.contains(expression.r.v.getName())) {
+                varNameSet.add(expression.r.v.getName());
+                tokens.add(originalVarCount++, expression.r.v.getName());
+            }
+            tokenValueDict.put(expression.r.v.getName(), isPositive ? 1.0 * expression.l.num : -1.0 * expression.l.num);
+        }
+        return originalVarCount;
     }
 
     /**

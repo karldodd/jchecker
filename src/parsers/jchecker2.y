@@ -91,7 +91,7 @@ words: WORD {}
 | words ',' WORD {}
 ;
 
-expression: NUM {Expression e=new Number($1.ival);$$=new SourceParserVal(e);}
+expression: NUM {Expression e=new tokens.Number($1.ival);$$=new SourceParserVal(e);}
  | WORD {Expression e=new Variable(getStringValue($1));$$=new SourceParserVal(e);}
  | expression '+' expression
  {

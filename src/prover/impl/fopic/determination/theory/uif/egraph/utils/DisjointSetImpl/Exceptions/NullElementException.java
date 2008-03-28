@@ -1,7 +1,7 @@
 /**
  * 
  */
-package prover.impl.xxx.egraph.utils.DisjointSetImpl.Exceptions;
+package prover.impl.fopic.determination.theory.uif.egraph.utils.DisjointSetImpl.Exceptions;
 
 /**
  * 试图在DisjointSetEnvironment中加入为null的对象时抛出此异常

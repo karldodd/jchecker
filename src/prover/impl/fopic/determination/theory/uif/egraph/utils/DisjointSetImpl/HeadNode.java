@@ -1,4 +1,4 @@
-package prover.impl.xxx.egraph.utils.DisjointSetImpl;
+package prover.impl.fopic.determination.theory.uif.egraph.utils.DisjointSetImpl;
 
 public class HeadNode<K> extends Node<K> {
 	private DisjointSet<K> ds;

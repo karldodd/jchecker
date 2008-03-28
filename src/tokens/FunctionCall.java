@@ -9,7 +9,7 @@ package tokens;
  * @author KarlHe
  * 
  */
-public class FunctionCall implements Cloneable {
+public class FunctionCall extends Expression implements Cloneable {
 	protected String functionName;
 	protected Expression[] params;
 	protected int paramSize = -1;
@@ -26,17 +26,13 @@ public class FunctionCall implements Cloneable {
 		this.functionName = functionName;
 		params = new Expression[vars.length];
 		for (int i = 0; i < vars.length; i++) {
-			params[i] = new Expression(new Variable(vars[i]));
+			params[i] = new Variable(vars[i]);
 		}
 	}
 
 	public FunctionCall(String functionName, Expression[] vars) {
 		this.functionName = functionName;
 		params=vars;
-		/*
-		 * params = new Expression[vars.length]; for (int i = 0; i <
-		 * vars.length; i++) { params[i] = vars[i].clone(); }
-		 */
 	}
 
 	public String getFunctionName() {
@@ -46,16 +42,6 @@ public class FunctionCall implements Cloneable {
 	public Expression[] getParameters() {
 		return this.params;
 	}
-
-	/*
-	public String[] getVariableStrings() {
-		Variable[] vars = getVariables();
-		String[] strs = new String[this.paramSize];
-		for (int i = 0; i < this.paramSize; i++) {
-			strs[i] = vars[i].getName();
-		}
-		return strs;
-	}*/
 
 	/**
 	 * 获取函数的参数个数
@@ -112,7 +98,7 @@ public class FunctionCall implements Cloneable {
 	}
 	
 	@Override
-	protected FunctionCall clone() {
+	public FunctionCall clone() {
 		Expression[] params=getParameters();
 		Expression[] cloneParams=new Expression[params.length];
 		for (int i=0; i<params.length; i++){
@@ -121,4 +107,13 @@ public class FunctionCall implements Cloneable {
 		return new FunctionCall(getFunctionName(),cloneParams);
 	}
 	
+	@Override
+	public FunctionCall substitute(Variable v, Expression e) {
+		// TODO Auto-generated method stub
+		FunctionCall copy=this.clone();
+		for(int i=0;i<copy.params.length;i++){
+			copy.params[i]=copy.params[i].substitute(v, e);
+		}
+		return copy;
+	}
 }

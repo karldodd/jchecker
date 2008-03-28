@@ -139,7 +139,7 @@ formulaarray: formula formula
  }
  ;
 
-term: NUM {Expression e=new Expression($1.ival);$$=new FociParserVal(e);}
+term: NUM {Expression e=new Number($1.ival);$$=new FociParserVal(e);}
  | WORD
  {
 	 String withSuffix=getStringValue($1);
@@ -148,7 +148,7 @@ term: NUM {Expression e=new Expression($1.ival);$$=new FociParserVal(e);}
 		 withoutSuffix=revertMap.get(withSuffix);
 	 else
 		 withoutSuffix=withSuffix;
-	Expression e=new Expression(new Variable(withoutSuffix));$$=new FociParserVal(e);
+	Expression e=new Variable(withoutSuffix);$$=new FociParserVal(e);
 	if(debugging)System.out.println("term is word: "+e.toString());
  }
  | '+' '[' termarray ']'
@@ -164,13 +164,13 @@ term: NUM {Expression e=new Expression($1.ival);$$=new FociParserVal(e);}
 			 firstEle=false;
 		 }
 		 else
-			 latestExp=new Expression(latestExp,e,ExpType.plus);
+			 latestExp=new CompositeExpression(latestExp,e,CompositeExpression.TYPE_PLUS);
 	 }
 	 $$=new FociParserVal(latestExp);
  }
  | NUM '*' term 
  {
-	 Expression e=new Expression(new Expression($1.ival),(Expression)$3.obj,ExpType.multiply);
+	 Expression e=new CompositeExpression(new Number($1.ival),(Expression)$3.obj,CompositeExpression.TYPE_MULTIPLY);
 	 $$=new FociParserVal(e);
  }
  | '(' term ')' {$$=$2;}

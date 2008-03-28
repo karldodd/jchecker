@@ -7,16 +7,10 @@ import java.util.Iterator;
  * @author aleck
  *
  */
-public class PrefixHashCode extends HashCode implements Iterable<Integer> {
+public class PrefixHashCode extends HashCode {
 	/**
 	 * 使用一个数组来保存相应的hashCode序列
 	 */
 	protected int[] codes;
 
-	//@Override
-	public Iterator<Integer> iterator() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 }

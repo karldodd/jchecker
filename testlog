@@ -1,0 +1,18 @@
+source file is:
+
+b=0;
+while(b<4)b=b+1;
+if(b==3)
+{a=1;}
+else{ ERROR;}
+
+When calculating interpolation, foci give:
+
+predicate is: (((0<=(3+(-1*b)))&&(b==3))||(0>(-3+(1*b))))
+
+But vampyre can't judge, so give true and till error node.
+
+Then return to parent node. And do it again.
+
+This is real-counter example, but can't deduce?
+

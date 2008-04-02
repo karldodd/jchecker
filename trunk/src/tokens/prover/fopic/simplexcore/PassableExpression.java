@@ -19,6 +19,21 @@ public class PassableExpression extends Expression{
         return false;
     }
 
+	public int hashCode()
+    {
+        return 0;
+    }
+
+	public String toString()
+    {
+        return "";
+    }
+	
+	public Expression substitute(Variable v, Expression e)
+    {
+        return null;
+    }
+
     /**
      * 运算表达式的左侧表达式
      */

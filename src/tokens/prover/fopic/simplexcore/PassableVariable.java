@@ -1,4 +1,4 @@
-package tokens.prover.xxx.simplexcore;
+package tokens.prover.fopic.simplexcore;
 import java.lang.*;
 import java.util.*;
 import tokens.*;
@@ -14,6 +14,7 @@ public class PassableVariable extends Variable{
      */
     public int belongFieldId;
 
+    /*
     PassableVariable(String name) {
         super(name);
     }
@@ -21,6 +22,7 @@ public class PassableVariable extends Variable{
     PassableVariable(String name, Object value) {
         super(name, value);
     }
+    */
 
 }
 

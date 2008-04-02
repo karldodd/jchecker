@@ -1,7 +1,7 @@
-package prover.impl.xxx.simplexcore;
+package prover.impl.fopic.determination.theory.li.simplexcore;
 
 import tokens.*;
-import tokens.prover.xxx.simplexcore.*;
+import tokens.prover.fopic.simplexcore.*;
 import abstraction.*;
 
 import java.lang.*;

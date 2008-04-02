@@ -1,4 +1,4 @@
-package tokens.prover.xxx.simplexcore;
+package tokens.prover.fopic.simplexcore;
 import java.lang.*;
 import java.util.*;
 import tokens.*;
@@ -13,6 +13,11 @@ public class PassableExpression extends Expression{
      * 变量
      */
     public PassableVariable v;
+
+    public boolean equals(Object obj)
+    {
+        return false;
+    }
 
     /**
      * 运算表达式的左侧表达式
@@ -29,11 +34,11 @@ public class PassableExpression extends Expression{
      */
     public int belongFieldId;
 
+    /*
 	/**
 	*数字类型的构造函数
 	*
 	*@param num 数字
-	*/
 	public PassableExpression(int num){
         super(num);
 	}
@@ -42,7 +47,6 @@ public class PassableExpression extends Expression{
 	*变量类型的构造函数
 	*
 	*@param v 变量
-	*/
 	public PassableExpression(Variable v){
         super(v);
 	}
@@ -53,9 +57,13 @@ public class PassableExpression extends Expression{
 	*@param l 运算的左侧表达式
 	*@param r 运算的右侧表达式
 	*@param type 运算类型
-	*/
 	public PassableExpression(Expression l,Expression r, ExpType type)
 	{
         super(l, r, type);
 	}
+	*/
+
+    public PassableExpression clone() {
+        return this;
+    }
 }

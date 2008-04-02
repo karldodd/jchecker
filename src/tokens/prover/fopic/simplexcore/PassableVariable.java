@@ -14,11 +14,11 @@ public class PassableVariable extends Variable{
      */
     public int belongFieldId;
 
-    /*
     PassableVariable(String name) {
         super(name);
     }
 
+    /*
     PassableVariable(String name, Object value) {
         super(name, value);
     }
